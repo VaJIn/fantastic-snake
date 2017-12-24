@@ -1,6 +1,7 @@
 package fr.univangers.vajin.gamemodel.utilities;
 
-import fr.univangers.vrjlpv.snakerpg.gamemodel.Position;
+
+import fr.univangers.vajin.gamemodel.Position;
 
 public abstract class AbstractMatrix<E> implements Matrix<E> {
 

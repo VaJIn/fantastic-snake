@@ -1,6 +1,6 @@
 package fr.univangers.vajin.gamemodel;
 
-import fr.univangers.vrjlpv.snakerpg.gamemodel.mutableobject.MutableObjectAtom;
+import fr.univangers.vajin.gamemodel.mutableobject.MutableObjectAtom;
 
 public interface Wall extends MutableObjectAtom {
 }

@@ -1,9 +1,10 @@
 package fr.univangers.vajin.gamemodel.field.impl;
 
-import fr.univangers.vrjlpv.snakerpg.gamemodel.Position;
-import fr.univangers.vrjlpv.snakerpg.gamemodel.field.Field;
-import fr.univangers.vrjlpv.snakerpg.gamemodel.field.FieldUnit;
-import fr.univangers.vrjlpv.snakerpg.gamemodel.utilities.Matrix;
+
+import fr.univangers.vajin.gamemodel.Position;
+import fr.univangers.vajin.gamemodel.field.Field;
+import fr.univangers.vajin.gamemodel.field.FieldUnit;
+import fr.univangers.vajin.gamemodel.utilities.Matrix;
 
 public class AbstractField implements Field {
 

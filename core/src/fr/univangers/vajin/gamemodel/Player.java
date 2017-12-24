@@ -1,6 +1,7 @@
 package fr.univangers.vajin.gamemodel;
 
-import fr.univangers.vrjlpv.snakerpg.gamemodel.snakemodel.SnakeModel;
+
+import fr.univangers.vajin.gamemodel.snakemodel.SnakeModel;
 
 public interface Player {
     String getName();

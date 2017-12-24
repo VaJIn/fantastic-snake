@@ -1,8 +1,8 @@
 package fr.univangers.vajin.gamemodel.field.impl;
 
-import fr.univangers.vrjlpv.snakerpg.gamemodel.field.FieldUnit;
-import fr.univangers.vrjlpv.snakerpg.gamemodel.utilities.Matrix;
-import fr.univangers.vrjlpv.snakerpg.gamemodel.utilities.StaticMatrix;
+import fr.univangers.vajin.gamemodel.field.FieldUnit;
+import fr.univangers.vajin.gamemodel.utilities.Matrix;
+import fr.univangers.vajin.gamemodel.utilities.StaticMatrix;
 
 public class StaticField extends AbstractField {
 

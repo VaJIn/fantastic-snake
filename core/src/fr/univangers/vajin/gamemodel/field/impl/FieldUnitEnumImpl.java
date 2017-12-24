@@ -1,6 +1,7 @@
 package fr.univangers.vajin.gamemodel.field.impl;
 
-import fr.univangers.vrjlpv.snakerpg.gamemodel.field.FieldUnit;
+
+import fr.univangers.vajin.gamemodel.field.FieldUnit;
 
 public enum FieldUnitEnumImpl implements FieldUnit {
 

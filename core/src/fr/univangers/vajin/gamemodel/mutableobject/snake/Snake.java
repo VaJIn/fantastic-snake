@@ -1,7 +1,8 @@
 package fr.univangers.vajin.gamemodel.mutableobject.snake;
 
-import fr.univangers.vrjlpv.snakerpg.gamemodel.SnakeState;
-import fr.univangers.vrjlpv.snakerpg.gamemodel.mutableobject.MovingMutableObject;
+
+import fr.univangers.vajin.gamemodel.SnakeState;
+import fr.univangers.vajin.gamemodel.mutableobject.MovingMutableObject;
 
 import java.util.Iterator;
 

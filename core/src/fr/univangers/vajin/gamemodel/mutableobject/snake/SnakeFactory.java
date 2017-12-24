@@ -1,7 +1,7 @@
 package fr.univangers.vajin.gamemodel.mutableobject.snake;
 
-import fr.univangers.vrjlpv.snakerpg.gamemodel.Position;
-import fr.univangers.vrjlpv.snakerpg.gamemodel.snakemodel.SnakeModel;
+import fr.univangers.vajin.gamemodel.Position;
+import fr.univangers.vajin.gamemodel.snakemodel.SnakeModel;
 
 import java.util.List;
 

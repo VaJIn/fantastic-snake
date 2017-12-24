@@ -1,7 +1,7 @@
 package fr.univangers.vajin.gamemodel.utilities;
 
 
-import fr.univangers.vrjlpv.snakerpg.gamemodel.Position;
+import fr.univangers.vajin.gamemodel.Position;
 
 public interface Matrix<E> extends Iterable<E>, Cloneable {
     /**

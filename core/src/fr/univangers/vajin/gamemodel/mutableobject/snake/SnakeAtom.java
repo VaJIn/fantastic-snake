@@ -1,8 +1,9 @@
 package fr.univangers.vajin.gamemodel.mutableobject.snake;
 
-import fr.univangers.vrjlpv.snakerpg.gamemodel.Position;
-import fr.univangers.vrjlpv.snakerpg.gamemodel.mutableobject.MovingMutableObject;
-import fr.univangers.vrjlpv.snakerpg.gamemodel.mutableobject.MutableObjectAtom;
+
+import fr.univangers.vajin.gamemodel.Position;
+import fr.univangers.vajin.gamemodel.mutableobject.MovingMutableObject;
+import fr.univangers.vajin.gamemodel.mutableobject.MutableObjectAtom;
 
 public interface SnakeAtom extends MutableObjectAtom, MovingMutableObject {
     Position getPosition();
