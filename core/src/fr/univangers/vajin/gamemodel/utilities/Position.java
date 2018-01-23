@@ -1,12 +1,12 @@
-package fr.univangers.vajin.gamemodel;
+package fr.univangers.vajin.gamemodel.utilities;
 
 
 /**
  * Une position, caractérisée par ses coordonnées sur l'axe x et y.
  */
 public class Position {
-    private int x = 0;
-    private int y = 0;
+    private int x;
+    private int y;
 
     public Position(int x, int y) {
         this.x = x;
@@ -22,14 +22,6 @@ public class Position {
     }
 
     /**
-     * Setter for the X coordiantes.
-     * @param x the new value for X.
-     */
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    /**
      * Getter for the Y coordinate.
      * @return the value of the y coordinate
      */
@@ -37,18 +29,11 @@ public class Position {
         return y;
     }
 
-    /**
-     * Setter for the Y coordiantes.
-     * @param y the new value for Y.
-     */
-    public void setY(int y) {
-        this.y = y;
-    }
 
     /**
      * Translates this point, at location (x,y), by dx along the x axis and dy along the y axis so that it now represents the Position (x+dx,y+dy).
-     * @param dx the distance to move this point along the X axis
-     * @param dy the distance to move this point along the Y axis
+     * @param dx the distance to computeTick this point along the X axis
+     * @param dy the distance to computeTick this point along the Y axis
      */
     public void translate(int dx, int dy){
         this.x += dx;

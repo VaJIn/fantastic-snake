@@ -1,25 +1,21 @@
-package fr.univangers.vajin.gamemodel.field.impl;
+package fr.univangers.vajin.gamemodel;
 
+public enum FieldUnitEnum implements FieldUnit {
 
-import fr.univangers.vajin.gamemodel.field.FieldUnit;
-
-public enum FieldUnitEnumImpl implements FieldUnit {
-
-    GRASS(true, true, false),
-    ROCK(false, false, true),
-    BARREN_LAND(true, false, false),
-    WATER(false, false, false);
+    WATER(false, false, false),
+    GRASS(true, true, true),
+    BARRENLAND(true, false, true),
+    WALL(false, false, true);
 
     boolean walkable;
     boolean bonusSpawnArea;
     boolean solid;
 
-    FieldUnitEnumImpl(boolean walkable, boolean bonusSpawnArea, boolean solid) {
+    FieldUnitEnum(boolean walkable, boolean bonusSpawnArea, boolean solid) {
         this.walkable = walkable;
         this.bonusSpawnArea = bonusSpawnArea;
         this.solid = solid;
     }
-
 
 
     @Override

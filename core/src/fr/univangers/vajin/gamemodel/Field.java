@@ -1,6 +1,7 @@
-package fr.univangers.vajin.gamemodel.field;
+package fr.univangers.vajin.gamemodel;
 
-import fr.univangers.vajin.gamemodel.Position;
+
+import fr.univangers.vajin.gamemodel.utilities.Position;
 
 public interface Field {
     FieldUnit getFieldUnits(Position position);

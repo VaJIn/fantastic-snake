@@ -1,16 +1,18 @@
 package fr.univangers.vajin.gamemodel.utilities;
 
 
-import fr.univangers.vajin.gamemodel.Position;
-
+/**
+ * An interface for Matrix. A matrix is a two dimensional array.
+ */
 public interface Matrix<E> extends Iterable<E>, Cloneable {
     /**
-     * @return the number of getRowDimension of the matrix
+     *
+     * @return the number of rows in the matrix
      */
     int getRowDimension();
 
     /**
-     * @return the number of getColumnDimension of the matrix
+     * @return the number of columns in the matrix
      */
     int getColumnDimension();
 
@@ -32,13 +34,19 @@ public interface Matrix<E> extends Iterable<E>, Cloneable {
      */
     E get(Position p);
 
-
-    void set(int rowIndex, int columnIndex, E element);
+    /**
+     * Set the elements at index (rowIndex, columnIndex) to e
+     *
+     * @param rowIndex    the row index of the element to set
+     * @param columnIndex the column index of the element to set
+     * @param e           the new element at the position
+     */
+    void set(int rowIndex, int columnIndex, E e);
 
     /**
-     *
-     * @param element
-     * @param p
+     * Set the element at position p (such as p.getX() is the column index and p.getY() the row index) to e
+     * @param p the position of the element to set
+     * @param e the new element at this position
      */
-    void set(E element, Position p);
+    void set(Position p, E e);
 }
