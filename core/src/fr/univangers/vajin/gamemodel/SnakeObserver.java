@@ -1,6 +1,6 @@
 package fr.univangers.vajin.gamemodel;
 
-public interface SnakeObserver extends MutableObjectObserver {
+public interface SnakeObserver extends EntityObserver {
 
     void notifyNewAtom(SnakeAtom atom);
 

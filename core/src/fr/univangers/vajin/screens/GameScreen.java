@@ -11,16 +11,14 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.sun.istack.internal.NotNull;
 import fr.univangers.vajin.IO.TileMapReader;
 import fr.univangers.vajin.SnakeRPG;
 import fr.univangers.vajin.gamemodel.*;
 import fr.univangers.vajin.gamemodel.utilities.Position;
-import fr.univangers.vajin.screens.objectView.SnakeView;
+import fr.univangers.vajin.screens.objectView.EntityView;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class GameScreen implements Screen, GameEngineObserver {
 
@@ -40,7 +38,7 @@ public class GameScreen implements Screen, GameEngineObserver {
 
     BitmapFont font;
 
-    List<Actor> actorList;
+    Map<Integer, EntityView> entityViewMap;
 
     AssetManager assetManager;
 
@@ -60,7 +58,7 @@ public class GameScreen implements Screen, GameEngineObserver {
 
         this.tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
 
-        this.actorList = new ArrayList<>();
+        this.entityViewMap = new TreeMap<>();
 
         float w = Gdx.graphics.getWidth();
         float h = Gdx.graphics.getHeight();
@@ -74,7 +72,7 @@ public class GameScreen implements Screen, GameEngineObserver {
         List<Position> pos = new ArrayList<>();
         Snake dummy = new DummySnake(100, 100, 100, 100, 100, new Position(32, 32));
 
-        actorList.add(new SnakeView(assetManager.get("snake.atlas", TextureAtlas.class), dummy, 16, 16));
+        entityViewMap.put(dummy.getEntityId(), new EntityView(dummy, assetManager.get("snake.atlas", TextureAtlas.class), 16, 16));
 
     }
 
@@ -94,8 +92,8 @@ public class GameScreen implements Screen, GameEngineObserver {
 
         batch.begin();
         font.draw(batch, "FPS: " + Gdx.graphics.getFramesPerSecond(), 10, 20);
-        for (Actor a : actorList) {
-            a.draw(batch, 1);
+        for (Map.Entry<Integer, EntityView> e : entityViewMap.entrySet()) {
+            e.getValue().draw(batch, 1);
         }
         batch.end();
     }
@@ -126,8 +124,13 @@ public class GameScreen implements Screen, GameEngineObserver {
     }
 
     @Override
-    public void notifyNewMutableObject(MutableObject object) {
+    public void notifyNewEntity(Entity object) {
 
+    }
+
+    @Override
+    public void notifyRemovedEntity(Entity entity) {
+        entityViewMap.remove(entity.getEntityId());
     }
 
     @Override

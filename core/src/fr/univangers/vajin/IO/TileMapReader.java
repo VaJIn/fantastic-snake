@@ -1,6 +1,5 @@
 package fr.univangers.vajin.IO;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
@@ -11,13 +10,12 @@ import fr.univangers.vajin.gamemodel.utilities.Matrix;
 import fr.univangers.vajin.gamemodel.utilities.StaticMatrix;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class TileMapReader {
 
     Field field;
-    List<MutableObject> objects;
+    List<Entity> objects;
 
     int mapWidth;
     int mapHeight;
@@ -87,7 +85,6 @@ public class TileMapReader {
                 //END TEMPORATY CODE
 
                 this.field = new StaticField(fieldMatrix);
-
 
             }
         }

@@ -1,8 +1,9 @@
 package fr.univangers.vajin.gamemodel;
 
+import fr.univangers.vajin.gamemodel.utilities.Direction;
 import fr.univangers.vajin.gamemodel.utilities.Position;
 
-public abstract class SnakeAtom implements MutableObjectAtom {
+public abstract class SnakeAtom {
 
     private final int id;
 
@@ -24,7 +25,7 @@ public abstract class SnakeAtom implements MutableObjectAtom {
 
     private Properties properties;
 
-    private boolean redifinesProperties;
+    private boolean redefinesProperties;
 
     private boolean activated;
 
@@ -44,25 +45,22 @@ public abstract class SnakeAtom implements MutableObjectAtom {
         this.activated = activated;
     }
 
-    @Override
     public boolean isBreakable() {
-        if (redifinesProperties || atomTowardsHead == null) {
+        if (redefinesProperties || atomTowardsHead == null) {
             return properties.breakable;
         }
         return atomTowardsHead.isBreakable();
     }
 
-    @Override
     public boolean isVisible() {
-        if (redifinesProperties || atomTowardsHead == null) {
+        if (redefinesProperties || atomTowardsHead == null) {
             return properties.visible;
         }
         return atomTowardsHead.isVisible();
     }
 
-    @Override
     public boolean isSolid() {
-        if (redifinesProperties || atomTowardsHead == null) {
+        if (redefinesProperties || atomTowardsHead == null) {
             return properties.solid;
         }
         return atomTowardsHead.isSolid();
@@ -75,12 +73,12 @@ public abstract class SnakeAtom implements MutableObjectAtom {
 
     protected void redefinesProperties(Properties newProperties) {
         properties = newProperties;
-        redifinesProperties = true;
+        redefinesProperties = true;
     }
 
     protected void setDefaultProperties() {
         properties = null;
-        redifinesProperties = false;
+        redefinesProperties = false;
     }
 
     public SnakeAtom getAtomTowardsHead() {
@@ -91,8 +89,22 @@ public abstract class SnakeAtom implements MutableObjectAtom {
         return atomTowardsTail;
     }
 
-    @Override
     public int getId() {
         return id;
     }
+
+    public String getGraphicKey() {
+        if (this.getAtomTowardsHead() == null) {
+            Direction fromDir = Direction.fromPosition(this.getAtomTowardsTail().getPosition(), this.getPosition());
+            return "head_" + fromDir.toString().toLowerCase();
+        } else if (this.getAtomTowardsTail() == null) {
+            Direction toDir = Direction.fromPosition(this.getPosition(), this.getAtomTowardsHead().getPosition());
+            return "tail_" + toDir.toString().toLowerCase();
+        } else {
+            Direction fromDir = Direction.fromPosition(this.getPosition(), this.getAtomTowardsTail().getPosition());
+            Direction toDir = Direction.fromPosition(this.getPosition(), this.getAtomTowardsHead().getPosition());
+            return fromDir.toString().toLowerCase() + "_" + toDir.toString().toLowerCase();
+        }
+    }
+
 }

@@ -1,6 +1,8 @@
 package fr.univangers.vajin.gamemodel.utilities;
 
 
+import java.awt.*;
+
 /**
  * Une position, caractérisée par ses coordonnées sur l'axe x et y.
  */
@@ -11,6 +13,11 @@ public class Position {
     public Position(int x, int y) {
         this.x = x;
         this.y = y;
+    }
+
+    public Position(Position other) {
+        this.x = other.x;
+        this.y = other.y;
     }
 
     /**
@@ -38,6 +45,23 @@ public class Position {
     public void translate(int dx, int dy){
         this.x += dx;
         this.y += dy;
+    }
+
+    public void moveInDirection(Direction dir, int delta) {
+        switch (dir) {
+            case NORTH:
+                this.y += delta;
+                break;
+            case SOUTH:
+                this.y -= delta;
+                break;
+            case EAST:
+                this.x += delta;
+                break;
+            case WEST:
+                this.x -= delta;
+                break;
+        }
     }
 
     /**

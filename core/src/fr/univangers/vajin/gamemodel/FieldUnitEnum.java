@@ -2,6 +2,7 @@ package fr.univangers.vajin.gamemodel;
 
 public enum FieldUnitEnum implements FieldUnit {
 
+    //FIELD(walkable, bonusSpawnArea, solid)
     WATER(false, false, false),
     GRASS(true, true, true),
     BARRENLAND(true, false, true),
@@ -16,7 +17,6 @@ public enum FieldUnitEnum implements FieldUnit {
         this.bonusSpawnArea = bonusSpawnArea;
         this.solid = solid;
     }
-
 
     @Override
     public boolean isWalkable() {

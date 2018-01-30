@@ -8,7 +8,7 @@ public class DummySnake extends Snake {
 
     List<SnakeAtom> atoms;
 
-    List<MutableObjectObserver> observers;
+    List<EntityObserver> observers;
 
     private class DummySnakeAtom extends SnakeAtom {
 
@@ -56,17 +56,61 @@ public class DummySnake extends Snake {
     }
 
     @Override
+    public void sendAction(int action) {
+        //This is a dummy snake, it can't even receive action !
+        /*
+                       .,,: ,.
+           .-:++++XXXXXX
+         .,:+++XXXXXXXXXXX
+        .++:++XXXXXXXXXX@XX
+       .++:+++XXX+++X+XXXXXXX
+       ,+::+:::.-----++++XXXX
+      .-::+ .-'       .XX@++X@
+      .,:::|      .-.  |+@X+XXM
+       ,:-:| .-'       |+XX+XXM
+       ==-::\    _.    '.X+XXX@
+       -:+:::\          |XXX@X@
+       ..:+++:\  --'   .XXXX@X@M
+         .:+:++'.____.|+XXX@@@@MMM
+           ,-:+:+\     \+X++:+++XXM
+       ____=:++++/      |-,,/     :\
+      . /-.              /,/       ::
+     - |-|              /-/        |;
+    '  |-|             /-:'        |:
+    |  |-|     '      /==/         |:
+   /"\ |/     ;     ,,--/         /.
+  /\  : \__..'    .-'-:/         /:
+ /\   '.--=-'----'.,-:/         /:.
+ |    -,.-==-=----=-=/         /:.
+ |-_     '_-====-=--/         /+|
+|   .      "-,___--'.-       /++.
+|    '.            / /      /:+.
+ .     '..       .'  '._--'\++.
+  '.      '-----'         -/X@|
+    '._   .              -/X@M|
+       '''------._____..-'+MMM|
+        |...,,-,,, '-====:+@MM|
+        */
+    }
+
+    @Override
     public Iterator<SnakeAtom> activatedAtomIterator() {
         return atoms.iterator();
     }
 
     @Override
-    public void computeTick(int tick) {
+    public boolean computeTick(int tick) {
         //This is a dummy snake, it does nothing
+        return false;
     }
 
     @Override
-    public void handleCollisionWith(MutableObject otherObject, Position collisionPosition) {
+    public List<Position> getNewPositions() {
+        return new LinkedList<>();
+    }
+
+    @Override
+    public void handleCollisionWith(Entity otherObject, Position collisionPosition, boolean initiater) {
         //This is a dummy snake
     }
 
@@ -82,8 +126,7 @@ public class DummySnake extends Snake {
         return false;
     }
 
-    @Override
-    public MutableObjectAtom getAtomAt(Position pos) {
+    public SnakeAtom getAtomAt(Position pos) {
         ListIterator<SnakeAtom> it = atoms.listIterator();
         SnakeAtom next = it.next();
         while (it.hasNext() && next.isActivated()) {
@@ -109,13 +152,54 @@ public class DummySnake extends Snake {
         }
     }
 
+
     @Override
-    public void registerObserver(MutableObjectObserver observer) {
+    public void registerObserver(EntityObserver observer) {
         this.observers.add(observer);
     }
 
     @Override
-    public void removeObserver(MutableObjectObserver observer) {
+    public void removeObserver(EntityObserver observer) {
         this.observers.remove(observer);
+    }
+
+    @Override
+    public String getGraphicRessourceKeyForPosition(Position pos) {
+        //TODO
+        return null;
+    }
+
+    @Override
+    public Iterator<EntityTileInfo> getEntityTilesInfosIterator() {
+        return new Iterator<EntityTileInfo>() {
+
+            Iterator<SnakeAtom> it = atoms.iterator();
+
+            @Override
+            public boolean hasNext() {
+                return it.hasNext();
+            }
+
+            @Override
+            public EntityTileInfo next() {
+                SnakeAtom atom = it.next();
+                return new EntityTileInfo() {
+                    @Override
+                    public String getRessourceKey() {
+                        return atom.getGraphicKey();
+                    }
+
+                    @Override
+                    public Position getPosition() {
+                        return atom.getPosition();
+                    }
+
+                    @Override
+                    public int getId() {
+                        return atom.getId();
+                    }
+                };
+            }
+        };
     }
 }

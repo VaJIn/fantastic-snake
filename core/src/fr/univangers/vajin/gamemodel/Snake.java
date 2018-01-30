@@ -6,7 +6,7 @@ import java.util.Iterator;
  * Base class for a snake. Implement method that should not be changed in further implementation.
  * This class should be instanciated with an instance of SnakeFactory.
  */
-public abstract class Snake implements DynamicMutableObject {
+public abstract class Snake extends DynamicEntity {
 
     /**
      * The maximum amount of life point a Snake can have.
@@ -78,6 +78,14 @@ public abstract class Snake implements DynamicMutableObject {
     public abstract int grow(int howMuch);
 
     public abstract int shrink(int howMuch);
+
+
+    public static final int MOVE_LEFT = 0x0000;
+    public static final int MOVE_RIGHT = 0x0001;
+    public static final int MOVE_UP = 0x0002;
+    public static final int MOVE_DOWN = 0x0003;
+
+    public abstract void sendAction(int action);
 
     public abstract Iterator<SnakeAtom> activatedAtomIterator();
 }

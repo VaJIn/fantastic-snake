@@ -16,5 +16,5 @@ public interface FieldMutableObjectRegister {
      * @return an new instance of the mutableObject matching the key if it exists, else null.
      */
     @Nullable
-    MutableObject getMutableObject(@NotNull String key);
+    Entity getMutableObject(@NotNull String key);
 }
