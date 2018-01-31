@@ -20,7 +20,6 @@ public class SimpleSnake extends Snake {
     //An atom A is referenced at the key K such as K.equals(A.getPosition())
     private Multimap<Position, SnakeAtom> atoms;
 
-
     //HEad of the snake
     private SnakeAtom head;
     //Tail of the snake
