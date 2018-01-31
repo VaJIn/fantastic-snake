@@ -1,10 +1,15 @@
 package fr.univangers.vajin.gamemodel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractGameEngine implements GameEngine {
 
     List<GameEngineObserver> observerList;
+
+    protected AbstractGameEngine() {
+        this.observerList = new ArrayList<>();
+    }
 
     @Override
     public void addGameEngineObserver(GameEngineObserver observer) {

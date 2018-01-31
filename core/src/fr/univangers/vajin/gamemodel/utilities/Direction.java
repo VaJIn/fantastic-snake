@@ -30,7 +30,7 @@ public enum Direction {
     }
 
     public static Direction fromPosition(Position src, Position dest) {
-        System.out.println("src :" + src + " dest :" + dest);
+        // System.out.println("src :" + src + " dest :" + dest);
         Direction result = null;
         if (src.getX() == dest.getX()) {
             if (src.getY() == dest.getY()) {
@@ -42,7 +42,7 @@ public enum Direction {
         } else if (src.getY() == dest.getY()) {
             result = src.getX() - dest.getX() < 0 ? EAST : WEST;
         }
-        System.out.println(" -> " + result);
+        // System.out.println(" -> " + result);
         return result;
     }
 

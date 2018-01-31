@@ -35,6 +35,7 @@ public abstract class SnakeAtom {
     protected SnakeAtom(Position position, int id) {
         this.position = position;
         this.id = id;
+        this.activated = true;
     }
 
     public boolean isActivated() {
@@ -94,10 +95,13 @@ public abstract class SnakeAtom {
     }
 
     public String getGraphicKey() {
+        if (!this.isActivated()) {
+            return "";
+        }
         if (this.getAtomTowardsHead() == null) {
             Direction fromDir = Direction.fromPosition(this.getAtomTowardsTail().getPosition(), this.getPosition());
             return "head_" + fromDir.toString().toLowerCase();
-        } else if (this.getAtomTowardsTail() == null) {
+        } else if (this.getAtomTowardsTail() == null || !this.getAtomTowardsTail().isActivated()) {
             Direction toDir = Direction.fromPosition(this.getPosition(), this.getAtomTowardsHead().getPosition());
             return "tail_" + toDir.toString().toLowerCase();
         } else {

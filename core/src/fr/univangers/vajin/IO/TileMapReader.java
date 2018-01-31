@@ -23,8 +23,15 @@ public class TileMapReader {
     int tileHeight;
     int tileWidth;
 
+    TiledMap tiledMap;
+
+    public TiledMap getTiledMap() {
+        return tiledMap;
+    }
+
     public TileMapReader(TiledMap map) {
 
+        this.tiledMap = map;
         this.objects = new ArrayList<>();
 
 
@@ -47,7 +54,8 @@ public class TileMapReader {
         TiledMapTileLayer terrainLayer = (TiledMapTileLayer) map.getLayers().get(GameConstants.TileMap.TERRAIN_LAYER);
 
         if (terrainLayer == null) {
-            System.err.println("NULL TERRAIN LAYER");
+            System.err.println("ERROR TILEDMAP : NO \"terrain\" layer ! Taking first layer as replacement");
+            terrainLayer = (TiledMapTileLayer) map.getLayers().get(0);
         }
 
 
@@ -55,13 +63,14 @@ public class TileMapReader {
         for (int i = 0; i < mapWidth; i++) {
             for (int j = 0; j < mapHeight; j++) {
                 TiledMapTileLayer.Cell cell = terrainLayer.getCell(i, j);
+
                 TiledMapTile tile = cell.getTile();
 
                 MapProperties tileProperties = tile.getProperties();
 
                 String fieldUnitString = tileProperties.get(GameConstants.TileMap.TILE_TYPE, String.class);
 
-                System.out.println("Tile " + i + ", " + j + " -> " + fieldUnitString);
+                //  System.out.println("Tile " + i + ", " + j + " -> " + fieldUnitString);
 
                 if (fieldUnitString == null) {
                     fieldUnitString = "null";

@@ -5,10 +5,7 @@ import com.google.common.collect.MultimapBuilder;
 import fr.univangers.vajin.gamemodel.utilities.Direction;
 import fr.univangers.vajin.gamemodel.utilities.Position;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 /**
  * A simple snake that move, grow and die.
@@ -31,8 +28,6 @@ public class SimpleSnake extends Snake {
 
     private int lastMoveTick;
 
-    private GameEngine engine;
-
     private int leftToGrow;
 
     private List<Position> newPositions;
@@ -47,19 +42,20 @@ public class SimpleSnake extends Snake {
             super(position, towardsTail.getId() + 1);
             this.atomTowardsTail = towardsTail;
             towardsTail.atomTowardsHead = this;
+//            System.out.println("New atom : pos " + position + " id : " + this.getId() +  "TowardTail : " + getAtomTowardsTail().getPosition());
         }
     }
 
-    public SimpleSnake(List<Position> startingPositions, Direction startingDirection, GameEngine engine) {
+    public SimpleSnake(List<Position> startingPositions, Direction startingDirection) {
         super(100, 100, 0, 0, 100);
-
-        this.engine = engine;
 
         this.atoms = MultimapBuilder.hashKeys().arrayListValues().build();
 
         this.direction = startingDirection;
 
-        this.leftToGrow = 0;
+        this.leftToGrow = 10;
+
+        this.lastMoveTick = -1;
 
         Iterator<Position> it = startingPositions.iterator();
 
@@ -72,16 +68,17 @@ public class SimpleSnake extends Snake {
         }
         this.head = last;
         this.size = atoms.size();
+
     }
 
     @Override
-    public int size() {
+    public int getSize() {
         return size;
     }
 
     @Override
     public int grow(int howMuch) {
-        return 0;
+        return (leftToGrow = leftToGrow + howMuch);
     }
 
     @Override
@@ -92,17 +89,11 @@ public class SimpleSnake extends Snake {
     @Override
     public void sendAction(int action) {
         switch (action) {
-            case MOVE_DOWN:
-                direction = Direction.SOUTH;
+            case TURN_LEFT:
+                direction = direction.rotate(false);
                 break;
-            case MOVE_UP:
-                direction = Direction.NORTH;
-                break;
-            case MOVE_LEFT:
-                direction = Direction.WEST;
-                break;
-            case MOVE_RIGHT:
-                direction = Direction.EAST;
+            case TURN_RIGHT:
+                direction = direction.rotate(true);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown action " + action);
@@ -123,8 +114,12 @@ public class SimpleSnake extends Snake {
         newPositions = new ArrayList<>();
         lastComputedTick = tick;
         //TODO Speed / tick formula
-        if (tick - lastMoveTick > 8) {
+        System.out.println("Tick=" + tick + " - lastMoveTick=" + lastMoveTick);
+        if (tick - lastMoveTick > 0) {
             //We move
+
+            System.out.println("[SimpleSnake " + this.getEntityId() + "] Move");
+            lastMoveTick = tick;
 
             Position newPosition = new Position(this.head.getPosition());
             newPosition.moveInDirection(this.direction, 1);
@@ -144,11 +139,12 @@ public class SimpleSnake extends Snake {
 
             //Check if new head position is valid on the board
 
-            if (newPosition.getX() < 0 || newPosition.getX() >= this.engine.getField().getWidth() || newPosition.getY() < 0 || newPosition.getY() >= this.engine.getField().getHeight()) {
+            if (newPosition.getX() < 0 || newPosition.getX() >= this.getEngine().getField().getWidth() || newPosition.getY() < 0 || newPosition.getY() >= this.getEngine().getField().getHeight()) {
                 this.destroy();
             } else {
-                FieldUnit headFieldUnit = this.engine.getField().getFieldUnits(newPosition);
+                FieldUnit headFieldUnit = this.getEngine().getField().getFieldUnits(newPosition);
                 if (!headFieldUnit.isWalkable()) {
+                    System.out.println("\033[31mField " + headFieldUnit + " ! You die\033[0m");
                     this.destroy();
                     return true;
                 }
@@ -156,6 +152,7 @@ public class SimpleSnake extends Snake {
 
             if (leftToGrow > 0) {
                 leftToGrow--;
+                size++;
             } else {
                 //Remove tail
                 tail.setActivated(false);
@@ -191,13 +188,17 @@ public class SimpleSnake extends Snake {
     public void handleCollisionWith(Entity otherObject, Position collisionPosition, boolean isInitater) {
         //EVOLUTION : encapsulate this method into a strategie pattern (power : snake dont die on contact with itself, as an example
 
-        if (isInitater) {
-            //Dead
+        if (isInitater && otherObject.isKiller()) {
             this.setLifePoint(0);
             notifyOfDestruction();
         } else {
             //Do nothing
         }
+    }
+
+    @Override
+    public boolean isKiller() {
+        return true;
     }
 
     @Override
@@ -210,6 +211,7 @@ public class SimpleSnake extends Snake {
     public void destroy() {
         //Dis is death
         this.setLifePoint(0);
+        this.notifyOfDestruction();
     }
 
     @Override
@@ -232,7 +234,7 @@ public class SimpleSnake extends Snake {
 
         @Override
         public boolean hasNext() {
-            return current.getAtomTowardsTail() != null && current.getAtomTowardsTail().isActivated();
+            return current != null && current.isActivated();
         }
 
         @Override
@@ -240,7 +242,7 @@ public class SimpleSnake extends Snake {
             if (current == null) {
                 throw new NoSuchElementException("There is no next element !");
             }
-            return new EntityTileInfo() {
+            EntityTileInfo info = new EntityTileInfo() {
                 final String ressourceKey = current.getGraphicKey();
                 final Position pos = current.getPosition();
                 final int id = current.getId();
@@ -260,6 +262,10 @@ public class SimpleSnake extends Snake {
                     return id;
                 }
             };
+
+            current = current.getAtomTowardsTail();
+
+            return info;
         }
     }
 }

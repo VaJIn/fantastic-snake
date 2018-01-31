@@ -79,7 +79,7 @@ public class StaticMatrix<E> extends AbstractMatrix<E> {
      */
     @Override
     public void set(int rowIndex, int columnIndex, E element) {
-        System.out.println("Set " + rowIndex + ", " + columnIndex + " -> " + element + " (" + (rowIndex * this.columns + columnIndex) + ")");
+        //System.out.println("Set " + rowIndex + ", " + columnIndex + " -> " + element + " (" + (rowIndex * this.columns + columnIndex) + ")");
         this.content.set(rowIndex * this.columns + columnIndex, element);
     }
 

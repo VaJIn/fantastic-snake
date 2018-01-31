@@ -4,7 +4,13 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTile;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import fr.univangers.vajin.GameConstants;
 import fr.univangers.vajin.gamemodel.Entity;
 import fr.univangers.vajin.gamemodel.EntityObserver;
 import fr.univangers.vajin.gamemodel.utilities.Position;
@@ -13,7 +19,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class EntityView extends Actor implements EntityObserver {
+public class EntityView implements EntityObserver {
 
     private Entity entity;
 
@@ -22,9 +28,13 @@ public class EntityView extends Actor implements EntityObserver {
     private int tileWidth;
     private int tileHeight;
 
+    TiledMapTileLayer layer;
+
+    TiledMap map;
+
     private Map<Integer, Sprite> spritesMap;
 
-    public EntityView(Entity entity, TextureAtlas atlas, int tileWidth, int tileHeight) {
+    public EntityView(Entity entity, TextureAtlas atlas, int mapWidth, int mapHeight, int tileWidth, int tileHeight, TiledMap tileMap) {
         this.entity = entity;
         this.atlas = atlas;
         this.tileWidth = tileWidth;
@@ -32,23 +42,28 @@ public class EntityView extends Actor implements EntityObserver {
 
         this.spritesMap = new HashMap<>();
 
-        Iterator<Entity.EntityTileInfo> it = entity.getEntityTilesInfosIterator();
-        while (it.hasNext()) {
-            Entity.EntityTileInfo info = it.next();
-            spritesMap.put(info.getId(), createSprite(info.getPosition(), info.getRessourceKey()));
-        }
-    }
+        this.map = tileMap;
 
-    @Override
-    public void draw(Batch batch, float parentAlpha) {
-        for (Map.Entry<Integer, Sprite> entry : spritesMap.entrySet()) {
-            entry.getValue().draw(batch);
+        this.layer = new TiledMapTileLayer(mapWidth, mapHeight, tileWidth, tileHeight);
+
+        entity.registerObserver(this);
+
+        Iterator<Entity.EntityTileInfo> it = entity.getEntityTilesInfosIterator();
+
+        while (it.hasNext()) {
+            TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
+            Entity.EntityTileInfo info = it.next();
+
+            this.tileChange(info.getPosition(), info.getRessourceKey());
+
         }
+
+        tileMap.getLayers().add(this.layer);
     }
 
     @Override
     public void notifyDestroyed(Entity entity) {
-        //Do nothing
+        layer.setOpacity(0.5f);
     }
 
     @Override
@@ -58,22 +73,37 @@ public class EntityView extends Actor implements EntityObserver {
 
     @Override
     public void notifyChangeAtPosition(Entity entity, Position position, int what) {
-        //Do nothing
+        if (what == Entity.ONE_LESS_COVER_ON_POSITION) {
+            layer.setCell(position.getX(), position.getY(), new TiledMapTileLayer.Cell());
+        }
     }
 
     @Override
     public void notifySpriteChange(int id, Position newPosition, String newResource) {
-        spritesMap.put(id, createSprite(newPosition, newResource));
+        if (newResource.equals("")) {
+            return;
+        }
+        tileChange(newPosition, newResource);
     }
 
-    protected Sprite createSprite(Position pos, String resource) {
-        System.out.println("loading ressource : " + resource);
-        TextureRegion region = atlas.findRegion(resource);
-        Sprite sprite = new Sprite(region);
-        sprite.setPosition(pos.getX() * tileWidth, pos.getY() * tileHeight);
-        sprite.setSize(tileWidth, tileHeight);
-        return sprite;
+    private void tileChange(Position pos, String newRessource) {
+        if (layer.getCell(pos.getX(), pos.getY()) == null) {
+            TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
+            cell.setTile(getTile(newRessource));
+            layer.setCell(pos.getX(), pos.getY(), cell);
+        } else {
+            layer.getCell(pos.getX(), pos.getY()).setTile(getTile(newRessource));
+        }
     }
 
+    private TiledMapTile getTile(String resource) {
+        if (resource.equals("")) {
+            return null;
+        }
+        return new StaticTiledMapTile(this.atlas.findRegion(resource));
+    }
 
+    public void dispose() {
+        this.map.getLayers().remove(this.layer);
+    }
 }

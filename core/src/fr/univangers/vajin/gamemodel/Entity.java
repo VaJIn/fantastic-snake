@@ -18,6 +18,7 @@ public abstract class Entity {
     private final int entityId;
 
     private List<EntityObserver> observers;
+    private GameEngine engine;
 
     protected Entity() {
         this.entityId = nextId++;
@@ -64,6 +65,16 @@ public abstract class Entity {
         this.observers.remove(observer);
     }
 
+    public abstract boolean isKiller();
+
+    public void setEngine(GameEngine engine) {
+        this.engine = engine;
+    }
+
+    protected GameEngine getEngine() {
+        return engine;
+    }
+
     protected void notifyOfDestruction() {
         for (EntityObserver obs : observers) {
             obs.notifyDestroyed(this);
@@ -80,16 +91,20 @@ public abstract class Entity {
     public static final int NOT_COVER_POSITION_ANYMORE = 1;
     public static final int ONE_LESS_COVER_ON_POSITION = 2;
 
-    void notifyChangeAtPosition(Position position, int what) {
+    protected void notifyChangeAtPosition(Position position, int what) {
         for (EntityObserver obs : observers) {
             obs.notifyChangeAtPosition(this, position, what);
         }
     }
 
-    void notifySpriteChange(int id, Position newPosition, String newResource) {
+    protected void notifySpriteChange(int id, Position newPosition, String newResource) {
         for (EntityObserver obs : observers) {
             obs.notifySpriteChange(id, newPosition, newResource);
         }
+    }
+
+    void dispose() {
+        this.observers = new ArrayList<>();
     }
 
 }

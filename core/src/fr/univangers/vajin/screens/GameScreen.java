@@ -1,58 +1,61 @@
 package fr.univangers.vajin.screens;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.sun.istack.internal.NotNull;
+import fr.univangers.vajin.GameConstants;
 import fr.univangers.vajin.IO.TileMapReader;
 import fr.univangers.vajin.SnakeRPG;
 import fr.univangers.vajin.gamemodel.*;
+import fr.univangers.vajin.gamemodel.utilities.Direction;
 import fr.univangers.vajin.gamemodel.utilities.Position;
 import fr.univangers.vajin.screens.objectView.EntityView;
 
 import java.util.*;
 
-public class GameScreen implements Screen, GameEngineObserver {
+public class GameScreen implements Screen, GameEngineObserver, InputProcessor {
 
     final SnakeRPG game;
 
-    TiledMap tiledMap;
+    private TiledMap tiledMap;
 
-    Field field;
+    private Field field;
 
-    GameEngine engine;
+    private GameEngine engine;
 
-    OrthographicCamera camera;
+    private OrthographicCamera camera;
 
-    TiledMapRenderer tiledMapRenderer;
+    private TiledMapRenderer tiledMapRenderer;
 
-    SpriteBatch batch;
+    private SpriteBatch batch;
 
-    BitmapFont font;
+    private BitmapFont font;
 
-    Map<Integer, EntityView> entityViewMap;
+    private Map<Integer, EntityView> entityViewMap;
 
-    AssetManager assetManager;
 
-    public GameScreen(@NotNull SnakeRPG game, @NotNull TiledMap tiledMap, @NotNull AssetManager assetManager, GameEngine engine) {
+    private AssetManager assetManager;
+
+    private long lastTime;
+
+
+    public GameScreen(SnakeRPG game, TileMapReader reader, AssetManager assetManager, GameEngine engine) {
 
         this.game = game;
 
-        this.tiledMap = tiledMap;
+        this.tiledMap = reader.getTiledMap();
 
         this.font = new BitmapFont();
 
         this.batch = new SpriteBatch();
-
-        TileMapReader reader = new TileMapReader(tiledMap);
 
         this.field = reader.getField();
 
@@ -66,14 +69,19 @@ public class GameScreen implements Screen, GameEngineObserver {
         this.camera = new OrthographicCamera();
         //Height is multiplied by aspect ratio
 
-        camera.setToOrtho(true, reader.getMapWidth() * reader.getTileWidth(), reader.getMapHeight() * reader.getTileHeight());
+        camera.setToOrtho(false, reader.getMapWidth() * reader.getTileWidth(), reader.getMapHeight() * reader.getTileHeight());
+
         camera.update();
+        this.engine = engine;
+        System.out.println();
 
-        List<Position> pos = new ArrayList<>();
-        Snake dummy = new DummySnake(100, 100, 100, 100, 100, new Position(32, 32));
+        for (Entity e : this.engine.getEntityList()) {
+            EntityView view = new EntityView(e, assetManager.get(GameConstants.ATLAS_FILENAME, TextureAtlas.class), reader.getMapWidth(), reader.getMapHeight(), reader.getTileWidth(), reader.getTileHeight(), tiledMap);
+            entityViewMap.put(e.getEntityId(), view);
+        }
 
-        entityViewMap.put(dummy.getEntityId(), new EntityView(dummy, assetManager.get("snake.atlas", TextureAtlas.class), 16, 16));
 
+        Gdx.input.setInputProcessor(this);
     }
 
     @Override
@@ -83,18 +91,31 @@ public class GameScreen implements Screen, GameEngineObserver {
 
     @Override
     public void render(float delta) {
+
+        long time = System.currentTimeMillis();
+
+        if (time - lastTime > 1000) {
+            lastTime = time;
+            engine.computeTick();
+        }
+
+
         Gdx.gl.glClearColor(100f / 255f, 100f / 255f, 250f / 255f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         camera.update();
+
         tiledMapRenderer.setView(camera);
         tiledMapRenderer.render();
 
 
         batch.begin();
-        font.draw(batch, "FPS: " + Gdx.graphics.getFramesPerSecond(), 10, 20);
-        for (Map.Entry<Integer, EntityView> e : entityViewMap.entrySet()) {
-            e.getValue().draw(batch, 1);
+        font.draw(batch, "FPS : " + Gdx.graphics.getFramesPerSecond(), 10, 20);
+        font.draw(batch, "Score : " + engine.getPlayerScore(0), Gdx.graphics.getWidth() - 100, Gdx.graphics.getHeight() - 50);
+
+        if (!engine.isGameOver()) {
+            font.draw(batch, "GAME OVER", Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
         }
+
         batch.end();
     }
 
@@ -130,11 +151,66 @@ public class GameScreen implements Screen, GameEngineObserver {
 
     @Override
     public void notifyRemovedEntity(Entity entity) {
+        EntityView view = entityViewMap.get(entity.getEntityId());
+
+        view.dispose();
+
         entityViewMap.remove(entity.getEntityId());
     }
 
     @Override
     public void notifyGameEnd() {
 
+    }
+
+    /* INPUT HANDLING METHOD */
+
+    @Override
+    public boolean keyDown(int keycode) {
+        System.out.println("Key pressed : " + keycode);
+        switch (keycode) {
+            case Input.Keys.A:
+                engine.sendInput(0, Snake.TURN_LEFT);
+                break;
+            case Input.Keys.Z:
+                engine.sendInput(0, Snake.TURN_RIGHT);
+                break;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean keyUp(int keycode) {
+        return false;
+    }
+
+    @Override
+    public boolean keyTyped(char character) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        return false;
+    }
+
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        return false;
+    }
+
+    @Override
+    public boolean scrolled(int amount) {
+        return false;
     }
 }

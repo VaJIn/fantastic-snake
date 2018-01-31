@@ -24,4 +24,6 @@ public class GameConstants {
         public String WEST = "west";
     }
 
+    public static final String ATLAS_FILENAME = "snake.atlas";
+
 }

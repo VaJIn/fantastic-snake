@@ -6,6 +6,11 @@ import java.util.*;
 
 public class DummySnake extends Snake {
 
+    @Override
+    public boolean isKiller() {
+        return true;
+    }
+
     List<SnakeAtom> atoms;
 
     List<EntityObserver> observers;
@@ -41,7 +46,7 @@ public class DummySnake extends Snake {
     }
 
     @Override
-    public int size() {
+    public int getSize() {
         return atoms.size();
     }
 

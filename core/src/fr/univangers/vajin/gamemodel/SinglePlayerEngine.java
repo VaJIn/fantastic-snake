@@ -3,7 +3,9 @@ package fr.univangers.vajin.gamemodel;
 import fr.univangers.vajin.gamemodel.utilities.Position;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 public class SinglePlayerEngine extends AbstractGameEngine implements EntityObserver {
 
@@ -16,22 +18,41 @@ public class SinglePlayerEngine extends AbstractGameEngine implements EntityObse
     boolean ended;
 
     Field field;
+    private List<Entity> toDispose;
 
-    public SinglePlayerEngine(Snake player, List<Entity> entityList, boolean ended, Field field) {
+    public SinglePlayerEngine(Snake player, List<Entity> entityList, Field field) {
         this.player = player;
-        this.entityList = entityList;
-        this.ended = ended;
+        player.setEngine(this);
+        this.entityList = new ArrayList<>(entityList);
+        this.toDispose = new LinkedList<>();
+        this.entityList.add(player);
+        this.ended = false;
         this.field = field;
+
+        for (Entity e : entityList) {
+            e.setEngine(this);
+        }
 
         lastComputedTick = -1;
     }
 
     @Override
+    public boolean isGameOver() {
+        return player.getLifePoint() > 0;
+    }
+
+    @Override
     public void computeTick() {
+
+        if (!toDispose.isEmpty()) {
+            entityList.removeAll(toDispose);
+            toDispose = new LinkedList<>();
+        }
+
         if (!this.ended) {
 
             int tick = lastComputedTick + 1;
-
+            System.out.println("[SinglePlayerEngine] Computing tick " + tick);
             List<DynamicEntity> updatedEntities = new ArrayList<>();
 
             //Call every entity to compute their moves
@@ -67,10 +88,13 @@ public class SinglePlayerEngine extends AbstractGameEngine implements EntityObse
                 this.ended = true;
                 this.notifyOfGameEnd();
             }
+
+            lastComputedTick = tick;
         }
     }
 
-    boolean doesAnEntityCoverPosition(Position position) {
+    @Override
+    public boolean doesAnEntityCoverPosition(Position position) {
         for (Entity e : entityList) {
             if (e.coverPosition(position)) {
                 return true;
@@ -92,6 +116,7 @@ public class SinglePlayerEngine extends AbstractGameEngine implements EntityObse
     @Override
     public void notifyDestroyed(Entity entity) {
         entityList.remove(entity);
+        this.toDispose.add(entity);
     }
 
     @Override
@@ -117,5 +142,14 @@ public class SinglePlayerEngine extends AbstractGameEngine implements EntityObse
 
         this.player.sendAction(input);
 
+    }
+
+    @Override
+    public int getPlayerScore(int playerId) {
+        if (playerId != 0) {
+            throw new IllegalArgumentException("Player " + playerId + " does not exist");
+        }
+
+        return player.getSize();
     }
 }
