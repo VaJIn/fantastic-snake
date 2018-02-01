@@ -1,6 +1,4 @@
 buildscript {
-    
-
     repositories {
         mavenLocal()
         mavenCentral()
@@ -8,7 +6,6 @@ buildscript {
         jcenter()
     }
     dependencies {
-        
 
     }
 }
@@ -52,12 +49,27 @@ project(":desktop") {
 project(":core") {
     apply plugin: "java"
 
-
     dependencies {
+        compile project(":engine")
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         compile "com.badlogicgames.box2dlights:box2dlights:$box2DLightsVersion"
+    }
+}
+
+project(":server"){
+    apply plugin: "java"
+
+    dependencies{
+
+    }
+}
+
+project(":engine"){
+    apply plugin: "java"
+
+    dependencies{
         compile "com.google.guava:guava:23.6-jre"
     }
 }
