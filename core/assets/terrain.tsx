@@ -39,7 +39,11 @@
    <property name="fieldUnit" value="grass"/>
   </properties>
  </tile>
- <tile id="6" type="Stone" terrain="2,2,2,2"/>
+    <tile id="6" type="Stone" terrain="2,2,2,2">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
  <tile id="7" type="Stone" terrain="4,4,4,4">
   <properties>
    <property name="fieldUnit" value="stone"/>
@@ -101,7 +105,11 @@
    <property name="fieldUnit" value="grass"/>
   </properties>
  </tile>
- <tile id="36" type="Stone" terrain="2,2,2,2"/>
+    <tile id="36" type="Stone" terrain="2,2,2,2">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
  <tile id="37" type="Stone" terrain="4,4,4,4">
   <properties>
    <property name="fieldUnit" value="stone"/>
@@ -154,15 +162,56 @@
    <property name="fieldUnit" value="water"/>
   </properties>
  </tile>
- <tile id="66" type="Stone"/>
- <tile id="67" type="Stone"/>
- <tile id="68" type="Stone"/>
- <tile id="69" type="Stone"/>
- <tile id="70" type="Stone"/>
- <tile id="71" type="Sand"/>
- <tile id="72" type="Sand"/>
- <tile id="73" type="Sand"/>
- <tile id="74" type="Sand"/>
+    <tile id="65">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
+    <tile id="66" type="Stone">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
+    <tile id="67" type="Stone">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
+    <tile id="68" type="Stone">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
+    <tile id="69" type="Stone">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
+    <tile id="70" type="Stone">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
+    <tile id="71" type="Sand">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
+    <tile id="72" type="Sand">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
+    <tile id="73" type="Sand">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
+    <tile id="74" type="Sand">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
  <tile id="75" type="Sand"/>
  <tile id="76" type="Dirt"/>
  <tile id="77" type="Dirt"/>
@@ -197,15 +246,56 @@
    <property name="fieldUnit" value="water"/>
   </properties>
  </tile>
- <tile id="96" type="Stone"/>
- <tile id="97" type="Stone"/>
- <tile id="98" type="Stone"/>
- <tile id="99" type="Stone" probability="0.334"/>
- <tile id="100" type="Stone"/>
- <tile id="101" type="Sand"/>
- <tile id="102" type="Sand"/>
- <tile id="103" type="Sand"/>
- <tile id="104" type="Sand" probability="0.334"/>
+    <tile id="95">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
+    <tile id="96" type="Stone">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
+    <tile id="97" type="Stone">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
+    <tile id="98" type="Stone">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
+    <tile id="99" type="Stone" probability="0.334">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
+    <tile id="100" type="Stone">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
+    <tile id="101" type="Sand">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
+    <tile id="102" type="Sand">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
+    <tile id="103" type="Sand">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
+    <tile id="104" type="Sand" probability="0.334">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
  <tile id="105" type="Sand"/>
  <tile id="106" type="Dirt"/>
  <tile id="107" type="Dirt"/>
@@ -242,16 +332,56 @@
    <property name="fieldUnit" value="water"/>
   </properties>
  </tile>
- <tile id="125" terrain="2,2,2,1"/>
- <tile id="126" type="Stone" terrain="2,2,1,2"/>
- <tile id="127" type="Stone" terrain="1,1,1,2"/>
- <tile id="128" type="Stone" terrain="1,1,2,2"/>
- <tile id="129" type="Stone" terrain="1,1,2,1"/>
- <tile id="130" type="Stone" terrain="3,3,3,1"/>
- <tile id="131" type="Sand" terrain="3,3,1,3"/>
- <tile id="132" type="Sand" terrain="1,1,1,3"/>
- <tile id="133" type="Sand" terrain="1,1,3,3"/>
- <tile id="134" type="Sand" terrain="1,1,3,1"/>
+    <tile id="125" terrain="2,2,2,1">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
+    <tile id="126" type="Stone" terrain="2,2,1,2">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
+    <tile id="127" type="Stone" terrain="1,1,1,2">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
+    <tile id="128" type="Stone" terrain="1,1,2,2">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
+    <tile id="129" type="Stone" terrain="1,1,2,1">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
+    <tile id="130" type="Stone" terrain="3,3,3,1">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
+    <tile id="131" type="Sand" terrain="3,3,1,3">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
+    <tile id="132" type="Sand" terrain="1,1,1,3">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
+    <tile id="133" type="Sand" terrain="1,1,3,3">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
+    <tile id="134" type="Sand" terrain="1,1,3,1">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
  <tile id="135" type="Sand"/>
  <tile id="136" type="Dirt"/>
  <tile id="137" type="Dirt"/>
@@ -288,16 +418,56 @@
    <property name="fieldUnit" value="water"/>
   </properties>
  </tile>
- <tile id="155" terrain="2,1,2,2"/>
- <tile id="156" type="Stone" terrain="1,2,2,2"/>
- <tile id="157" type="Stone" terrain="1,2,1,2"/>
- <tile id="158" type="Stone" terrain="2,2,2,2"/>
- <tile id="159" type="Stone" terrain="2,1,2,1"/>
- <tile id="160" terrain="3,1,3,3"/>
- <tile id="161" type="Sand" terrain="1,3,3,3"/>
- <tile id="162" type="Sand" terrain="1,3,1,3"/>
- <tile id="163" type="Sand" terrain="3,3,3,3"/>
- <tile id="164" type="Sand" terrain="3,1,3,1"/>
+    <tile id="155" terrain="2,1,2,2">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
+    <tile id="156" type="Stone" terrain="1,2,2,2">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
+    <tile id="157" type="Stone" terrain="1,2,1,2">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
+    <tile id="158" type="Stone" terrain="2,2,2,2">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
+    <tile id="159" type="Stone" terrain="2,1,2,1">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
+    <tile id="160" terrain="3,1,3,3">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
+    <tile id="161" type="Sand" terrain="1,3,3,3">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
+    <tile id="162" type="Sand" terrain="1,3,1,3">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
+    <tile id="163" type="Sand" terrain="3,3,3,3">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
+    <tile id="164" type="Sand" terrain="3,1,3,1">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
  <tile id="166" type="Dirt"/>
  <tile id="167" type="Dirt"/>
  <tile id="168" type="Dirt"/>
@@ -330,14 +500,56 @@
    <property name="fieldUnit" value="water"/>
   </properties>
  </tile>
- <tile id="186" type="Water"/>
- <tile id="187" type="Water" terrain="1,2,1,1"/>
- <tile id="188" type="Water" terrain="2,2,1,1"/>
- <tile id="189" type="Water" terrain="2,1,1,1"/>
- <tile id="190" type="Water"/>
- <tile id="192" terrain="1,3,1,1"/>
- <tile id="193" terrain="3,3,1,1"/>
- <tile id="194" terrain="3,1,1,1"/>
+    <tile id="185">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
+    <tile id="186" type="Water">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
+    <tile id="187" type="Water" terrain="1,2,1,1">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
+    <tile id="188" type="Water" terrain="2,2,1,1">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
+    <tile id="189" type="Water" terrain="2,1,1,1">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
+    <tile id="190" type="Water">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
+    <tile id="191">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
+    <tile id="192" terrain="1,3,1,1">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
+    <tile id="193" terrain="3,3,1,1">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
+    <tile id="194" terrain="3,1,1,1">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
  <tile id="201" type="Grass"/>
  <tile id="202" type="Grass"/>
  <tile id="203" type="Grass"/>
@@ -368,11 +580,47 @@
    <property name="fieldUnit" value="water"/>
   </properties>
  </tile>
- <tile id="216" type="Water"/>
- <tile id="217" type="Water"/>
- <tile id="218" type="Water"/>
+    <tile id="215">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
+    <tile id="216" type="Water">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
+    <tile id="217" type="Water">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
+    <tile id="218" type="Water">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
  <tile id="219" type="Water"/>
- <tile id="220" type="Water"/>
+    <tile id="220" type="Water">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
+    <tile id="221">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
+    <tile id="222">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
+    <tile id="223">
+        <properties>
+            <property name="fieldUnit" value="barren_land"/>
+        </properties>
+    </tile>
  <tile id="231" type="Grass"/>
  <tile id="232" type="Grass"/>
  <tile id="233" type="Grass"/>
