@@ -1,6 +1,5 @@
 package fr.univangers.vajin.gamemodel.utilities;
 
-import com.sun.istack.internal.NotNull;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -28,7 +27,7 @@ public class StaticMatrix<E> extends AbstractMatrix<E> {
         }
     }
 
-    public StaticMatrix(@NotNull Matrix<E> other) {
+    public StaticMatrix(Matrix<E> other) {
         this.rows = other.getRowDimension();
         this.columns = other.getColumnDimension();
 

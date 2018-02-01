@@ -1,7 +1,5 @@
 package fr.univangers.vajin.gamemodel;
 
-import com.sun.istack.internal.NotNull;
-import com.sun.istack.internal.Nullable;
 import fr.univangers.vajin.gamemodel.utilities.Position;
 
 import java.util.ArrayList;
@@ -42,7 +40,7 @@ public abstract class Entity {
      * @param pos the position to evaluate.
      * @return true if the object has an atom on the given position, else false.
      */
-    public abstract boolean coverPosition(@NotNull Position pos);
+    public abstract boolean coverPosition(Position pos);
 
     public abstract void handleCollisionWith(Entity otherObject, Position collisionPosition, boolean isInitater);
 
