@@ -1,8 +1,5 @@
 package fr.univangers.vajin.gamemodel;
 
-import com.sun.xml.internal.ws.api.pipe.Engine;
-import fr.univangers.vajin.GameConstants;
-
 import java.util.Iterator;
 
 /**
