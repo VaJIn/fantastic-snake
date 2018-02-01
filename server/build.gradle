@@ -5,4 +5,5 @@ sourceCompatibility = 1.8
 
 sourceSets.main.java.srcDirs = [ "src/" ]
 
+project.ext.mainClassName = "fr.univangers.vajin.server.ServerLauncher"
 
