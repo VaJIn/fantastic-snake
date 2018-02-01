@@ -94,7 +94,7 @@ public class GameScreen implements Screen, GameEngineObserver, InputProcessor {
 
         long time = System.currentTimeMillis();
 
-        if (time - lastTime > 1000) {
+        if (time - lastTime > 1000 / GameConstants.TICKRATE) {
             lastTime = time;
             engine.computeTick();
         }

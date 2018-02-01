@@ -2,10 +2,14 @@ package fr.univangers.vajin.gamemodel;
 
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
+import fr.univangers.vajin.GameConstants;
 import fr.univangers.vajin.gamemodel.utilities.Direction;
 import fr.univangers.vajin.gamemodel.utilities.Position;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * A simple snake that move, grow and die.
@@ -22,9 +26,9 @@ public class SimpleSnake extends Snake {
     //Tail of the snake
     private SnakeAtom tail;
 
-    private Direction direction;
+    private Direction currentDirection;
 
-    private int lastComputedTick;
+    private Direction nextDirection;
 
     private int lastMoveTick;
 
@@ -47,13 +51,14 @@ public class SimpleSnake extends Snake {
     }
 
     public SimpleSnake(List<Position> startingPositions, Direction startingDirection) {
-        super(100, 100, 0, 0, 100);
+        super(100, 100, 0, 0, 2);
 
         this.atoms = MultimapBuilder.hashKeys().arrayListValues().build();
 
-        this.direction = startingDirection;
+        this.currentDirection = startingDirection;
+        this.nextDirection = startingDirection;
 
-        this.leftToGrow = 10;
+        this.leftToGrow = 0;
 
         this.lastMoveTick = -1;
 
@@ -90,10 +95,10 @@ public class SimpleSnake extends Snake {
     public void sendAction(int action) {
         switch (action) {
             case TURN_LEFT:
-                direction = direction.rotate(false);
+                nextDirection = currentDirection.rotate(false);
                 break;
             case TURN_RIGHT:
-                direction = direction.rotate(true);
+                nextDirection = currentDirection.rotate(true);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown action " + action);
@@ -112,17 +117,22 @@ public class SimpleSnake extends Snake {
             return false;
         }
         newPositions = new ArrayList<>();
-        lastComputedTick = tick;
-        //TODO Speed / tick formula
-        System.out.println("Tick=" + tick + " - lastMoveTick=" + lastMoveTick);
-        if (tick - lastMoveTick > 0) {
+
+        /*
+            Speed in tile/s
+            Tickrate = 32 tick/s;
+            tickrate / speed -> tick/tile
+         */
+        if (tick - lastMoveTick > GameConstants.TICKRATE / this.getSpeed()) {
             //We move
 
             System.out.println("[SimpleSnake " + this.getEntityId() + "] Move");
             lastMoveTick = tick;
 
+            currentDirection = nextDirection;
+
             Position newPosition = new Position(this.head.getPosition());
-            newPosition.moveInDirection(this.direction, 1);
+            newPosition.moveInDirection(this.currentDirection, 1);
             this.newPositions.add(newPosition);
             SnakeAtom newHead = new SimpleSnakeAtom(newPosition, head);
 
@@ -188,9 +198,11 @@ public class SimpleSnake extends Snake {
     public void handleCollisionWith(Entity otherObject, Position collisionPosition, boolean isInitater) {
         //EVOLUTION : encapsulate this method into a strategie pattern (power : snake dont die on contact with itself, as an example
 
+        if (otherObject == this) {
+            return;
+        }
         if (isInitater && otherObject.isKiller()) {
-            this.setLifePoint(0);
-            notifyOfDestruction();
+            this.destroy();
         } else {
             //Do nothing
         }
