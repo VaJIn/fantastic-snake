@@ -1,6 +1,4 @@
-package fr.univangers.vajin.gamemodel;
-
-import fr.univangers.vajin.gamemodel.utilities.Position;
+package fr.univangers.vajin.engine;
 
 public class Food implements Cloneable {
 

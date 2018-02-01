@@ -1,7 +1,5 @@
-package fr.univangers.vajin.gamemodel.utilities;
+package fr.univangers.vajin.engine.utilities;
 
-
-import java.awt.*;
 
 /**
  * Une position, caractérisée par ses coordonnées sur l'axe x et y.

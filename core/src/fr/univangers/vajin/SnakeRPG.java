@@ -10,13 +10,12 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import fr.univangers.vajin.IO.TileMapReader;
-import fr.univangers.vajin.gamemodel.*;
-import fr.univangers.vajin.gamemodel.utilities.Direction;
-import fr.univangers.vajin.gamemodel.utilities.Position;
+import fr.univangers.vajin.engine.*;
+import fr.univangers.vajin.engine.utilities.Direction;
+import fr.univangers.vajin.engine.utilities.Position;
 import fr.univangers.vajin.screens.GameScreen;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 public class SnakeRPG extends Game implements ApplicationListener {

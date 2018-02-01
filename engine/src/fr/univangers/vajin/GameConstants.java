@@ -1,7 +1,5 @@
 package fr.univangers.vajin;
 
-import fr.univangers.vajin.gamemodel.utilities.Position;
-
 public class GameConstants {
 
     public class TileMap {

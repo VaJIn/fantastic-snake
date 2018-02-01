@@ -1,10 +1,10 @@
-package fr.univangers.vajin.gamemodel;
+package fr.univangers.vajin.engine;
 
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
 import fr.univangers.vajin.GameConstants;
-import fr.univangers.vajin.gamemodel.utilities.Direction;
-import fr.univangers.vajin.gamemodel.utilities.Position;
+import fr.univangers.vajin.engine.utilities.Direction;
+import fr.univangers.vajin.engine.utilities.Position;
 
 import java.util.ArrayList;
 import java.util.Iterator;

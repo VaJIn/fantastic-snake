@@ -1,4 +1,4 @@
-package fr.univangers.vajin.gamemodel.utilities;
+package fr.univangers.vajin.engine.utilities;
 
 public enum Direction {
 

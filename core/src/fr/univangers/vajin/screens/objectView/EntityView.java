@@ -1,19 +1,15 @@
 package fr.univangers.vajin.screens.objectView;
 
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import fr.univangers.vajin.GameConstants;
-import fr.univangers.vajin.gamemodel.Entity;
-import fr.univangers.vajin.gamemodel.EntityObserver;
-import fr.univangers.vajin.gamemodel.utilities.Position;
+import fr.univangers.vajin.engine.Entity;
+import fr.univangers.vajin.engine.EntityObserver;
+import fr.univangers.vajin.engine.utilities.Position;
 
 import java.util.HashMap;
 import java.util.Iterator;

@@ -5,9 +5,9 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import fr.univangers.vajin.GameConstants;
-import fr.univangers.vajin.gamemodel.*;
-import fr.univangers.vajin.gamemodel.utilities.Matrix;
-import fr.univangers.vajin.gamemodel.utilities.StaticMatrix;
+import fr.univangers.vajin.engine.*;
+import fr.univangers.vajin.engine.utilities.Matrix;
+import fr.univangers.vajin.engine.utilities.StaticMatrix;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,6 +1,6 @@
-package fr.univangers.vajin.gamemodel;
+package fr.univangers.vajin.engine;
 
-import fr.univangers.vajin.gamemodel.utilities.Position;
+import fr.univangers.vajin.engine.utilities.Position;
 
 import java.util.*;
 

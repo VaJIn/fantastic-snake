@@ -1,4 +1,4 @@
-package fr.univangers.vajin.gamemodel;
+package fr.univangers.vajin.engine;
 
 public interface FoodRegistry {
 

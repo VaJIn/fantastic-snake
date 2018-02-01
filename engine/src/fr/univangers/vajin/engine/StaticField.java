@@ -1,10 +1,8 @@
-package fr.univangers.vajin.gamemodel;
+package fr.univangers.vajin.engine;
 
-import fr.univangers.vajin.gamemodel.Field;
-import fr.univangers.vajin.gamemodel.FieldUnit;
-import fr.univangers.vajin.gamemodel.utilities.Matrix;
-import fr.univangers.vajin.gamemodel.utilities.Position;
-import fr.univangers.vajin.gamemodel.utilities.StaticMatrix;
+import fr.univangers.vajin.engine.utilities.Matrix;
+import fr.univangers.vajin.engine.utilities.Position;
+import fr.univangers.vajin.engine.utilities.StaticMatrix;
 
 public class StaticField implements Field {
 
