@@ -6,10 +6,7 @@ import fr.univangers.vajin.GameConstants;
 import fr.univangers.vajin.engine.utilities.Direction;
 import fr.univangers.vajin.engine.utilities.Position;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 /**
  * A simple snake that move, grow and die.
@@ -26,9 +23,8 @@ public class SimpleSnake extends Snake {
     //Tail of the snake
     private SnakeAtom tail;
 
-    private Direction currentDirection;
-
-    private Direction nextDirection;
+    private Deque<Direction> nextDirections;
+    private Direction lastDirection;
 
     private int lastMoveTick;
 
@@ -55,8 +51,8 @@ public class SimpleSnake extends Snake {
 
         this.atoms = MultimapBuilder.hashKeys().arrayListValues().build();
 
-        this.currentDirection = startingDirection;
-        this.nextDirection = startingDirection;
+        this.nextDirections = new ArrayDeque<>();
+        this.lastDirection = startingDirection;
 
         this.leftToGrow = 0;
 
@@ -95,10 +91,18 @@ public class SimpleSnake extends Snake {
     public void sendAction(int action) {
         switch (action) {
             case TURN_LEFT:
-                nextDirection = currentDirection.rotate(false);
+                if (nextDirections.isEmpty()) {
+                    nextDirections.addLast(lastDirection.rotate(false));
+                } else {
+                    this.nextDirections.addLast(nextDirections.peekLast().rotate(false));
+                }
                 break;
             case TURN_RIGHT:
-                nextDirection = currentDirection.rotate(true);
+                if (nextDirections.isEmpty()) {
+                    nextDirections.addLast(lastDirection.rotate(true));
+                } else {
+                    this.nextDirections.addLast(nextDirections.peekLast().rotate(true));
+                }
                 break;
             default:
                 throw new IllegalArgumentException("Unknown action " + action);
@@ -126,14 +130,32 @@ public class SimpleSnake extends Snake {
         if (tick - lastMoveTick > GameConstants.TICKRATE / this.getSpeed()) {
             //We move
 
-            System.out.println("[SimpleSnake " + this.getEntityId() + "] Move");
             lastMoveTick = tick;
 
-            currentDirection = nextDirection;
+            Direction currentDirection;
+
+            if (nextDirections.isEmpty()) {
+                currentDirection = lastDirection;
+            } else {
+                currentDirection = this.nextDirections.removeFirst();
+                lastDirection = currentDirection;
+            }
+
 
             Position newPosition = new Position(this.head.getPosition());
-            newPosition.moveInDirection(this.currentDirection, 1);
+            newPosition.moveInDirection(currentDirection, 1);
+
+
+            boolean destroyed = false;
+
+            //check if we don't hit ourself
+            if (this.coverPosition(newPosition)) {
+                destroyed = true;
+            }
+
             this.newPositions.add(newPosition);
+
+
             SnakeAtom newHead = new SimpleSnakeAtom(newPosition, head);
 
             notifySpriteChange(head.getId(), head.getPosition(), head.getGraphicKey());
@@ -155,10 +177,10 @@ public class SimpleSnake extends Snake {
                 FieldUnit headFieldUnit = this.getEngine().getField().getFieldUnits(newPosition);
                 if (!headFieldUnit.isWalkable()) {
                     System.out.println("\033[31mField " + headFieldUnit + " ! You die\033[0m");
-                    this.destroy();
-                    return true;
+                    destroyed = true;
                 }
             }
+
 
             if (leftToGrow > 0) {
                 leftToGrow--;
@@ -171,6 +193,11 @@ public class SimpleSnake extends Snake {
                 tail = tail.getAtomTowardsHead();
                 notifySpriteChange(tail.getId(), tail.getPosition(), tail.getGraphicKey());
             }
+
+            if (destroyed) {
+                this.destroy();
+            }
+
             return true;
         } else {
             return false;
@@ -197,10 +224,6 @@ public class SimpleSnake extends Snake {
     @Override
     public void handleCollisionWith(Entity otherObject, Position collisionPosition, boolean isInitater) {
         //EVOLUTION : encapsulate this method into a strategie pattern (power : snake dont die on contact with itself, as an example
-
-        if (otherObject == this) {
-            return;
-        }
         if (isInitater && otherObject.isKiller()) {
             this.destroy();
         } else {

@@ -30,7 +30,6 @@ public class FoodSpawner extends DynamicEntity
 
     @Override
     public boolean computeTick(int tick) {
-        System.out.println(spawnedFood.size());
         boolean trySpawn = spawnedFood.size() < minSimultaneousFood || spawnedFood.size() < maxSimultaneousFood;
         this.newPositions = new ArrayList<>(1);
         if (trySpawn) {

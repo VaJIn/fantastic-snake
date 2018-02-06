@@ -51,7 +51,6 @@ public class SinglePlayerEngine extends AbstractGameEngine implements EntityObse
         if (!this.ended) {
 
             int tick = lastComputedTick + 1;
-            System.out.println("[SinglePlayerEngine] Computing tick " + tick);
             List<DynamicEntity> updatedEntities = new ArrayList<>();
 
             //Call every entity to compute their moves
@@ -74,6 +73,7 @@ public class SinglePlayerEngine extends AbstractGameEngine implements EntityObse
                         if (de != ce) {
                             if (ce.coverPosition(p)) {
                                 //If there is a collision we let the entity handle it
+                                System.out.println("[Tick " + tick + "] Collision at " + p);
                                 de.handleCollisionWith(ce, p, true);
                                 ce.handleCollisionWith(de, p, false);
                             }
