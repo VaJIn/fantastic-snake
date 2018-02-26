@@ -1,4 +1,4 @@
-package fr.univangers.vajin.engine;
+package fr.univangers.vajin.engine.entities.snake;
 
 import fr.univangers.vajin.engine.utilities.Direction;
 import fr.univangers.vajin.engine.utilities.Position;

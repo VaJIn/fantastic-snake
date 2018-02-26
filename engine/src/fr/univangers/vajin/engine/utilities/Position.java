@@ -62,6 +62,32 @@ public class Position {
         }
     }
 
+    public Position nextPosition(Direction dir, int delta){
+
+        int x = this.x;
+        int y = this.y;
+
+        switch (dir) {
+            case NORTH:
+                y += delta;
+                break;
+            case SOUTH:
+                y -= delta;
+                break;
+            case EAST:
+                x += delta;
+                break;
+            case WEST:
+                x -= delta;
+                break;
+            default:
+                System.out.println("erreur");
+                break;
+        }
+
+        return new Position(x, y);
+    }
+
     /**
      * Returns a string representation of this position and its location in the (x,y) coordinate space. This method is intended to be used only for debugging purposes, and the unitMatrix and format of the returned string may vary between implementations. The returned string may be empty but may not be null.
      * @return a string representation of this Position

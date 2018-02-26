@@ -6,9 +6,8 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
-import fr.univangers.vajin.GameConstants;
-import fr.univangers.vajin.engine.Entity;
-import fr.univangers.vajin.engine.EntityObserver;
+import fr.univangers.vajin.engine.entities.Entity;
+import fr.univangers.vajin.engine.entities.EntityObserver;
 import fr.univangers.vajin.engine.utilities.Position;
 
 import java.util.HashMap;

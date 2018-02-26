@@ -1,5 +1,7 @@
-package fr.univangers.vajin.engine;
+package fr.univangers.vajin.engine.field;
 
+import fr.univangers.vajin.engine.field.Field;
+import fr.univangers.vajin.engine.field.FieldUnit;
 import fr.univangers.vajin.engine.utilities.Matrix;
 import fr.univangers.vajin.engine.utilities.Position;
 import fr.univangers.vajin.engine.utilities.StaticMatrix;

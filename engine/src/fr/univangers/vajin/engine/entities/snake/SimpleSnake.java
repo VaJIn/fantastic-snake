@@ -1,8 +1,10 @@
-package fr.univangers.vajin.engine;
+package fr.univangers.vajin.engine.entities.snake;
 
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
 import fr.univangers.vajin.GameConstants;
+import fr.univangers.vajin.engine.entities.Entity;
+import fr.univangers.vajin.engine.field.FieldUnit;
 import fr.univangers.vajin.engine.utilities.Direction;
 import fr.univangers.vajin.engine.utilities.Position;
 
@@ -23,8 +25,8 @@ public class SimpleSnake extends Snake {
     //Tail of the snake
     private SnakeAtom tail;
 
+    private Direction currentDirection;
     private Deque<Direction> nextDirections;
-    private Direction lastDirection;
 
     private int lastMoveTick;
 
@@ -42,17 +44,20 @@ public class SimpleSnake extends Snake {
             super(position, towardsTail.getId() + 1);
             this.atomTowardsTail = towardsTail;
             towardsTail.atomTowardsHead = this;
-//            System.out.println("New atom : pos " + position + " id : " + this.getId() +  "TowardTail : " + getAtomTowardsTail().getPosition());
         }
     }
 
-    public SimpleSnake(List<Position> startingPositions, Direction startingDirection) {
-        super(100, 100, 0, 0, 2);
+    public SimpleSnake() {
+        super(100, 100, 0, 0, 10);
 
         this.atoms = MultimapBuilder.hashKeys().arrayListValues().build();
 
-        this.nextDirections = new ArrayDeque<>();
-        this.lastDirection = startingDirection;
+
+    }
+
+    public void setInitialPosition(List<Position> startingPositions, Direction startingDirection){
+        this.currentDirection = startingDirection;
+        this.nextDirections = new LinkedList<>();
 
         this.leftToGrow = 0;
 
@@ -89,21 +94,22 @@ public class SimpleSnake extends Snake {
 
     @Override
     public void sendAction(int action) {
-        switch (action) {
-            case TURN_LEFT:
-                if (nextDirections.isEmpty()) {
-                    nextDirections.addLast(lastDirection.rotate(false));
-                } else {
-                    this.nextDirections.addLast(nextDirections.peekLast().rotate(false));
-                }
+
+        switch (action){
+
+            case GO_SOUTH:
+                this.nextDirections.addLast(Direction.SOUTH);
                 break;
-            case TURN_RIGHT:
-                if (nextDirections.isEmpty()) {
-                    nextDirections.addLast(lastDirection.rotate(true));
-                } else {
-                    this.nextDirections.addLast(nextDirections.peekLast().rotate(true));
-                }
+            case GO_WEST:
+                this.nextDirections.addLast(Direction.WEST);
                 break;
+            case GO_NORTH:
+                this.nextDirections.addLast(Direction.NORTH);
+                break;
+            case GO_EAST:
+                this.nextDirections.addLast(Direction.EAST);
+                break;
+
             default:
                 throw new IllegalArgumentException("Unknown action " + action);
         }
@@ -132,13 +138,31 @@ public class SimpleSnake extends Snake {
 
             lastMoveTick = tick;
 
-            Direction currentDirection;
+            //Determining the next direction
+            if (!this.nextDirections.isEmpty()){
+                switch (this.nextDirections.poll()){
 
-            if (nextDirections.isEmpty()) {
-                currentDirection = lastDirection;
-            } else {
-                currentDirection = this.nextDirections.removeFirst();
-                lastDirection = currentDirection;
+                    case EAST:
+                        if (currentDirection!=Direction.WEST){
+                            currentDirection = Direction.EAST;
+                        }
+                        break;
+                    case SOUTH:
+                        if (currentDirection!=Direction.NORTH){
+                            currentDirection = Direction.SOUTH;
+                        }
+                        break;
+                    case WEST:
+                        if (currentDirection!=Direction.EAST){
+                            currentDirection = Direction.WEST;
+                        }
+                        break;
+                    case NORTH:
+                        if (currentDirection!=Direction.SOUTH){
+                            currentDirection = Direction.NORTH;
+                        }
+                        break;
+                }
             }
 
 
@@ -149,12 +173,11 @@ public class SimpleSnake extends Snake {
             boolean destroyed = false;
 
             //check if we don't hit ourself
-            if (this.coverPosition(newPosition)) {
+            if (this.coversPosition(newPosition)) {
                 destroyed = true;
             }
 
             this.newPositions.add(newPosition);
-
 
             SnakeAtom newHead = new SimpleSnakeAtom(newPosition, head);
 
@@ -189,7 +212,7 @@ public class SimpleSnake extends Snake {
                 //Remove tail
                 tail.setActivated(false);
                 notifySpriteChange(tail.getId(), tail.getPosition(), tail.getGraphicKey());
-                notifyChangeAtPosition(tail.getPosition(), ONE_LESS_COVER_ON_POSITION);
+                notifyChangeAtPosition(tail.getPosition(), Entity.ONE_LESS_COVER_ON_POSITION);
                 tail = tail.getAtomTowardsHead();
                 notifySpriteChange(tail.getId(), tail.getPosition(), tail.getGraphicKey());
             }
@@ -210,7 +233,7 @@ public class SimpleSnake extends Snake {
     }
 
     @Override
-    public boolean coverPosition(Position pos) {
+    public boolean coversPosition(Position pos) {
         //For all atoms at position pos
         for (SnakeAtom sk : atoms.get(pos)) { //At worse the multimap return an empty collection, so no risk of NullPointerException
             if (sk.isActivated()) {
@@ -233,7 +256,7 @@ public class SimpleSnake extends Snake {
 
     @Override
     public boolean isKiller() {
-        return true;
+        return this.getLifePoint() > 0;
     }
 
     @Override
@@ -255,11 +278,11 @@ public class SimpleSnake extends Snake {
     }
 
     @Override
-    public Iterator<EntityTileInfo> getEntityTilesInfosIterator() {
+    public Iterator<Entity.EntityTileInfo> getEntityTilesInfosIterator() {
         return new EntityTileInfoInterator(head);
     }
 
-    private class EntityTileInfoInterator implements Iterator<EntityTileInfo> {
+    private class EntityTileInfoInterator implements Iterator<Entity.EntityTileInfo> {
 
         SnakeAtom current;
 
@@ -273,11 +296,11 @@ public class SimpleSnake extends Snake {
         }
 
         @Override
-        public EntityTileInfo next() {
+        public Entity.EntityTileInfo next() {
             if (current == null) {
                 throw new NoSuchElementException("There is no next element !");
             }
-            EntityTileInfo info = new EntityTileInfo() {
+            Entity.EntityTileInfo info = new Entity.EntityTileInfo() {
                 final String ressourceKey = current.getGraphicKey();
                 final Position pos = current.getPosition();
                 final int id = current.getId();

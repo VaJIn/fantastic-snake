@@ -1,5 +1,6 @@
-package fr.univangers.vajin.engine;
+package fr.univangers.vajin.engine.entities;
 
+import fr.univangers.vajin.engine.entities.Entity;
 import fr.univangers.vajin.engine.utilities.Position;
 
 public interface EntityObserver {

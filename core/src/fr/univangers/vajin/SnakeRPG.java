@@ -11,12 +11,8 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import fr.univangers.vajin.IO.TileMapReader;
 import fr.univangers.vajin.engine.*;
-import fr.univangers.vajin.engine.utilities.Direction;
-import fr.univangers.vajin.engine.utilities.Position;
+import fr.univangers.vajin.engine.entities.snake.SimpleSnake;
 import fr.univangers.vajin.screens.GameScreen;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class SnakeRPG extends Game implements ApplicationListener {
 	SpriteBatch batch;
@@ -42,19 +38,21 @@ public class SnakeRPG extends Game implements ApplicationListener {
 
         TileMapReader reader = new TileMapReader(assetManager.get(mapFileName));
 
-        List<Position> pos = new ArrayList<>();
-        pos.add(new Position(15, 30));
-        pos.add(new Position(16, 30));
-        pos.add(new Position(17, 30));
 
-        Snake snake = new SimpleSnake(pos, Direction.EAST);
+        EngineBuilder classicEngineBuilder = new EngineBuilder(reader.getField(), 1);
+        classicEngineBuilder.addSnake(0, new SimpleSnake());
+        classicEngineBuilder.addSnake(1, new SimpleSnake());
+        classicEngineBuilder.addSnake(2, new SimpleSnake());
 
-        List<Entity> entities = new ArrayList<>();
-        entities.add(new FoodSpawner(1, 3, new SimpleFoodRegistryImpl()));
+        try {
+            GameEngine classicEngine = classicEngineBuilder.build();
+            this.setScreen(new GameScreen(this, reader, assetManager, classicEngine));
+        } catch (WrongPlayersNumberException e) {
+            e.printStackTrace();
+        }
 
-        GameEngine engine = new SinglePlayerEngine(snake, entities, reader.getField());
 
-        this.setScreen(new GameScreen(this, reader, assetManager, engine));
+
     }
 
 	@Override

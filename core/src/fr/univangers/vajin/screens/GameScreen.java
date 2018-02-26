@@ -14,8 +14,9 @@ import fr.univangers.vajin.GameConstants;
 import fr.univangers.vajin.IO.TileMapReader;
 import fr.univangers.vajin.SnakeRPG;
 import fr.univangers.vajin.engine.*;
-import fr.univangers.vajin.engine.utilities.Direction;
-import fr.univangers.vajin.engine.utilities.Position;
+import fr.univangers.vajin.engine.entities.Entity;
+import fr.univangers.vajin.engine.entities.snake.Snake;
+import fr.univangers.vajin.engine.field.Field;
 import fr.univangers.vajin.screens.objectView.EntityView;
 
 import java.util.*;
@@ -111,7 +112,7 @@ public class GameScreen implements Screen, GameEngineObserver, InputProcessor {
         font.draw(batch, "FPS : " + Gdx.graphics.getFramesPerSecond(), 10, 20);
         font.draw(batch, "Score : " + engine.getPlayerScore(0), Gdx.graphics.getWidth() - 100, Gdx.graphics.getHeight() - 50);
 
-        if (!engine.isGameOver()) {
+        if (engine.isGameOver()) {
             font.draw(batch, "GAME OVER", Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
         }
 
@@ -168,11 +169,31 @@ public class GameScreen implements Screen, GameEngineObserver, InputProcessor {
     public boolean keyDown(int keycode) {
         System.out.println("Key pressed : " + keycode);
         switch (keycode) {
-            case Input.Keys.A:
-                engine.sendInput(0, Snake.TURN_LEFT);
-                break;
             case Input.Keys.Z:
-                engine.sendInput(0, Snake.TURN_RIGHT);
+                engine.sendInput(0, Snake.GO_NORTH);
+                break;
+            case Input.Keys.Q:
+                engine.sendInput(0, Snake.GO_WEST);
+                break;
+            case Input.Keys.S:
+                engine.sendInput(0, Snake.GO_SOUTH);
+                break;
+            case Input.Keys.D:
+                engine.sendInput(0, Snake.GO_EAST);
+                break;
+
+
+            case Input.Keys.UP:
+                engine.sendInput(1, Snake.GO_NORTH);
+                break;
+            case Input.Keys.LEFT:
+                engine.sendInput(1, Snake.GO_WEST);
+                break;
+            case Input.Keys.DOWN:
+                engine.sendInput(1, Snake.GO_SOUTH);
+                break;
+            case Input.Keys.RIGHT:
+                engine.sendInput(1, Snake.GO_EAST);
                 break;
         }
         return false;

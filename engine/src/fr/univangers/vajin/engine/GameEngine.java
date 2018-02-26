@@ -1,5 +1,7 @@
 package fr.univangers.vajin.engine;
 
+import fr.univangers.vajin.engine.entities.Entity;
+import fr.univangers.vajin.engine.field.Field;
 import fr.univangers.vajin.engine.utilities.Position;
 
 import java.util.List;

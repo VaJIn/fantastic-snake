@@ -1,6 +1,12 @@
-package fr.univangers.vajin.engine;
+package fr.univangers.vajin.engine.entities.snake;
+
+import fr.univangers.vajin.engine.GameEngine;
+import fr.univangers.vajin.engine.entities.DynamicEntity;
+import fr.univangers.vajin.engine.utilities.Direction;
+import fr.univangers.vajin.engine.utilities.Position;
 
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Base class for a snake. Implement method that should not be changed in further implementation.
@@ -37,6 +43,12 @@ public abstract class Snake extends DynamicEntity {
         this.resistance = resistance;
         this.luckFactor = luckFactor;
         this.speed = speed;
+    }
+
+
+    public void setInitialPosition(List<Position> startingPositions, Direction startingDirection){
+
+
     }
 
     public int getMaxLifePoint() {
@@ -82,8 +94,10 @@ public abstract class Snake extends DynamicEntity {
     public abstract int shrink(int howMuch);
 
 
-    public static final int TURN_LEFT = 0x0000;
-    public static final int TURN_RIGHT = 0x0001;
+    public static final int GO_NORTH = 0x0000;
+    public static final int GO_EAST = 0x0001;
+    public static final int GO_SOUTH = 0x0002;
+    public static final int GO_WEST = 0x0003;
 
     public abstract void sendAction(int action);
 

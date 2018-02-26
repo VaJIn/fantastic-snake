@@ -1,5 +1,6 @@
-package fr.univangers.vajin.engine;
+package fr.univangers.vajin.engine.entities;
 
+import fr.univangers.vajin.engine.GameEngine;
 import fr.univangers.vajin.engine.utilities.Position;
 
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ public abstract class Entity {
      * @param pos the position to evaluate.
      * @return true if the object has an atom on the given position, else false.
      */
-    public abstract boolean coverPosition(Position pos);
+    public abstract boolean coversPosition(Position pos);
 
     public abstract void handleCollisionWith(Entity otherObject, Position collisionPosition, boolean isInitater);
 

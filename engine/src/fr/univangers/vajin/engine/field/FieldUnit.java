@@ -1,4 +1,4 @@
-package fr.univangers.vajin.engine;
+package fr.univangers.vajin.engine.field;
 
 public interface FieldUnit {
     boolean isWalkable();

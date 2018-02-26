@@ -1,4 +1,6 @@
-package fr.univangers.vajin.engine;
+package fr.univangers.vajin.engine.entities.snake;
+
+import fr.univangers.vajin.engine.entities.EntityObserver;
 
 public interface SnakeObserver extends EntityObserver {
 

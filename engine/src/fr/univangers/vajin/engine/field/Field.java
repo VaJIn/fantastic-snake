@@ -1,4 +1,4 @@
-package fr.univangers.vajin.engine;
+package fr.univangers.vajin.engine.field;
 
 
 import fr.univangers.vajin.engine.utilities.Position;

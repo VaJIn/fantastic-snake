@@ -1,5 +1,7 @@
-package fr.univangers.vajin.engine;
+package fr.univangers.vajin.engine.entities.snake;
 
+import fr.univangers.vajin.engine.entities.Entity;
+import fr.univangers.vajin.engine.entities.EntityObserver;
 import fr.univangers.vajin.engine.utilities.Position;
 
 import java.util.*;
@@ -120,7 +122,7 @@ public class DummySnake extends Snake {
     }
 
     @Override
-    public boolean coverPosition(Position pos) {
+    public boolean coversPosition(Position pos) {
         ListIterator<SnakeAtom> it = atoms.listIterator();
         SnakeAtom next = it.next();
         while (it.hasNext() && next.isActivated()) {
@@ -175,8 +177,8 @@ public class DummySnake extends Snake {
     }
 
     @Override
-    public Iterator<EntityTileInfo> getEntityTilesInfosIterator() {
-        return new Iterator<EntityTileInfo>() {
+    public Iterator<Entity.EntityTileInfo> getEntityTilesInfosIterator() {
+        return new Iterator<Entity.EntityTileInfo>() {
 
             Iterator<SnakeAtom> it = atoms.iterator();
 
@@ -186,9 +188,9 @@ public class DummySnake extends Snake {
             }
 
             @Override
-            public EntityTileInfo next() {
+            public Entity.EntityTileInfo next() {
                 SnakeAtom atom = it.next();
-                return new EntityTileInfo() {
+                return new Entity.EntityTileInfo() {
                     @Override
                     public String getRessourceKey() {
                         return atom.getGraphicKey();

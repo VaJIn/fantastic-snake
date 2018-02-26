@@ -1,5 +1,8 @@
-package fr.univangers.vajin.engine;
+package fr.univangers.vajin.engine.entities.spawnables.food;
 
+import fr.univangers.vajin.engine.entities.DynamicEntity;
+import fr.univangers.vajin.engine.entities.Entity;
+import fr.univangers.vajin.engine.entities.snake.Snake;
 import fr.univangers.vajin.engine.utilities.Position;
 
 import java.util.*;
@@ -8,7 +11,7 @@ public class FoodSpawner extends DynamicEntity
 
 {
 
-    private final FoodRegistry registry;
+    private final FoodRegistryImpl registry;
     private Map<Position, Food> spawnedFood;
 
     private final int maxSimultaneousFood;
@@ -19,7 +22,7 @@ public class FoodSpawner extends DynamicEntity
     private Random randomGenerator;
     private List<Position> newPositions;
 
-    public FoodSpawner(int maxFood, int minFood, FoodRegistry registry) {
+    public FoodSpawner(int minFood, int maxFood, FoodRegistryImpl registry) {
         this.maxSimultaneousFood = maxFood;
         this.minSimultaneousFood = minFood;
 
@@ -47,10 +50,10 @@ public class FoodSpawner extends DynamicEntity
         if (pos == null) {
             return null;
         } else {
-            Food newFood = registry.getRandomFood();
+            Food newFood = registry.getRandom();
             this.spawnedFood.put(pos, newFood);
             this.notifyChangeAtPosition(pos, Entity.NEW_COVERED_POSITION);
-            this.notifySpriteChange(hashCode(), pos, newFood.getRessourceKey());
+            this.notifySpriteChange(hashCode(), pos, newFood.getResourceKey());
             return pos;
         }
     }
@@ -82,7 +85,7 @@ public class FoodSpawner extends DynamicEntity
     }
 
     @Override
-    public boolean coverPosition(Position pos) {
+    public boolean coversPosition(Position pos) {
         return spawnedFood.containsKey(pos);
     }
 
@@ -125,7 +128,7 @@ public class FoodSpawner extends DynamicEntity
         if (f == null) {
             return "";
         } else {
-            return f.getRessourceKey();
+            return f.getResourceKey();
         }
     }
 
@@ -149,7 +152,7 @@ public class FoodSpawner extends DynamicEntity
 
                     @Override
                     public String getRessourceKey() {
-                        return f.getRessourceKey();
+                        return f.getResourceKey();
                     }
 
                     @Override

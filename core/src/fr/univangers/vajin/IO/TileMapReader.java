@@ -5,7 +5,11 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import fr.univangers.vajin.GameConstants;
-import fr.univangers.vajin.engine.*;
+import fr.univangers.vajin.engine.entities.Entity;
+import fr.univangers.vajin.engine.field.Field;
+import fr.univangers.vajin.engine.field.FieldUnit;
+import fr.univangers.vajin.engine.field.FieldUnitEnum;
+import fr.univangers.vajin.engine.field.StaticField;
 import fr.univangers.vajin.engine.utilities.Matrix;
 import fr.univangers.vajin.engine.utilities.StaticMatrix;
 
@@ -14,16 +18,16 @@ import java.util.List;
 
 public class TileMapReader {
 
-    Field field;
-    List<Entity> objects;
+    private Field field;
+    private List<Entity> objects;
 
-    int mapWidth;
-    int mapHeight;
+    private int mapWidth;
+    private int mapHeight;
 
-    int tileHeight;
-    int tileWidth;
+    private int tileHeight;
+    private int tileWidth;
 
-    TiledMap tiledMap;
+    private TiledMap tiledMap;
 
     public TiledMap getTiledMap() {
         return tiledMap;

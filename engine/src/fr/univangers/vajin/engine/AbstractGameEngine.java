@@ -1,5 +1,7 @@
 package fr.univangers.vajin.engine;
 
+import fr.univangers.vajin.engine.entities.Entity;
+
 import java.util.ArrayList;
 import java.util.List;
 
