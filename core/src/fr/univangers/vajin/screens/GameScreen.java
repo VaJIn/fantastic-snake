@@ -73,7 +73,6 @@ public class GameScreen implements Screen, GameEngineObserver, InputProcessor {
 
         camera.update();
         this.engine = engine;
-        System.out.println();
 
         for (Entity e : this.engine.getEntityList()) {
             EntityView view = new EntityView(e, assetManager.get(GameConstants.ATLAS_FILENAME, TextureAtlas.class), reader.getMapWidth(), reader.getMapHeight(), reader.getTileWidth(), reader.getTileHeight(), tiledMap);
@@ -167,7 +166,6 @@ public class GameScreen implements Screen, GameEngineObserver, InputProcessor {
 
     @Override
     public boolean keyDown(int keycode) {
-        System.out.println("Key pressed : " + keycode);
         switch (keycode) {
             case Input.Keys.Z:
                 engine.sendInput(0, Snake.GO_NORTH);
