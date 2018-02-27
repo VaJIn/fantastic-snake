@@ -1,5 +1,6 @@
 package fr.univangers.vajin.engine;
 
+import com.google.common.collect.ImmutableList;
 import fr.univangers.vajin.engine.entities.DynamicEntity;
 import fr.univangers.vajin.engine.entities.Entity;
 import fr.univangers.vajin.engine.entities.EntityObserver;
@@ -9,10 +10,7 @@ import fr.univangers.vajin.engine.utilities.Direction;
 import fr.univangers.vajin.engine.utilities.Position;
 import fr.univangers.vajin.engine.utilities.RandomNumberGenerator;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class MultiPlayerEngine extends AbstractGameEngine implements EntityObserver {
 
@@ -28,8 +26,7 @@ public class MultiPlayerEngine extends AbstractGameEngine implements EntityObser
     private List<Entity> toDispose;
 
     public MultiPlayerEngine(Map<Integer, Snake> players, List<Entity> entityList, Field field) {
-        this.players = players;
-
+        this.players = new HashMap<>(players);
         this.field = field;
 
         initSnakePositions();

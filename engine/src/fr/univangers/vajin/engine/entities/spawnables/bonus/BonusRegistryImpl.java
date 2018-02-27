@@ -1,6 +1,6 @@
 package fr.univangers.vajin.engine.entities.spawnables.bonus;
 
-import fr.univangers.vajin.engine.entities.spawnables.RegistryImpl;
+import fr.univangers.vajin.engine.entities.spawnables.AbstractRegistry;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ import java.util.List;
  * Stores a list of bonuses
  * The bonuses can be accessed randomly depending on their probability weight, or can be accessed by their name
  */
-public class BonusRegistryImpl extends RegistryImpl {
+public class BonusRegistryImpl extends AbstractRegistry {
 
     public BonusRegistryImpl(List<Bonus> list) {
         super(list);

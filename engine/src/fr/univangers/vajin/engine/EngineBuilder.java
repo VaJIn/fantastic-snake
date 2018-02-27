@@ -42,7 +42,7 @@ public class EngineBuilder {
     private final static String PROBA_WEIGHT = "proba_weight";
     private final static String BONUS_TYPE = "type";
     private final static String BONUS_TARGET = "target";
-    private final static String TAKER = "taker";
+    private final static String TAKER = "TAKER";
     private final static String ANYONE_BUT_TAKER = "anyone_but_taker";
     private final static String EVERYONE_BUT_TAKER = "everyone_but_taker";
     private final static String EVERYONE = "everyone";
@@ -76,18 +76,20 @@ public class EngineBuilder {
         this.availableBonuses = new ArrayList<>();
         this.players = new HashMap<>();
 
-        readXml(gameMode);
+        loadGameModeConfigurationFile(gameMode);
     }
 
 
 
 
-    public void addSnake(Integer id, Snake s){
+    public EngineBuilder addSnake(Integer id, Snake s){
         players.put(id, s);
+        return this;
     }
 
-    public void removeSnake(Integer id){
+    public EngineBuilder removeSnake(Integer id){
         players.remove(id);
+        return this;
     }
 
     public GameEngine build() throws WrongPlayersNumberException {
@@ -99,9 +101,7 @@ public class EngineBuilder {
         }
 
         entities.add(new FoodSpawner(this.minFood, this.maxFood, new FoodRegistryImpl(availableFood)));
-
-
-
+        
         return new MultiPlayerEngine(players, entities, field);
 
     }
@@ -113,7 +113,7 @@ public class EngineBuilder {
      *
      * @param gameMode
      */
-    private void readXml(int gameMode){
+    private void loadGameModeConfigurationFile(int gameMode){
 
         try {
             final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -212,16 +212,16 @@ public class EngineBuilder {
 
                 switch (bonusTargetStr) {
                     case TAKER:
-                        bonusTarget = BonusTarget.taker;
+                        bonusTarget = BonusTarget.TAKER;
                         break;
                     case EVERYONE_BUT_TAKER:
-                        bonusTarget = BonusTarget.everyone_but_taker;
+                        bonusTarget = BonusTarget.EVERYONE_BUT_TAKER;
                         break;
                     case ANYONE_BUT_TAKER:
-                        bonusTarget = BonusTarget.anyone_but_taker;
+                        bonusTarget = BonusTarget.ANYONE_BUT_TAKER;
                         break;
                     case EVERYONE:
-                        bonusTarget = BonusTarget.everyone;
+                        bonusTarget = BonusTarget.EVERYONE;
                         break;
                     default:
                         bonusTarget = null; //Should never happen
@@ -230,22 +230,22 @@ public class EngineBuilder {
 
                 switch (bonusTypeStr) {
                     case GAIN_LIFE:
-                        bonusType = BonusType.gain_life;
+                        bonusType = BonusType.GAIN_LIFE;
                         break;
                     case LOOSE_LIFE:
-                        bonusType = BonusType.loose_life;
+                        bonusType = BonusType.LOOSE_LIFE;
                         break;
                     case GO_FASTER:
-                        bonusType = BonusType.go_faster;
+                        bonusType = BonusType.GO_FASTER;
                         break;
                     case GO_SLOWER:
-                        bonusType = BonusType.go_slower;
+                        bonusType = BonusType.GO_SLOWER;
                         break;
                     case IMMATERIALITY:
-                        bonusType = BonusType.immateriality;
+                        bonusType = BonusType.IMMATERIALITY;
                         break;
                     case INVISIBILITY:
-                        bonusType = BonusType.invisibility;
+                        bonusType = BonusType.INVISIBILITY;
                         break;
                     default:
                         bonusType = null; //Should never happen
