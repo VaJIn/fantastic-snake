@@ -24,6 +24,7 @@ import java.util.*;
 public class GameScreen implements Screen, GameEngineObserver, InputProcessor {
 
     final SnakeRPG game;
+    private final String mapFileName;
 
     private TiledMap tiledMap;
 
@@ -47,7 +48,7 @@ public class GameScreen implements Screen, GameEngineObserver, InputProcessor {
     private long lastTime;
 
 
-    public GameScreen(SnakeRPG game, TileMapReader reader, AssetManager assetManager, GameEngine engine) {
+    public GameScreen(SnakeRPG game, TileMapReader reader, AssetManager assetManager, GameEngine engine, String mapFileName) {
 
         this.game = game;
 
@@ -62,6 +63,10 @@ public class GameScreen implements Screen, GameEngineObserver, InputProcessor {
         this.tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
 
         this.entityViewMap = new TreeMap<>();
+
+        this.assetManager = assetManager;
+
+        this.mapFileName = mapFileName;
 
         float w = Gdx.graphics.getWidth();
         float h = Gdx.graphics.getHeight();
@@ -112,7 +117,7 @@ public class GameScreen implements Screen, GameEngineObserver, InputProcessor {
         font.draw(batch, "Score : " + engine.getPlayerScore(0), Gdx.graphics.getWidth() - 100, Gdx.graphics.getHeight() - 50);
 
         if (engine.isGameOver()) {
-            font.draw(batch, "GAME OVER", Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
+            font.draw(batch, "GAME OVER\nPress any key to restart", Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
         }
 
         batch.end();
@@ -140,7 +145,9 @@ public class GameScreen implements Screen, GameEngineObserver, InputProcessor {
 
     @Override
     public void dispose() {
-
+        for (Map.Entry<Integer, EntityView> viewEntry : entityViewMap.entrySet()) {
+            viewEntry.getValue().dispose();
+        }
     }
 
     @Override
@@ -166,35 +173,42 @@ public class GameScreen implements Screen, GameEngineObserver, InputProcessor {
 
     @Override
     public boolean keyDown(int keycode) {
-        switch (keycode) {
-            case Input.Keys.Z:
-                engine.sendInput(0, Snake.GO_NORTH);
-                break;
-            case Input.Keys.Q:
-                engine.sendInput(0, Snake.GO_WEST);
-                break;
-            case Input.Keys.S:
-                engine.sendInput(0, Snake.GO_SOUTH);
-                break;
-            case Input.Keys.D:
-                engine.sendInput(0, Snake.GO_EAST);
-                break;
+        if (engine.isGameOver()) {
+            game.setScreen(new GameLoadingScreen(game, assetManager, mapFileName));
+            dispose();
+            return true;
+        } else {
+            switch (keycode) {
+                case Input.Keys.Z:
+                    engine.sendInput(0, Snake.GO_NORTH);
+                    break;
+                case Input.Keys.Q:
+                    engine.sendInput(0, Snake.GO_WEST);
+                    break;
+                case Input.Keys.S:
+                    engine.sendInput(0, Snake.GO_SOUTH);
+                    break;
+                case Input.Keys.D:
+                    engine.sendInput(0, Snake.GO_EAST);
+                    break;
 
 
-            case Input.Keys.UP:
-                engine.sendInput(1, Snake.GO_NORTH);
-                break;
-            case Input.Keys.LEFT:
-                engine.sendInput(1, Snake.GO_WEST);
-                break;
-            case Input.Keys.DOWN:
-                engine.sendInput(1, Snake.GO_SOUTH);
-                break;
-            case Input.Keys.RIGHT:
-                engine.sendInput(1, Snake.GO_EAST);
-                break;
+                case Input.Keys.UP:
+                    engine.sendInput(1, Snake.GO_NORTH);
+                    break;
+                case Input.Keys.LEFT:
+                    engine.sendInput(1, Snake.GO_WEST);
+                    break;
+                case Input.Keys.DOWN:
+                    engine.sendInput(1, Snake.GO_SOUTH);
+                    break;
+                case Input.Keys.RIGHT:
+                    engine.sendInput(1, Snake.GO_EAST);
+                    break;
+            }
+            return true;
         }
-        return false;
+
     }
 
     @Override

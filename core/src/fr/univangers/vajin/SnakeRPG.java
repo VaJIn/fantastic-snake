@@ -9,20 +9,24 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.google.common.collect.Maps;
 import fr.univangers.vajin.IO.TileMapReader;
 import fr.univangers.vajin.engine.*;
 import fr.univangers.vajin.engine.entities.snake.SimpleSnake;
+import fr.univangers.vajin.screens.GameLoadingScreen;
 import fr.univangers.vajin.screens.GameScreen;
 
+import java.util.Map;
+
 public class SnakeRPG extends Game implements ApplicationListener {
-	SpriteBatch batch;
+
 	AssetManager assetManager;
 
 
 	@Override
 	public void create () {
 
-        String mapFileName = "simple_map.tmx";
+        String mapFileName = "hardcore.tmx";
 
 		assetManager = new AssetManager();
 
@@ -30,29 +34,12 @@ public class SnakeRPG extends Game implements ApplicationListener {
 
 		assetManager.setLoader(TextureAtlas.class, new TextureAtlasLoader(new InternalFileHandleResolver()));
 
-        assetManager.load(mapFileName, TiledMap.class);
+        Map<String, Class> filesToLoad = Maps.newHashMap();
 
-        assetManager.load(GameConstants.ATLAS_FILENAME, TextureAtlas.class);
+        filesToLoad.put(mapFileName, TiledMap.class);
+        filesToLoad.put(GameConstants.ATLAS_FILENAME, TextureAtlas.class);
 
-		assetManager.finishLoading();
-
-        TileMapReader reader = new TileMapReader(assetManager.get(mapFileName));
-
-
-        EngineBuilder classicEngineBuilder = new EngineBuilder(reader.getField(), 1);
-        classicEngineBuilder.addSnake(0, new SimpleSnake());
-        classicEngineBuilder.addSnake(1, new SimpleSnake());
-        classicEngineBuilder.addSnake(2, new SimpleSnake());
-
-        try {
-            GameEngine classicEngine = classicEngineBuilder.build();
-            this.setScreen(new GameScreen(this, reader, assetManager, classicEngine));
-        } catch (WrongPlayersNumberException e) {
-            e.printStackTrace();
-        }
-
-
-
+        this.setScreen(new GameLoadingScreen(this, assetManager, mapFileName, filesToLoad));
     }
 
 	@Override
