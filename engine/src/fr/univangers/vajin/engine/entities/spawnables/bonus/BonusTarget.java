@@ -1,8 +1,8 @@
 package fr.univangers.vajin.engine.entities.spawnables.bonus;
 
 public enum BonusTarget {
-    taker,
-    everyone_but_taker,
-    anyone_but_taker,
-    everyone
+    TAKER,
+    EVERYONE_BUT_TAKER,
+    ANYONE_BUT_TAKER,
+    EVERYONE
 }

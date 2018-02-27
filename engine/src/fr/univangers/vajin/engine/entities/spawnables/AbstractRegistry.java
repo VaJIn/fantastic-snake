@@ -1,26 +1,27 @@
 package fr.univangers.vajin.engine.entities.spawnables;
 
+import com.google.common.collect.ImmutableList;
 import fr.univangers.vajin.engine.utilities.RandomNumberGenerator;
 
-import java.util.List;
+import java.util.Collection;
 
 /**
  * Abstract implementation of a spawnable items registery
  * Whatever the subclass implementation, the computing is done in this class
  */
-public abstract class RegistryImpl implements Registry {
+public abstract class AbstractRegistry implements Registry {
 
-    List<? extends SpawnableItem> itemsList;
+    Collection<? extends SpawnableItem> itemsCollection;
     private RandomNumberGenerator randomNumberGenerator;
     private int weightsSum;
 
-    public RegistryImpl(List<? extends SpawnableItem> list){
-        this.itemsList = list;
+    public AbstractRegistry(Collection<? extends SpawnableItem> collection){
+        this.itemsCollection = ImmutableList.copyOf(collection);
         this.randomNumberGenerator = new RandomNumberGenerator();
 
         //Computing the sum of the probabilistic weights of the contained items
         this.weightsSum = 0;
-        for (SpawnableItem i : this.itemsList){
+        for (SpawnableItem i : this.itemsCollection){
             weightsSum += i.getProbaWeight();
         }
     }
@@ -34,7 +35,7 @@ public abstract class RegistryImpl implements Registry {
         int currentSum = 0;
 
         //returning the item corresponding to the drawn number
-        for (SpawnableItem item : this.itemsList){
+        for (SpawnableItem item : this.itemsCollection){
             currentSum += item.getProbaWeight();
             if (randomNumber < currentSum){
                 return item;
@@ -47,7 +48,7 @@ public abstract class RegistryImpl implements Registry {
 
     @Override
     public SpawnableItem getByName(String name) {
-        for (SpawnableItem i : itemsList) {
+        for (SpawnableItem i : itemsCollection) {
             if (i.getName().equals(name)) {
                 return i;
             }
