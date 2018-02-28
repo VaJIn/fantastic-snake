@@ -59,6 +59,8 @@ public class MultiPlayerEngine extends AbstractGameEngine implements EntityObser
 
             while (!currentSnakeAssigned){
 
+                currentSnakeAssigned = true;
+
 
                 //Drawing the direction
                 int dir = randGen.inRange(0, 3);
@@ -95,11 +97,36 @@ public class MultiPlayerEngine extends AbstractGameEngine implements EntityObser
                     positions.add(positions.get(j-1).nextPosition(d, 1));
                 }
 
-                players.get(i).setInitialPosition(positions, d);
-
-                currentSnakeAssigned = true;
 
 
+
+                //Checking that the position is actually playable
+                for (int j = 0; j < 5; j++) {
+
+                    Position pos = positions.get(0).nextPosition(d, j);
+
+                    System.out.println("xpos : "+pos.getX());
+                    System.out.println("ypos : "+pos.getY());
+
+                    if ( !field.containsPos(pos) || !field.getFieldUnits(pos).isWalkable() || alreadyAssignedPositions.contains(pos)){
+                        currentSnakeAssigned = false;
+                        break;
+
+                    }
+
+                }
+
+                System.out.println("w : "+field.getWidth());
+                System.out.println("h : "+field.getHeight());
+
+                if (!currentSnakeAssigned){
+                    positions.clear();
+                }
+                else{
+                    players.get(i).setInitialPosition(positions, d);
+                }
+
+                alreadyAssignedPositions.addAll(positions);
             }
 
 

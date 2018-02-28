@@ -10,4 +10,6 @@ public interface Field {
 
     int getHeight();
 
+    boolean containsPos(Position position);
+
 }

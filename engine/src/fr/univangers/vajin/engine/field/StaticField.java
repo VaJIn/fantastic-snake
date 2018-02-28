@@ -28,4 +28,9 @@ public class StaticField implements Field {
     public int getHeight() {
         return this.content.getRowDimension();
     }
+
+    @Override
+    public boolean containsPos(Position position) {
+        return position.getX()>=0 && position.getX()<this.getWidth() && position.getY()>=0 && position.getY()<this.getHeight();
+    }
 }
