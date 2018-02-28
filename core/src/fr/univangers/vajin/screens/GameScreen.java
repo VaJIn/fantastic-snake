@@ -79,7 +79,7 @@ public class GameScreen implements Screen, GameEngineObserver, InputProcessor {
         camera.update();
         this.engine = engine;
 
-        for (Entity e : this.engine.getEntityList()) {
+        for (Entity e : this.engine.getEntityCollection()) {
             EntityView view = new EntityView(e, assetManager.get(GameConstants.ATLAS_FILENAME, TextureAtlas.class), reader.getMapWidth(), reader.getMapHeight(), reader.getTileWidth(), reader.getTileHeight(), tiledMap);
             entityViewMap.put(e.getEntityId(), view);
         }

@@ -1,13 +1,17 @@
 package fr.univangers.vajin.engine.entities.spawnables.bonus;
+import fr.univangers.vajin.engine.entities.snake.Snake;
 
-import fr.univangers.vajin.engine.entities.spawnables.SpawnableItem;
+import java.util.Collection;
 
-public class Bonus extends SpawnableItem{
+public interface Bonus{
 
-    public Bonus(BonusType type, BonusTarget target, String resourceKey, int probaWeight, String name){
-        super(resourceKey, probaWeight, name);
-    }
+    int getProbaWeight();
 
+    String getResourceKey();
 
+    String getName();
 
+    BonusTarget getBonusTarget();
+
+    void apply(Collection<Snake> targets);
 }

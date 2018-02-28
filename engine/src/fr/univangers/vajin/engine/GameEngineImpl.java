@@ -1,10 +1,10 @@
 package fr.univangers.vajin.engine;
 
-import com.google.common.collect.ImmutableList;
 import fr.univangers.vajin.engine.entities.DynamicEntity;
 import fr.univangers.vajin.engine.entities.Entity;
 import fr.univangers.vajin.engine.entities.EntityObserver;
 import fr.univangers.vajin.engine.entities.snake.Snake;
+import fr.univangers.vajin.engine.entities.spawnables.bonus.BonusTarget;
 import fr.univangers.vajin.engine.field.Field;
 import fr.univangers.vajin.engine.utilities.Direction;
 import fr.univangers.vajin.engine.utilities.Position;
@@ -12,20 +12,20 @@ import fr.univangers.vajin.engine.utilities.RandomNumberGenerator;
 
 import java.util.*;
 
-public class MultiPlayerEngine extends AbstractGameEngine implements EntityObserver {
+public class GameEngineImpl extends AbstractGameEngine implements EntityObserver {
 
     private int lastComputedTick;
 
     private Map<Integer, Snake> players;
 
-    private List<Entity> entityList;
+    private Collection<Entity> entityCollection;
 
     private boolean ended;
 
     private Field field;
-    private List<Entity> toDispose;
+    private Collection<Entity> toDispose;
 
-    public MultiPlayerEngine(Map<Integer, Snake> players, List<Entity> entityList, Field field) {
+    public GameEngineImpl(Map<Integer, Snake> players, Collection<Entity> entityCollection, Field field) {
         this.players = new HashMap<>(players);
         this.field = field;
 
@@ -34,12 +34,12 @@ public class MultiPlayerEngine extends AbstractGameEngine implements EntityObser
         //Setting a reference to the engine in each Snake
         players.forEach( (id, player) -> player.setEngine(this));
 
-        this.entityList = new ArrayList<>(entityList);
+        this.entityCollection = new ArrayList<>(entityCollection);
         this.toDispose = new LinkedList<>();
-        this.entityList.addAll(players.values());
+        this.entityCollection.addAll(players.values());
         this.ended = false;
 
-        for (Entity e : entityList) {
+        for (Entity e : entityCollection) {
             e.setEngine(this);
         }
 
@@ -97,27 +97,17 @@ public class MultiPlayerEngine extends AbstractGameEngine implements EntityObser
                     positions.add(positions.get(j-1).nextPosition(d, 1));
                 }
 
-
-
-
                 //Checking that the position is actually playable
                 for (int j = 0; j < 5; j++) {
 
                     Position pos = positions.get(0).nextPosition(d, j);
-
-                    System.out.println("xpos : "+pos.getX());
-                    System.out.println("ypos : "+pos.getY());
 
                     if ( !field.containsPos(pos) || !field.getFieldUnits(pos).isWalkable() || alreadyAssignedPositions.contains(pos)){
                         currentSnakeAssigned = false;
                         break;
 
                     }
-
                 }
-
-                System.out.println("w : "+field.getWidth());
-                System.out.println("h : "+field.getHeight());
 
                 if (!currentSnakeAssigned){
                     positions.clear();
@@ -157,7 +147,7 @@ public class MultiPlayerEngine extends AbstractGameEngine implements EntityObser
 
 
         if (!toDispose.isEmpty()) {
-            entityList.removeAll(toDispose);
+            entityCollection.removeAll(toDispose);
             toDispose = new LinkedList<>();
         }
 
@@ -167,7 +157,7 @@ public class MultiPlayerEngine extends AbstractGameEngine implements EntityObser
             List<DynamicEntity> updatedEntities = new ArrayList<>();
 
             //Call every entity to compute their moves
-            for (Entity e : entityList) {
+            for (Entity e : entityCollection) {
                 if (e instanceof DynamicEntity) {
                     DynamicEntity de = (DynamicEntity) e;
                     if (de.computeTick(tick)) {
@@ -182,7 +172,7 @@ public class MultiPlayerEngine extends AbstractGameEngine implements EntityObser
                 List<Position> newPosition = de.getNewPositions();
                 for (Position p : newPosition) {
                     //For every new position we check for collision
-                    for (Entity ce : entityList) {
+                    for (Entity ce : entityCollection) {
                         if (de != ce) {
                             if (ce.coversPosition(p)) {
                                 //If there is a collision we let the entity handle it
@@ -215,7 +205,7 @@ public class MultiPlayerEngine extends AbstractGameEngine implements EntityObser
 
     @Override
     public boolean doesAnEntityCoverPosition(Position position) {
-        for (Entity e : entityList) {
+        for (Entity e : entityCollection) {
             if (e.coversPosition(position)) {
                 return true;
             }
@@ -224,8 +214,41 @@ public class MultiPlayerEngine extends AbstractGameEngine implements EntityObser
     }
 
     @Override
-    public List<Entity> getEntityList() {
-        return entityList;
+    public Collection<Snake> getAffectedSnakes(Snake taker, BonusTarget target) {
+
+        Collection<Snake> out = new ArrayList<>();
+
+
+        switch(target){
+            case TAKER:
+                out.add(taker); //Only the taker is affected
+                break;
+            case EVERYONE:
+                out.addAll(players.values()); //All the snakes are affected
+                break;
+            case EVERYONE_BUT_TAKER:
+                players.forEach( (id, snake) -> { //All the snakes but the taker are affected
+                    if (!taker.equals(snake)) {
+                        out.add(snake);
+                    }
+                });
+                break;
+            case ANYONE_BUT_TAKER:
+                List<Snake> allSnakesCopy = new ArrayList<>(players.values()); //Copying all the snakes
+                allSnakesCopy.remove(taker); //Removing the taker from the list
+                Collections.shuffle(allSnakesCopy); //Shuffling the list
+                if (!allSnakesCopy.isEmpty()){
+                    out.add(allSnakesCopy.get(0)); //Selecting the first element if the list isn't empty
+                }
+        }
+
+        return out;
+
+    }
+
+    @Override
+    public Collection<Entity> getEntityCollection() {
+        return Collections.unmodifiableCollection(entityCollection);
     }
 
     @Override
@@ -235,7 +258,7 @@ public class MultiPlayerEngine extends AbstractGameEngine implements EntityObser
 
     @Override
     public void notifyDestroyed(Entity entity) {
-        entityList.remove(entity);
+        entityCollection.remove(entity);
         this.toDispose.add(entity);
     }
 

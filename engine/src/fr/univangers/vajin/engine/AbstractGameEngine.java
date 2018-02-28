@@ -3,40 +3,40 @@ package fr.univangers.vajin.engine;
 import fr.univangers.vajin.engine.entities.Entity;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 public abstract class AbstractGameEngine implements GameEngine {
 
-    List<GameEngineObserver> observerList;
+    Collection<GameEngineObserver> observerCollection;
 
     protected AbstractGameEngine() {
-        this.observerList = new ArrayList<>();
+        this.observerCollection = new ArrayList<>();
     }
 
     @Override
     public void addGameEngineObserver(GameEngineObserver observer) {
-        observerList.add(observer);
+        observerCollection.add(observer);
     }
 
     @Override
     public void removeGameEngineObserver(GameEngineObserver observer) {
-        observerList.remove(observer);
+        observerCollection.remove(observer);
     }
 
     protected void notifyOfNewEntity(Entity entity) {
-        for (GameEngineObserver obs : observerList) {
+        for (GameEngineObserver obs : observerCollection) {
             obs.notifyNewEntity(entity);
         }
     }
 
     protected void notifyOfRemovedEntity(Entity entity) {
-        for (GameEngineObserver obs : observerList) {
+        for (GameEngineObserver obs : observerCollection) {
             obs.notifyRemovedEntity(entity);
         }
     }
 
     protected void notifyOfGameEnd() {
-        for (GameEngineObserver obs : observerList) {
+        for (GameEngineObserver obs : observerCollection) {
             obs.notifyGameEnd();
         }
     }

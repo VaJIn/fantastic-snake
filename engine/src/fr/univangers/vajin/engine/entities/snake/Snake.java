@@ -27,7 +27,7 @@ public abstract class Snake extends DynamicEntity {
      */
     private int resistance;
     /**
-     * A snake with a high luck factor might get bonus
+     * A snake with a high luck gain might get bonus
      */
     private int luckFactor;
     /**
@@ -71,12 +71,12 @@ public abstract class Snake extends DynamicEntity {
         return speed;
     }
 
-    protected void setLifePoint(int lifePoint) {
-        this.lifePoint = lifePoint;
+    protected void setSpeed(int speed){
+        this.speed = speed;
     }
 
-    protected void setSpeed(int speed) {
-        this.speed = speed;
+    protected void setLifePoint(int lifePoint) {
+        this.lifePoint = lifePoint;
     }
 
     protected void setResistance(int resistance) {
@@ -92,6 +92,22 @@ public abstract class Snake extends DynamicEntity {
     public abstract int grow(int howMuch);
 
     public abstract int shrink(int howMuch);
+
+    /**
+     * Accelerates the snake by the given value
+     * Returns for how much the snake has been accelerated
+     * @param howMuch
+     * @return
+     */
+    public abstract int accelerate(int howMuch);
+
+    /**
+     * Decelerates the snake by the given value if the new value is still greater or equal to 1
+     * Returns for how much the snake has been decelerated
+     * @param howMuch
+     * @return
+     */
+    public abstract int decelerate(int howMuch);
 
 
     public static final int GO_NORTH = 0x0000;

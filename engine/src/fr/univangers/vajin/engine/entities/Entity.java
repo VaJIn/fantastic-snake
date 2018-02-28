@@ -106,4 +106,9 @@ public abstract class Entity {
         this.observers = new ArrayList<>();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        return entityId == ((Entity) o).entityId;
+    }
+
 }

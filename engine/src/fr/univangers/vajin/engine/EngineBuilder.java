@@ -1,12 +1,7 @@
 package fr.univangers.vajin.engine;
 
 import fr.univangers.vajin.engine.entities.Entity;
-import fr.univangers.vajin.engine.entities.spawnables.bonus.Bonus;
-import fr.univangers.vajin.engine.entities.spawnables.bonus.BonusTarget;
-import fr.univangers.vajin.engine.entities.spawnables.bonus.BonusType;
-import fr.univangers.vajin.engine.entities.spawnables.food.Food;
-import fr.univangers.vajin.engine.entities.spawnables.food.FoodSpawner;
-import fr.univangers.vajin.engine.entities.spawnables.food.FoodRegistryImpl;
+import fr.univangers.vajin.engine.entities.spawnables.bonus.*;
 import fr.univangers.vajin.engine.entities.snake.Snake;
 import fr.univangers.vajin.engine.field.Field;
 import org.w3c.dom.Document;
@@ -37,19 +32,18 @@ public class EngineBuilder {
     private final static String FOOD = "food";
     private final static String BONUS = "bonus";
     private final static String NAME = "name";
-    private final static String GROWTH_FACTOR = "growth_factor";
+    private final static String GAIN = "gain";
     private final static String RESOURCE_KEY = "resource_key";
     private final static String PROBA_WEIGHT = "proba_weight";
     private final static String BONUS_TYPE = "type";
     private final static String BONUS_TARGET = "target";
-    private final static String TAKER = "TAKER";
+    private final static String TAKER = "taker";
     private final static String ANYONE_BUT_TAKER = "anyone_but_taker";
     private final static String EVERYONE_BUT_TAKER = "everyone_but_taker";
     private final static String EVERYONE = "everyone";
-    private final static String GAIN_LIFE = "gain_life";
-    private final static String LOOSE_LIFE = "loose_life";
-    private final static String GO_FASTER = "go_faster";
-    private final static String GO_SLOWER = "go_slower";
+    private final static String ALTER_LIFE = "alter_life";
+    private final static String ALTER_SPEED = "alter_speed";
+    private final static String ALTER_SIZE = "alter_size";
     private final static String IMMATERIALITY = "immateriality";
     private final static String INVISIBILITY = "invisibility";
     private final static String MIN_FOOD = "min_simultaneous_food";
@@ -60,7 +54,7 @@ public class EngineBuilder {
     private int minPlayer;
     private int maxPlayer;
     private Field field;
-    private List<Food> availableFood;
+    private List<Bonus> availableFood;
     private List<Bonus> availableBonuses;
     private boolean powersAllowed;
     private int minFood;
@@ -100,9 +94,10 @@ public class EngineBuilder {
             throw new WrongPlayersNumberException(minPlayer, maxPlayer, players.size());
         }
 
-        entities.add(new FoodSpawner(this.minFood, this.maxFood, new FoodRegistryImpl(availableFood)));
-        
-        return new MultiPlayerEngine(players, entities, field);
+        entities.add(new BonusSpawner(this.minFood, this.maxFood, new BonusRegistryImpl(availableFood)));
+        entities.add(new BonusSpawner(this.minBonuses, this.maxBonuses, new BonusRegistryImpl(availableBonuses)));
+
+        return new GameEngineImpl(players, entities, field);
 
     }
 
@@ -175,11 +170,12 @@ public class EngineBuilder {
             if (foodNode.getNodeName().equals(FOOD)) {
 
                 String name = ((Element) foodNode).getAttribute(NAME);
-                int growthFactor = Integer.valueOf(((Element) foodNode).getAttribute(GROWTH_FACTOR));
+                int growthFactor = Integer.valueOf(((Element) foodNode).getAttribute(GAIN));
                 String resourceKey = ((Element) foodNode).getAttribute(RESOURCE_KEY);
                 int probaWeight = Integer.valueOf(((Element) foodNode).getAttribute(PROBA_WEIGHT));
 
-                availableFood.add(new Food(name, growthFactor, resourceKey, probaWeight));
+                availableFood.add(new SizeAlterationBonus(resourceKey, probaWeight, name, BonusTarget.TAKER, growthFactor) {
+                });
             }
         }
 
@@ -200,15 +196,22 @@ public class EngineBuilder {
 
             if (bonusNode.getNodeName().equals(BONUS)) {
 
+                //Reading the common values
                 String name = ((Element) bonusNode).getAttribute(NAME);
                 String bonusTypeStr = ((Element) bonusNode).getAttribute(BONUS_TYPE);
                 String bonusTargetStr = ((Element) bonusNode).getAttribute(BONUS_TARGET);
                 String resourceKey = ((Element) bonusNode).getAttribute(RESOURCE_KEY);
                 int probaWeight = Integer.valueOf(((Element) bonusNode).getAttribute(PROBA_WEIGHT));
+                int gain;
 
-                BonusType bonusType;
-                BonusTarget bonusTarget;
+                if (((Element) bonusNode).hasAttribute(GAIN)){
+                    gain = Integer.valueOf(((Element) bonusNode).getAttribute(GAIN));
+                }
+                else{
+                    gain = 0;
+                }
 
+                BonusTarget bonusTarget = null;
 
                 switch (bonusTargetStr) {
                     case TAKER:
@@ -223,36 +226,22 @@ public class EngineBuilder {
                     case EVERYONE:
                         bonusTarget = BonusTarget.EVERYONE;
                         break;
-                    default:
-                        bonusTarget = null; //Should never happen
-                        break;
                 }
 
-                switch (bonusTypeStr) {
-                    case GAIN_LIFE:
-                        bonusType = BonusType.GAIN_LIFE;
+
+                switch (bonusTypeStr){
+                    case ALTER_LIFE:
+                        availableBonuses.add(new LifeAlterationBonus(resourceKey, probaWeight, name, bonusTarget, gain));
                         break;
-                    case LOOSE_LIFE:
-                        bonusType = BonusType.LOOSE_LIFE;
+                    case ALTER_SPEED:
+                        availableBonuses.add(new SpeedAlterationBonus(resourceKey, probaWeight, name, bonusTarget, gain));
                         break;
-                    case GO_FASTER:
-                        bonusType = BonusType.GO_FASTER;
+                    case ALTER_SIZE:
+                        availableBonuses.add(new SizeAlterationBonus(resourceKey, probaWeight, name, bonusTarget, gain));
                         break;
-                    case GO_SLOWER:
-                        bonusType = BonusType.GO_SLOWER;
-                        break;
-                    case IMMATERIALITY:
-                        bonusType = BonusType.IMMATERIALITY;
-                        break;
-                    case INVISIBILITY:
-                        bonusType = BonusType.INVISIBILITY;
-                        break;
-                    default:
-                        bonusType = null; //Should never happen
-                        break;
+
                 }
 
-                availableBonuses.add(new Bonus(bonusType, bonusTarget, resourceKey, probaWeight, name));
             }
         }
     }

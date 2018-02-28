@@ -3,13 +3,15 @@
 <mode powers_allowed="true" min_players="1" max_players="5">
 
     <kitchen min_simultaneous_food="2" max_simultaneous_food="3">
-        <food name="Beer" resource_key="beer" growth_factor="2" proba_weight="3"/>
-        <food name="Apple" resource_key="apple" growth_factor="1" proba_weight="5"/>
-        <food name="Chicken" resource_key="chicken" growth_factor="3" proba_weight="2"/>
+        <food name="Beer" resource_key="beer" gain="2" proba_weight="3"/>
+        <food name="Apple" resource_key="apple" gain="1" proba_weight="5"/>
+        <food name="Chicken" resource_key="chicken" gain="3" proba_weight="2"/>
+        <food name="Cake" resource_key="cake" gain="-2" proba_weight="5"/>
     </kitchen>
 
     <bonuses min_simultaneous_bonuses="0" max_simultaneous_bonuses="3">
-        <bonus name="faster_taker" type="go_faster" target="taker" resource_key="faster" proba_weight="2"/>
+        <bonus name="faster_taker" type="alter_speed" target="taker" resource_key="piment" gain="5" proba_weight="2"/>
+        <bonus name="slower_taker" type="alter_speed" target="taker" resource_key="tea" gain="-5" proba_weight="2"/>
     </bonuses>
 
 </mode>

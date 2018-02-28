@@ -20,13 +20,13 @@ import java.util.Map;
 
 public class SnakeRPG extends Game implements ApplicationListener {
 
-	AssetManager assetManager;
+	private AssetManager assetManager;
 
 
 	@Override
 	public void create () {
 
-        String mapFileName = "hardcore.tmx";
+        String mapFileName = "simple_map.tmx";
 
 		assetManager = new AssetManager();
 

@@ -6,5 +6,6 @@ public enum BonusType {
     GO_FASTER,
     GO_SLOWER,
     IMMATERIALITY,
-    INVISIBILITY
+    INVISIBILITY,
+    GROW
 }

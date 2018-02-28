@@ -63,6 +63,16 @@ public class DummySnake extends Snake {
     }
 
     @Override
+    public int accelerate(int howMuch) {
+        return 0;
+    }
+
+    @Override
+    public int decelerate(int howMuch) {
+        return 0;
+    }
+
+    @Override
     public void sendAction(int action) {
         //This is a dummy snake, it can't even receive action !
         /*

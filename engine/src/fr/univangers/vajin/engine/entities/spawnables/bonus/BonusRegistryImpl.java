@@ -1,26 +1,59 @@
 package fr.univangers.vajin.engine.entities.spawnables.bonus;
 
-import fr.univangers.vajin.engine.entities.spawnables.AbstractRegistry;
+import com.google.common.collect.ImmutableList;
+import fr.univangers.vajin.engine.entities.spawnables.Registry;
+import fr.univangers.vajin.engine.utilities.RandomNumberGenerator;
 
-import java.util.List;
+import java.util.Collection;
 
 /**
- * Stores a list of bonuses
- * The bonuses can be accessed randomly depending on their probability weight, or can be accessed by their name
+ * Implementation of a registery for the bonuses
  */
-public class BonusRegistryImpl extends AbstractRegistry {
+public class BonusRegistryImpl implements Registry {
 
-    public BonusRegistryImpl(List<Bonus> list) {
-        super(list);
+    private Collection<Bonus> bonusCollection;
+    private RandomNumberGenerator randomNumberGenerator;
+    private int weightsSum;
+
+    public BonusRegistryImpl(Collection<Bonus> collection){
+        this.bonusCollection = ImmutableList.copyOf(collection);
+        this.randomNumberGenerator = new RandomNumberGenerator();
+
+        //Computing the sum of the probabilistic weights of the contained items
+        this.weightsSum = 0;
+        for (Bonus b : this.bonusCollection){
+            weightsSum += b.getProbaWeight();
+        }
     }
 
     @Override
     public Bonus getRandom() {
-        return ((Bonus)super.getRandom());
+
+        //drawing a number in between 0 and the sum of the weights minus one
+        int randomNumber = randomNumberGenerator.inRange(0, this.weightsSum-1);
+
+        int currentSum = 0;
+
+        //returning the item corresponding to the drawn number
+        for (Bonus b : this.bonusCollection){
+            currentSum += b.getProbaWeight();
+            if (randomNumber < currentSum){
+                return b;
+            }
+
+        }
+
+        return null; //Should never happen
     }
 
     @Override
     public Bonus getByName(String name) {
-        return ((Bonus) super.getByName(name));
+        for (Bonus b : bonusCollection) {
+            if (b.getName().equals(name)) {
+                return b;
+            }
+        }
+        return null;
     }
+
 }
