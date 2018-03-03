@@ -18,22 +18,39 @@ public abstract class Snake extends DynamicEntity {
      * The maximum amount of life point a Snake can have.
      */
     private final int maxLifePoint;
+
     /**
      * The current amount of life point of the snake.
      */
     private int lifePoint;
+
     /**
      * The resistance of the snake. The more resistance a snake have, the more inflicted damage are reduced.
      */
     private int resistance;
+
     /**
      * A snake with a high luck gain might get bonus
      */
     private int luckFactor;
+
     /**
      * The speed of a snake.
      */
     private int speed;
+
+    /**
+     * Greater than zero if the snake is currently invisible
+     */
+    private int invisible;
+
+    /**
+     * Greater than zero if the snake is currently immaterial
+     */
+    private int immaterial;
+
+
+
 
     private GameEngine engine;
 
@@ -87,27 +104,45 @@ public abstract class Snake extends DynamicEntity {
         this.luckFactor = luckFactor;
     }
 
+    public abstract void moveForward();
+
+    public abstract void moveBackward();
+
+    public abstract void moveGrowing();
+
+    public abstract void moveShrinking();
+
     public abstract int getSize();
 
-    public abstract int grow(int howMuch);
+    public abstract int changeSize(int howMuch);
 
-    public abstract int shrink(int howMuch);
+    public boolean isInvisible(){
+        return invisible>0;
+    }
 
-    /**
-     * Accelerates the snake by the given value
-     * Returns for how much the snake has been accelerated
-     * @param howMuch
-     * @return
-     */
-    public abstract int accelerate(int howMuch);
+    public boolean isImmaterial(){
+        return immaterial>0;
+    }
 
-    /**
-     * Decelerates the snake by the given value if the new value is still greater or equal to 1
-     * Returns for how much the snake has been decelerated
-     * @param howMuch
-     * @return
-     */
-    public abstract int decelerate(int howMuch);
+    public void becomeInvisible(){
+        invisible++;
+    }
+
+    public void becomeImmaterial(){
+        immaterial++;
+    }
+
+    public void stopInvisibility(){
+        invisible--;
+    }
+
+    public void stopImmateriality(){
+        invisible--;
+    }
+
+
+
+    public abstract int changeSpeed(int howMuch);
 
 
     public static final int GO_NORTH = 0x0000;

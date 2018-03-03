@@ -1,4 +1,5 @@
 package fr.univangers.vajin.engine.entities.spawnables.bonus;
+import fr.univangers.vajin.engine.GameEngine;
 import fr.univangers.vajin.engine.entities.snake.Snake;
 
 import java.util.Collection;
@@ -13,5 +14,5 @@ public interface Bonus{
 
     BonusTarget getBonusTarget();
 
-    void apply(Collection<Snake> targets);
+    void buildCommands(Collection<Snake> targets, GameEngine ge);
 }

@@ -2,12 +2,12 @@ package fr.univangers.vajin.engine;
 
 import fr.univangers.vajin.engine.entities.Entity;
 import fr.univangers.vajin.engine.entities.snake.Snake;
+import fr.univangers.vajin.engine.entities.spawnables.bonus.TimedCommand;
 import fr.univangers.vajin.engine.entities.spawnables.bonus.BonusTarget;
 import fr.univangers.vajin.engine.field.Field;
 import fr.univangers.vajin.engine.utilities.Position;
 
 import java.util.Collection;
-import java.util.List;
 
 public interface GameEngine {
 
@@ -22,6 +22,10 @@ public interface GameEngine {
     void addGameEngineObserver(GameEngineObserver observer);
 
     void removeGameEngineObserver(GameEngineObserver observer);
+
+    void addBonusTimedCommand(TimedCommand timedCommand);
+
+    int getCurrentTick();
 
     int getPlayerScore(int player);
 

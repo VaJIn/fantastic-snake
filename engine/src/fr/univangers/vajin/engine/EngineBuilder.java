@@ -35,6 +35,7 @@ public class EngineBuilder {
     private final static String GAIN = "gain";
     private final static String RESOURCE_KEY = "resource_key";
     private final static String PROBA_WEIGHT = "proba_weight";
+    private final static String DURATION = "duration";
     private final static String BONUS_TYPE = "type";
     private final static String BONUS_TARGET = "target";
     private final static String TAKER = "taker";
@@ -174,7 +175,7 @@ public class EngineBuilder {
                 String resourceKey = ((Element) foodNode).getAttribute(RESOURCE_KEY);
                 int probaWeight = Integer.valueOf(((Element) foodNode).getAttribute(PROBA_WEIGHT));
 
-                availableFood.add(new SizeAlterationBonus(resourceKey, probaWeight, name, BonusTarget.TAKER, growthFactor) {
+                availableFood.add(new SizeAlterationBonus(resourceKey, probaWeight, name, BonusTarget.TAKER, growthFactor, -1) {
                 });
             }
         }
@@ -203,12 +204,20 @@ public class EngineBuilder {
                 String resourceKey = ((Element) bonusNode).getAttribute(RESOURCE_KEY);
                 int probaWeight = Integer.valueOf(((Element) bonusNode).getAttribute(PROBA_WEIGHT));
                 int gain;
+                int duration;
 
                 if (((Element) bonusNode).hasAttribute(GAIN)){
                     gain = Integer.valueOf(((Element) bonusNode).getAttribute(GAIN));
                 }
                 else{
                     gain = 0;
+                }
+
+                if (((Element) bonusNode).hasAttribute(DURATION)){
+                    duration = Integer.valueOf(((Element) bonusNode).getAttribute(DURATION));
+                }
+                else{
+                    duration = -1;
                 }
 
                 BonusTarget bonusTarget = null;
@@ -231,15 +240,14 @@ public class EngineBuilder {
 
                 switch (bonusTypeStr){
                     case ALTER_LIFE:
-                        availableBonuses.add(new LifeAlterationBonus(resourceKey, probaWeight, name, bonusTarget, gain));
+                        availableBonuses.add(new LifeAlterationBonus(resourceKey, probaWeight, name, bonusTarget, gain, duration));
                         break;
                     case ALTER_SPEED:
-                        availableBonuses.add(new SpeedAlterationBonus(resourceKey, probaWeight, name, bonusTarget, gain));
+                        availableBonuses.add(new SpeedAlterationBonus(resourceKey, probaWeight, name, bonusTarget, gain, duration));
                         break;
                     case ALTER_SIZE:
-                        availableBonuses.add(new SizeAlterationBonus(resourceKey, probaWeight, name, bonusTarget, gain));
+                        availableBonuses.add(new SizeAlterationBonus(resourceKey, probaWeight, name, bonusTarget, gain, duration));
                         break;
-
                 }
 
             }

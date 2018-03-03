@@ -95,7 +95,7 @@ public class BonusSpawner extends DynamicEntity {
             if (otherObject instanceof Snake) {
                 Snake snake = (Snake) otherObject;
 
-                struckBonus.apply(getEngine().getAffectedSnakes(snake, struckBonus.getBonusTarget()));
+                struckBonus.buildCommands(getEngine().getAffectedSnakes(snake, struckBonus.getBonusTarget()), getEngine());
 
                 this.removeBonus(collisionPosition);
             } else {

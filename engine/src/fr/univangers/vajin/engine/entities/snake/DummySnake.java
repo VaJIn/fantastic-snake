@@ -48,29 +48,42 @@ public class DummySnake extends Snake {
     }
 
     @Override
+    public void moveForward() {
+
+    }
+
+    @Override
+    public void moveBackward() {
+
+    }
+
+    @Override
+    public void moveGrowing() {
+
+    }
+
+    @Override
+    public void moveShrinking() {
+
+    }
+
+    @Override
     public int getSize() {
         return atoms.size();
     }
 
     @Override
-    public int grow(int howMuch) {
+    public int changeSize(int howMuch) {
         return 0;
     }
 
     @Override
-    public int shrink(int howMuch) {
+    public int changeSpeed(int howMuch) {
         return 0;
     }
 
-    @Override
-    public int accelerate(int howMuch) {
-        return 0;
-    }
 
-    @Override
-    public int decelerate(int howMuch) {
-        return 0;
-    }
+
 
     @Override
     public void sendAction(int action) {

@@ -1,0 +1,113 @@
+ @Override
+    public boolean computeTick(int tick) {
+        if (this.getLifePoint() <= 0) {
+            //Snake is dead
+            return false;
+        }
+        //znewPositions = new ArrayList<>();
+        boolean destroyed = false;
+        newPositions = new ArrayList<>();
+
+
+        /*
+            Speed in tile/s
+            Tickrate = 32 tick/s;
+            tickrate / speed -> tick/tile
+         */
+        if (tick - lastMoveTick > GameConstants.TICKRATE / this.getSpeed()) {
+            //We move
+
+            //position of the head of the snake
+            Position newHeadPosition;
+
+
+            if (leftToGrow>=0){
+                //The snake grows or moves forward
+
+                //Updating the head position
+                newHeadPosition = computeNextPosition();
+
+                //check if we don't hit ourself if the snake is material
+                if (!isImmaterial() && this.coversPosition(newHeadPosition)) {
+                    destroyed = true;
+                }
+
+                //Adding the new head position to the new positions
+                this.newPositions.add(newHeadPosition);
+
+                //Creating the new head atom
+                SnakeAtom newHead = new SimpleSnakeAtom(newHeadPosition, head);
+
+                //Notifying the sprite change
+                notifySpriteChange(head.getId(), head.getPosition(), head.getGraphicKey());
+
+                //Updating the reference to the snake atom head
+                head = newHead;
+
+                //Adding the head to the list of the snake atoms
+                atoms.put(head.getPosition(), head);
+
+                //Notifying that the snake covers a new position
+                notifyChangeAtPosition(newHeadPosition, Entity.NEW_COVERED_POSITION);
+
+                //Check if new head position is valid on the board
+                if (newHeadPosition.getX() < 0 || newHeadPosition.getX() >= this.getEngine().getField().getWidth() || newHeadPosition.getY() < 0 || newHeadPosition.getY() >= this.getEngine().getField().getHeight()) {
+                    this.destroy();
+                } else {
+                    FieldUnit headFieldUnit = this.getEngine().getField().getFieldUnits(newHeadPosition);
+                    if (!headFieldUnit.isWalkable()) {
+                        System.out.println("\033[31mField " + headFieldUnit + " ! You die\033[0m");
+                        destroyed = true;
+                    }
+                }
+
+
+                if (leftToGrow>0){
+                    //If the snake must grow, recording that it has grown and updating the size
+                    leftToGrow--;
+                    size++;
+                }
+                else{
+                    //Removing the tail of the snake
+                    //Remove tail
+                    tail.setActivated(false);
+                    notifySpriteChange(tail.getId(), tail.getPosition(), tail.getGraphicKey());
+                    notifyChangeAtPosition(tail.getPosition(), Entity.ONE_LESS_COVER_ON_POSITION);
+                    tail = tail.getAtomTowardsHead();
+                    notifySpriteChange(tail.getId(), tail.getPosition(), tail.getGraphicKey());
+                }
+
+            }
+            else{
+                //The snake shrinks
+
+
+
+                leftToGrow++;
+                size--;
+
+                //Remove tail
+                tail.setActivated(false);
+                notifySpriteChange(tail.getId(), tail.getPosition(), tail.getGraphicKey());
+                notifyChangeAtPosition(tail.getPosition(), Entity.ONE_LESS_COVER_ON_POSITION);
+                tail = tail.getAtomTowardsHead();
+                notifySpriteChange(tail.getId(), tail.getPosition(), tail.getGraphicKey());
+
+                if (size<=1){
+                    destroyed = true;
+                }
+
+
+            }
+
+
+            if (destroyed) {
+                this.destroy();
+            }
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+

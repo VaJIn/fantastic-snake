@@ -4,6 +4,7 @@ import fr.univangers.vajin.engine.entities.DynamicEntity;
 import fr.univangers.vajin.engine.entities.Entity;
 import fr.univangers.vajin.engine.entities.EntityObserver;
 import fr.univangers.vajin.engine.entities.snake.Snake;
+import fr.univangers.vajin.engine.entities.spawnables.bonus.TimedCommand;
 import fr.univangers.vajin.engine.entities.spawnables.bonus.BonusTarget;
 import fr.univangers.vajin.engine.field.Field;
 import fr.univangers.vajin.engine.utilities.Direction;
@@ -23,7 +24,10 @@ public class GameEngineImpl extends AbstractGameEngine implements EntityObserver
     private boolean ended;
 
     private Field field;
+
     private Collection<Entity> toDispose;
+
+    private PriorityQueue<TimedCommand> timedCommands;
 
     public GameEngineImpl(Map<Integer, Snake> players, Collection<Entity> entityCollection, Field field) {
         this.players = new HashMap<>(players);
@@ -42,6 +46,8 @@ public class GameEngineImpl extends AbstractGameEngine implements EntityObserver
         for (Entity e : entityCollection) {
             e.setEngine(this);
         }
+
+        this.timedCommands = new PriorityQueue<>();
 
         lastComputedTick = -1;
     }
@@ -154,6 +160,15 @@ public class GameEngineImpl extends AbstractGameEngine implements EntityObserver
         if (!this.ended) {
 
             int tick = lastComputedTick + 1;
+
+
+            //Ending bonuses if necessary
+            while (!timedCommands.isEmpty() && tick == timedCommands.peek().getTick()){
+                System.out.println("Applying end of a bonus on tick : "+getCurrentTick());
+                timedCommands.poll().apply();
+            }
+
+
             List<DynamicEntity> updatedEntities = new ArrayList<>();
 
             //Call every entity to compute their moves
@@ -285,6 +300,24 @@ public class GameEngineImpl extends AbstractGameEngine implements EntityObserver
 
         this.players.get(playerId).sendAction(input);
 
+    }
+
+    @Override
+    public void addBonusTimedCommand(TimedCommand timedCommand) {
+
+        if (timedCommand.getTick()>getCurrentTick()){
+            timedCommands.add(timedCommand);
+            System.out.println("Adding timedCommand for tick : "+ timedCommand.getTick()+ " current : "+getCurrentTick());
+        }
+        else{
+            System.out.println("Impossible d'ajouter le bonus end");
+        }
+
+    }
+
+    @Override
+    public int getCurrentTick() {
+        return lastComputedTick+1;
     }
 
     @Override

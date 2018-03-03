@@ -26,26 +26,18 @@ public class SimpleSnake extends Snake {
     private SnakeAtom tail;
 
     private Direction currentDirection;
+
+    //FIFO list of the directions the user has entered
     private Deque<Direction> nextDirections;
 
+    //Last tick the snake moved
     private int lastMoveTick;
 
+    //Remaining size the snake has to grow. Can be negative if the snake must shrink
     private int leftToGrow;
 
     private List<Position> newPositions;
 
-    private class SimpleSnakeAtom extends SnakeAtom {
-
-        private SimpleSnakeAtom(Position position, int id) {
-            super(position, id);
-        }
-
-        private SimpleSnakeAtom(Position position, SnakeAtom towardsTail) {
-            super(position, towardsTail.getId() + 1);
-            this.atomTowardsTail = towardsTail;
-            towardsTail.atomTowardsHead = this;
-        }
-    }
 
     public SimpleSnake() {
         super(100, 100, 0, 0, 10);
@@ -55,7 +47,7 @@ public class SimpleSnake extends Snake {
 
     }
 
-    public void setInitialPosition(List<Position> startingPositions, Direction startingDirection){
+    public void setInitialPosition(List<Position> startingPositions, Direction startingDirection) {
         this.currentDirection = startingDirection;
         this.nextDirections = new LinkedList<>();
 
@@ -78,45 +70,69 @@ public class SimpleSnake extends Snake {
     }
 
     @Override
+    public void moveForward() {
+
+    }
+
+    @Override
+    public void moveBackward() {
+
+    }
+
+    @Override
+    public void moveGrowing() {
+
+    }
+
+    @Override
+    public void moveShrinking() {
+
+    }
+
+    private void removeTail() {
+
+    }
+
+    private void moveHeadForward() {
+
+    }
+
+    @Override
     public int getSize() {
         return size;
     }
 
     @Override
-    public int grow(int howMuch) {
+    public int changeSize(int howMuch) {
         return (leftToGrow = leftToGrow + howMuch);
     }
 
     @Override
-    public int shrink(int howMuch) {
-        return (leftToGrow = leftToGrow - howMuch);
-    }
+    public int changeSpeed(int howMuch) {
 
-    @Override
-    public int accelerate(int howMuch) {
-        setSpeed(getSpeed() + howMuch);
-        return howMuch;
-    }
-
-    @Override
-    public int decelerate(int howMuch) {
         int delta;
 
-        if (getSpeed()-howMuch>=1){
+        if (howMuch < 0) {
+            if (getSpeed() + howMuch >= 1) {
+                delta = howMuch;
+                setSpeed(getSpeed() + howMuch);
+            } else {
+                delta = -getSpeed() + 1;
+                setSpeed(1);
+            }
+        } else {
+            setSpeed(getSpeed() + howMuch);
             delta = howMuch;
-            setSpeed(getSpeed()-howMuch);
         }
-        else{
-            delta = getSpeed()-1;
-            setSpeed(1);
-        }
+
         return delta;
+
     }
 
     @Override
     public void sendAction(int action) {
 
-        switch (action){
+        switch (action) {
 
             case GO_SOUTH:
                 this.nextDirections.addLast(Direction.SOUTH);
@@ -147,8 +163,9 @@ public class SimpleSnake extends Snake {
             //Snake is dead
             return false;
         }
-        newPositions = new ArrayList<>();
+        //znewPositions = new ArrayList<>();
         boolean destroyed = false;
+        newPositions = new ArrayList<>();
 
 
         /*
@@ -158,92 +175,77 @@ public class SimpleSnake extends Snake {
          */
         if (tick - lastMoveTick > GameConstants.TICKRATE / this.getSpeed()) {
             //We move
-
             lastMoveTick = tick;
 
-            if (leftToGrow>=0) {
 
-                //Determining the next direction
-                if (!this.nextDirections.isEmpty()) {
-                    switch (this.nextDirections.poll()) {
+            //Updating the head position
+            Position newHeadPosition = computeNextPosition();
 
-                        case EAST:
-                            if (currentDirection != Direction.WEST) {
-                                currentDirection = Direction.EAST;
-                            }
-                            break;
-                        case SOUTH:
-                            if (currentDirection != Direction.NORTH) {
-                                currentDirection = Direction.SOUTH;
-                            }
-                            break;
-                        case WEST:
-                            if (currentDirection != Direction.EAST) {
-                                currentDirection = Direction.WEST;
-                            }
-                            break;
-                        case NORTH:
-                            if (currentDirection != Direction.SOUTH) {
-                                currentDirection = Direction.NORTH;
-                            }
-                            break;
-                    }
-                }
+            //check if we don't hit ourself if the snake is material
+            if (!isImmaterial() && this.coversPosition(newHeadPosition)) {
+                destroyed = true;
+            }
 
+            //Adding the new head position to the new positions
+            this.newPositions.add(newHeadPosition);
 
-                Position newPosition = new Position(this.head.getPosition());
-                newPosition.moveInDirection(currentDirection, 1);
+            //Creating the new head atom
+            SnakeAtom newHead = new SimpleSnakeAtom(newHeadPosition, head);
 
-                //check if we don't hit ourself
-                if (this.coversPosition(newPosition)) {
+            //Notifying the sprite change of the former head
+            notifySpriteChange(head.getId(), head.getPosition(), head.getGraphicKey());
+
+            //Updating the reference to the snake atom head
+            head = newHead;
+
+            //Notifying the sprite change of the new head
+            notifySpriteChange(head.getId(), head.getPosition(), head.getGraphicKey());
+
+            //Adding the head to the list of the snake atoms
+            atoms.put(head.getPosition(), head);
+
+            //Notifying that the snake covers a new position
+            notifyChangeAtPosition(newHeadPosition, Entity.NEW_COVERED_POSITION);
+
+            //Check if new head position is valid on the board
+            if (newHeadPosition.getX() < 0 || newHeadPosition.getX() >= this.getEngine().getField().getWidth() || newHeadPosition.getY() < 0 || newHeadPosition.getY() >= this.getEngine().getField().getHeight()) {
+                this.destroy();
+            } else {
+                FieldUnit headFieldUnit = this.getEngine().getField().getFieldUnits(newHeadPosition);
+                if (!headFieldUnit.isWalkable()) {
+                    System.out.println("\033[31mField " + headFieldUnit + " ! You die\033[0m");
                     destroyed = true;
                 }
-
-                this.newPositions.add(newPosition);
-
-                SnakeAtom newHead = new SimpleSnakeAtom(newPosition, head);
-
-                notifySpriteChange(head.getId(), head.getPosition(), head.getGraphicKey());
-
-                head = newHead;
-
-                atoms.put(head.getPosition(), head);
-
-                notifyChangeAtPosition(newPosition, Entity.NEW_COVERED_POSITION);
-                notifySpriteChange(head.getId(), head.getPosition(), head.getGraphicKey());
-
-
-                //Remove tail if needed (no growth)
-
-                //Check if new head position is valid on the board
-                if (newPosition.getX() < 0 || newPosition.getX() >= this.getEngine().getField().getWidth() || newPosition.getY() < 0 || newPosition.getY() >= this.getEngine().getField().getHeight()) {
-                    this.destroy();
-                } else {
-                    FieldUnit headFieldUnit = this.getEngine().getField().getFieldUnits(newPosition);
-                    if (!headFieldUnit.isWalkable()) {
-                        System.out.println("\033[31mField " + headFieldUnit + " ! You die\033[0m");
-                        destroyed = true;
-                    }
-                }
-
             }
 
 
             if (leftToGrow > 0) {
+                //If the snake must grow, recording that it has grown and updating the size
                 leftToGrow--;
                 size++;
-            }
+            } else if (leftToGrow < 0) {
 
-            else {
-                if (leftToGrow < 0){
-                    leftToGrow++;
-                    size--;
 
-                    if (size<=1){
-                        destroyed = true;
-                    }
+                leftToGrow++;
+                size--;
 
-                }
+                //Removing the tail of the snake
+                //Remove tail
+                tail.setActivated(false);
+                notifySpriteChange(tail.getId(), tail.getPosition(), tail.getGraphicKey());
+                notifyChangeAtPosition(tail.getPosition(), Entity.ONE_LESS_COVER_ON_POSITION);
+                tail = tail.getAtomTowardsHead();
+                notifySpriteChange(tail.getId(), tail.getPosition(), tail.getGraphicKey());
+
+                //Removing the tail of the snake
+                //Remove tail
+                tail.setActivated(false);
+                notifySpriteChange(tail.getId(), tail.getPosition(), tail.getGraphicKey());
+                notifyChangeAtPosition(tail.getPosition(), Entity.ONE_LESS_COVER_ON_POSITION);
+                tail = tail.getAtomTowardsHead();
+                notifySpriteChange(tail.getId(), tail.getPosition(), tail.getGraphicKey());
+            } else {
+                //Removing the tail of the snake
                 //Remove tail
                 tail.setActivated(false);
                 notifySpriteChange(tail.getId(), tail.getPosition(), tail.getGraphicKey());
@@ -251,6 +253,7 @@ public class SimpleSnake extends Snake {
                 tail = tail.getAtomTowardsHead();
                 notifySpriteChange(tail.getId(), tail.getPosition(), tail.getGraphicKey());
             }
+
 
             if (destroyed) {
                 this.destroy();
@@ -262,7 +265,47 @@ public class SimpleSnake extends Snake {
         }
     }
 
-    private void computeNextPosition(){
+    /**
+     * Computes the next position for the snake
+     *
+     * @return
+     */
+    private Position computeNextPosition() {
+
+
+        //Determining the next direction if the user entered a new direction
+        //If the user entered several directions, only computing the first one for this tick
+        if (!this.nextDirections.isEmpty()) {
+            switch (this.nextDirections.poll()) {
+
+                case EAST:
+                    if (currentDirection != Direction.WEST) {
+                        currentDirection = Direction.EAST;
+                    }
+                    break;
+                case SOUTH:
+                    if (currentDirection != Direction.NORTH) {
+                        currentDirection = Direction.SOUTH;
+                    }
+                    break;
+                case WEST:
+                    if (currentDirection != Direction.EAST) {
+                        currentDirection = Direction.WEST;
+                    }
+                    break;
+                case NORTH:
+                    if (currentDirection != Direction.SOUTH) {
+                        currentDirection = Direction.NORTH;
+                    }
+                    break;
+            }
+        }
+
+
+        Position newPosition = new Position(this.head.getPosition());
+        newPosition.moveInDirection(currentDirection, 1);
+
+        return newPosition;
 
     }
 
@@ -319,6 +362,19 @@ public class SimpleSnake extends Snake {
     @Override
     public Iterator<Entity.EntityTileInfo> getEntityTilesInfosIterator() {
         return new EntityTileInfoInterator(head);
+    }
+
+    private class SimpleSnakeAtom extends SnakeAtom {
+
+        private SimpleSnakeAtom(Position position, int id) {
+            super(position, id);
+        }
+
+        private SimpleSnakeAtom(Position position, SnakeAtom towardsTail) {
+            super(position, towardsTail.getId() + 1);
+            this.atomTowardsTail = towardsTail;
+            towardsTail.atomTowardsHead = this;
+        }
     }
 
     private class EntityTileInfoInterator implements Iterator<Entity.EntityTileInfo> {
