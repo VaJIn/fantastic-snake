@@ -107,7 +107,7 @@ public class GameLoadingScreen implements Screen, InputProcessor {
 
             EngineBuilder classicEngineBuilder = new EngineBuilder(reader.getField(), 1);
             classicEngineBuilder.addSnake(0, new SimpleSnake());
-            //   classicEngineBuilder.addSnake(1, new SimpleSnake());
+            classicEngineBuilder.addSnake(1, new SimpleSnake());
             //   classicEngineBuilder.addSnake(2, new SimpleSnake());
 
             GameEngine classicEngine = null;

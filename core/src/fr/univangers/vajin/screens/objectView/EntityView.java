@@ -82,13 +82,13 @@ public class EntityView implements EntityObserver {
     }
 
     private void tileChange(Position pos, String newRessource) {
-        if (layer.getCell(pos.getX(), pos.getY()) == null) {
+//        if (layer.getCell(pos.getX(), pos.getY()) == null) {
             TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
             cell.setTile(getTile(newRessource));
             layer.setCell(pos.getX(), pos.getY(), cell);
-        } else {
-            layer.getCell(pos.getX(), pos.getY()).setTile(getTile(newRessource));
-        }
+//        } else {
+//            layer.getCell(pos.getX(), pos.getY()).setTile(getTile(newRessource));
+//        }
     }
 
     private TiledMapTile getTile(String resource) {
