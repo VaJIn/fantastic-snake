@@ -47,23 +47,19 @@ public class DummySnake extends Snake {
 
     }
 
+
     @Override
-    public void moveForward() {
+    public void move(WalkDirection walkDirection) {
 
     }
 
     @Override
-    public void moveBackward() {
+    public void moveGrowing(WalkDirection walkDirection) {
 
     }
 
     @Override
-    public void moveGrowing() {
-
-    }
-
-    @Override
-    public void moveShrinking() {
+    public void moveShrinking(WalkDirection walkDirection) {
 
     }
 
@@ -138,6 +134,8 @@ public class DummySnake extends Snake {
     public List<Position> getNewPositions() {
         return new LinkedList<>();
     }
+
+
 
     @Override
     public void handleCollisionWith(Entity otherObject, Position collisionPosition, boolean initiater) {

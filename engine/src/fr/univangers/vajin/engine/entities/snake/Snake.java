@@ -104,13 +104,11 @@ public abstract class Snake extends DynamicEntity {
         this.luckFactor = luckFactor;
     }
 
-    public abstract void moveForward();
+    public abstract void move(WalkDirection walkDirection);
 
-    public abstract void moveBackward();
+    public abstract void moveGrowing(WalkDirection walkDirection);
 
-    public abstract void moveGrowing();
-
-    public abstract void moveShrinking();
+    public abstract void moveShrinking(WalkDirection walkDirection);
 
     public abstract int getSize();
 

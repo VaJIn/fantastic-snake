@@ -8,12 +8,18 @@ import fr.univangers.vajin.engine.entities.spawnables.bonus.TimedCommand;
 import fr.univangers.vajin.engine.entities.spawnables.bonus.BonusTarget;
 import fr.univangers.vajin.engine.field.Field;
 import fr.univangers.vajin.engine.utilities.Direction;
+import fr.univangers.vajin.engine.utilities.PerformedCommandsMap;
 import fr.univangers.vajin.engine.utilities.Position;
 import fr.univangers.vajin.engine.utilities.RandomNumberGenerator;
 
 import java.util.*;
 
 public class GameEngineImpl extends AbstractGameEngine implements EntityObserver {
+
+    /**
+     * Number of ticks the time machine goes in the past
+     */
+    private final int TIME_MACHINE_DURATION = 50;
 
     private int lastComputedTick;
 
@@ -27,7 +33,32 @@ public class GameEngineImpl extends AbstractGameEngine implements EntityObserver
 
     private Collection<Entity> toDispose;
 
-    private PriorityQueue<TimedCommand> timedCommands;
+    private boolean isTimeMachineActive;
+
+    private PerformedCommandsMap performedCommandsMap;
+
+
+    /**
+     * Contains the commands concerning the effects of the bonuses sorted by priority (application tick)
+     */
+    private PriorityQueue<TimedCommand> timedBonusCommands;
+
+    /**
+     * Contains the commands concerning the movement of a snake sorted by priority (application tick)
+     */
+    private PriorityQueue<TimedCommand> timedMovementCommands;
+
+    /**
+     * Integer corresponding to the last tick the time machine has been in the past
+     */
+    private int lastTickTimeMachine;
+
+    /**
+     * Integer corresponding to the tick the time machine must stop going in the past
+     */
+    private int stoppingTickTimeMachine;
+
+
 
     public GameEngineImpl(Map<Integer, Snake> players, Collection<Entity> entityCollection, Field field) {
         this.players = new HashMap<>(players);
@@ -47,9 +78,16 @@ public class GameEngineImpl extends AbstractGameEngine implements EntityObserver
             e.setEngine(this);
         }
 
-        this.timedCommands = new PriorityQueue<>();
+        this.timedBonusCommands = new PriorityQueue<>();
 
-        lastComputedTick = -1;
+        this.timedMovementCommands = new PriorityQueue<>();
+
+        this.lastComputedTick = -1;
+
+        this.isTimeMachineActive = false;
+
+        this.performedCommandsMap = new PerformedCommandsMap(TIME_MACHINE_DURATION);
+
     }
 
 
@@ -161,37 +199,58 @@ public class GameEngineImpl extends AbstractGameEngine implements EntityObserver
 
             int tick = lastComputedTick + 1;
 
-
-            //Ending bonuses if necessary
-            while (!timedCommands.isEmpty() && tick == timedCommands.peek().getTick()){
-                System.out.println("Applying end of a bonus on tick : "+getCurrentTick());
-                timedCommands.poll().apply();
-            }
-
-
             List<DynamicEntity> updatedEntities = new ArrayList<>();
 
-            //Call every entity to compute their moves
-            for (Entity e : entityCollection) {
-                if (e instanceof DynamicEntity) {
-                    DynamicEntity de = (DynamicEntity) e;
-                    if (de.computeTick(tick)) {
-                        //If there is a change on the entity, we had it on the list
-                        updatedEntities.add(de);
+
+            if (isTimeMachineActive){
+
+                //Reaching the commands of the past at the currently performed tick
+                List<TimedCommand> commands = performedCommandsMap.get(lastTickTimeMachine);
+
+                //Canceling all the commands
+                for (TimedCommand command : commands){
+                    command.cancel();
+                }
+
+                //If the last tick in the past has been reached, aborting the time machine
+                if (lastTickTimeMachine==stoppingTickTimeMachine){
+                    isTimeMachineActive = false;
+                }
+
+                lastTickTimeMachine--;
+            }
+            else{
+                //Call every entity to compute their moves
+                for (Entity e : entityCollection) {
+                    if (e instanceof DynamicEntity) {
+                        DynamicEntity de = (DynamicEntity) e;
+                        if (de.computeTick(tick)) {
+                            //If there is a change on the entity, we had it on the list
+                            updatedEntities.add(de);
+                        }
                     }
                 }
             }
 
+
+            //Applying all the commands coming from the snake to perform their movements
+            while (!timedMovementCommands.isEmpty() && tick == timedMovementCommands.peek().getTick()){
+                TimedCommand command = timedMovementCommands.poll();
+                command.apply();
+                performedCommandsMap.put(command);
+            }
+
             //For each entity that changed, we check for collision with other entities
+            //No collision search if the time machine is on
             for (DynamicEntity de : updatedEntities) {
                 List<Position> newPosition = de.getNewPositions();
+                if(! newPosition.isEmpty())
                 for (Position p : newPosition) {
                     //For every new position we check for collision
                     for (Entity ce : entityCollection) {
                         if (de != ce) {
                             if (ce.coversPosition(p)) {
                                 //If there is a collision we let the entity handle it
-                                System.out.println("[Tick " + tick + "] Collision at " + p);
                                 de.handleCollisionWith(ce, p, true);
                                 ce.handleCollisionWith(de, p, false);
                             }
@@ -199,6 +258,14 @@ public class GameEngineImpl extends AbstractGameEngine implements EntityObserver
                     }
                 }
             }
+
+            //Applying all the commands coming from the bonuses
+            while (!timedBonusCommands.isEmpty() && tick == timedBonusCommands.peek().getTick()){
+                TimedCommand command = timedBonusCommands.poll();
+                command.apply();
+                performedCommandsMap.put(command);
+            }
+
 
             //Recording that a snake just died
             players.forEach( ((id, snake) -> {
@@ -302,15 +369,53 @@ public class GameEngineImpl extends AbstractGameEngine implements EntityObserver
 
     }
 
+
+    /**
+     * Adding a timed command concerning the movement of a snake at the specified tick
+     * @param timedCommand
+     */
+    @Override
+    public void addMovementTimedCommand(TimedCommand timedCommand) {
+
+        if (timedCommand.getTick()>=getCurrentTick()){
+            timedMovementCommands.add(timedCommand);
+        }
+
+    }
+
+    /**
+     * Adding a timed command concerning the movement of a snake at the specified tick
+     * @param timedCommand
+     */
     @Override
     public void addBonusTimedCommand(TimedCommand timedCommand) {
 
-        if (timedCommand.getTick()>getCurrentTick()){
-            timedCommands.add(timedCommand);
+        if (timedCommand.getTick()>=getCurrentTick()){
+            timedBonusCommands.add(timedCommand);
             System.out.println("Adding timedCommand for tick : "+ timedCommand.getTick()+ " current : "+getCurrentTick());
         }
         else{
             System.out.println("Impossible d'ajouter le bonus end");
+        }
+
+    }
+
+    @Override
+    public void launchTimeMachine() {
+
+        System.out.println("Launching time machine");
+
+        isTimeMachineActive = true;
+
+        //Recording the tick the time machine must stop to go in the past
+        stoppingTickTimeMachine = lastComputedTick+1-TIME_MACHINE_DURATION;
+
+        //Current tick the time machine is going in the past
+        lastTickTimeMachine = lastComputedTick;
+
+        //Removing all the canceling bonus commands because they will be applied by the time machine
+        while (!timedBonusCommands.isEmpty()){
+            timedBonusCommands.poll();
         }
 
     }

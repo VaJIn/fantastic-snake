@@ -16,6 +16,8 @@ public class SpeedAlterationBonus extends AbstractBonus{
 
         targets.forEach( (snake) -> {
 
+            Integer test= 5;
+
             //Creating apply command
             TimedCommand.BonusTimedLambda applyLambda = (s -> {
                 s.changeSpeed(gain);
@@ -28,7 +30,7 @@ public class SpeedAlterationBonus extends AbstractBonus{
 
 
             //Getting current tick of the application
-            int applicationTick = ge.getCurrentTick() + 1;
+            int applicationTick = ge.getCurrentTick();
 
             //Creating the command for applying the bonus during the next tick
             TimedCommand timedCommand =  new TimedCommandImpl(snake, applicationTick, applyLambda, cancelLambda);

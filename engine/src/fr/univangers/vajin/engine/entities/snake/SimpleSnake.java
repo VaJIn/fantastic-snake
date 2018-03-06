@@ -4,6 +4,8 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
 import fr.univangers.vajin.GameConstants;
 import fr.univangers.vajin.engine.entities.Entity;
+import fr.univangers.vajin.engine.entities.spawnables.bonus.TimedCommand;
+import fr.univangers.vajin.engine.entities.spawnables.bonus.TimedCommandImpl;
 import fr.univangers.vajin.engine.field.FieldUnit;
 import fr.univangers.vajin.engine.utilities.Direction;
 import fr.univangers.vajin.engine.utilities.Position;
@@ -69,32 +71,193 @@ public class SimpleSnake extends Snake {
 
     }
 
+    /**
+     * The snake moves backward or forward
+     * If it moves forward, both head and tail move forward
+     * If it moves backward, both head and tail move backward
+     */
     @Override
-    public void moveForward() {
-
+    public void move(WalkDirection walkDirection) {
+        moveTail(walkDirection);
+        moveHead(walkDirection);
     }
 
+    /**
+     * The snake moves while growing
+     * If he moves forward, the head moves and the tail remains still
+     * if he moves backward the head moves backward once and the tail moves backward twice
+     *
+     *
+     * @param walkDirection
+     */
     @Override
-    public void moveBackward() {
+    public void moveGrowing(WalkDirection walkDirection) {
 
+        moveHead(walkDirection);
+
+        if (walkDirection==WalkDirection.BACKWARD){
+            moveTail(walkDirection);
+            moveTail(walkDirection);
+        }
     }
 
+    /**
+     * The snake moves while shrinking
+     * If it moves forward, the head moves forward once and the tail moves forward twice
+     * If it moves backward, the head moves backward and the tail remains still
+     */
     @Override
-    public void moveGrowing() {
+    public void moveShrinking(WalkDirection walkDirection) {
+
+        moveHead(walkDirection);
+
+        if (walkDirection==WalkDirection.FORWARD){
+            moveTail(walkDirection);
+            moveTail(walkDirection);
+        }
 
     }
 
-    @Override
-    public void moveShrinking() {
+    /**
+     * Moves the tail of the snake
+     * Either moves it torwards the head of the snake if the snake is moving forward or moves in the opposite direction if
+     * the snake is moving backward
+     */
+    private void moveTail(WalkDirection walkDirection) {
+
+        if (walkDirection==WalkDirection.FORWARD) {
+
+            //Remove tail
+            tail.setActivated(false);
+            notifySpriteChange(tail.getId(), tail.getPosition(), tail.getGraphicKey());
+            notifyChangeAtPosition(tail.getPosition(), Entity.ONE_LESS_COVER_ON_POSITION);
+            tail = tail.getAtomTowardsHead();
+            notifySpriteChange(tail.getId(), tail.getPosition(), tail.getGraphicKey());
+
+
+            //If the snake has no more body, it dies
+            if (size <= 1) {
+                System.out.println("Destroy because no more body");
+                this.destroy();
+            }
+
+        }
+        else if (walkDirection==WalkDirection.BACKWARD){
+
+            SnakeAtom formerTail = tail;
+
+            //New tail is the former one
+            tail = tail.getAtomTowardsTail();
+            tail.setActivated(true);
+
+            //Notifying change a new tail position
+            notifyChangeAtPosition(tail.getPosition(), Entity.NEW_COVERED_POSITION);
+
+            //Notifying that the new tail is a tail
+            notifySpriteChange(tail.getId(), tail.getPosition(), tail.getGraphicKey());
+
+            //Notifying that the former tail is no more a tail
+            notifySpriteChange(formerTail.getId(), formerTail.getPosition(), formerTail.getGraphicKey());
+
+            //Checking that the new position is valid
+            if (!isValidSnakePosition(tail.getPosition())){
+                System.out.println("Destroy because tail not valid position");
+                this.destroy();
+            }
+
+        }
+    }
+
+    /**
+     * Moves the head of the snake
+     * Either moves it towards the tail of the snake if the snake is moving backward or moves in the opposite direction if
+     * the snake is moving forward
+     */
+    private void moveHead(WalkDirection walkDirection) {
+
+        if (walkDirection==WalkDirection.FORWARD) {
+
+            boolean destroyed = false;
+
+            //Updating the head position
+            Position newHeadPosition = computeNextPosition();
+
+            //check if we don't hit ourself if the snake is material
+            if (!isImmaterial() && this.coversPosition(newHeadPosition)) {
+                System.out.println("Destroy because covers own position");
+                destroyed = true;
+            }
+
+            //Adding the new head position to the new positions
+            this.newPositions.add(newHeadPosition);
+
+            //Creating the new head atom
+            SnakeAtom newHead = new SimpleSnakeAtom(newHeadPosition, head);
+
+            //Notifying the sprite change of the former head
+            notifySpriteChange(head.getId(), head.getPosition(), head.getGraphicKey());
+
+            //Updating the reference to the snake atom head
+            head = newHead;
+
+            head.setActivated(true);
+
+            //Notifying the sprite change of the new head
+            notifySpriteChange(head.getId(), head.getPosition(), head.getGraphicKey());
+
+            //Adding the head to the list of the snake atoms
+            atoms.put(head.getPosition(), head);
+
+            //Notifying that the snake covers a new position
+            notifyChangeAtPosition(newHeadPosition, Entity.NEW_COVERED_POSITION);
+
+            //Check if new head position is valid on the board
+            if (!isValidSnakePosition(newHeadPosition)){
+                System.out.println("Destroy because not valid head position");
+                destroyed = true;
+            }
+
+            if (destroyed) {
+                this.destroy();
+            }
+
+        }
+        else if (walkDirection==WalkDirection.BACKWARD && size>1){
+
+            //Notifying that the former head doesn't exist anymore
+            head.setActivated(false);
+            notifySpriteChange(head.getId(), head.getPosition(), head.getGraphicKey());
+            notifyChangeAtPosition(head.getPosition(), Entity.ONE_LESS_COVER_ON_POSITION);
+
+            //Setting up the new head
+            head = head.getAtomTowardsTail();
+            head.setActivated(true);
+            notifySpriteChange(head.getId(), head.getPosition(), head.getGraphicKey());
+
+        }
 
     }
 
-    private void removeTail() {
+    private boolean isValidSnakePosition(Position pos){
 
-    }
+        boolean isValid = true;
 
-    private void moveHeadForward() {
+        System.out.println("Pos : "+pos);
 
+        //Check if new head position is valid on the board
+        if (pos.getX() < 0 || pos.getX() >= this.getEngine().getField().getWidth() || pos.getY() < 0 || pos.getY() >= this.getEngine().getField().getHeight()) {
+            isValid = false;
+            System.out.println("Destroyed true because pos out of screen");
+        }
+        else {
+            FieldUnit headFieldUnit = this.getEngine().getField().getFieldUnits(pos);
+            if (!headFieldUnit.isWalkable()) {
+                isValid = false;
+                System.out.println("Destroyed true because pos not walkable");
+            }
+        }
+
+        return isValid;
     }
 
     @Override
@@ -177,87 +340,53 @@ public class SimpleSnake extends Snake {
             //We move
             lastMoveTick = tick;
 
+            TimedCommand movingTimedCommand = null;
 
-            //Updating the head position
-            Position newHeadPosition = computeNextPosition();
+            if (leftToGrow==0){
+                //The snakes moves forward
 
-            //check if we don't hit ourself if the snake is material
-            if (!isImmaterial() && this.coversPosition(newHeadPosition)) {
-                destroyed = true;
+                //Creating application command
+                TimedCommand.BonusTimedLambda applyLambda = snake -> snake.move(WalkDirection.FORWARD);
+
+                //Creating cancel command
+                TimedCommand.BonusTimedLambda cancelLambda = snake -> snake.move(WalkDirection.BACKWARD);
+
+                movingTimedCommand = new TimedCommandImpl(this, tick, applyLambda, cancelLambda);
             }
+            else if (leftToGrow > 0) {
 
-            //Adding the new head position to the new positions
-            this.newPositions.add(newHeadPosition);
-
-            //Creating the new head atom
-            SnakeAtom newHead = new SimpleSnakeAtom(newHeadPosition, head);
-
-            //Notifying the sprite change of the former head
-            notifySpriteChange(head.getId(), head.getPosition(), head.getGraphicKey());
-
-            //Updating the reference to the snake atom head
-            head = newHead;
-
-            //Notifying the sprite change of the new head
-            notifySpriteChange(head.getId(), head.getPosition(), head.getGraphicKey());
-
-            //Adding the head to the list of the snake atoms
-            atoms.put(head.getPosition(), head);
-
-            //Notifying that the snake covers a new position
-            notifyChangeAtPosition(newHeadPosition, Entity.NEW_COVERED_POSITION);
-
-            //Check if new head position is valid on the board
-            if (newHeadPosition.getX() < 0 || newHeadPosition.getX() >= this.getEngine().getField().getWidth() || newHeadPosition.getY() < 0 || newHeadPosition.getY() >= this.getEngine().getField().getHeight()) {
-                this.destroy();
-            } else {
-                FieldUnit headFieldUnit = this.getEngine().getField().getFieldUnits(newHeadPosition);
-                if (!headFieldUnit.isWalkable()) {
-                    System.out.println("\033[31mField " + headFieldUnit + " ! You die\033[0m");
-                    destroyed = true;
-                }
-            }
-
-
-            if (leftToGrow > 0) {
                 //If the snake must grow, recording that it has grown and updating the size
                 leftToGrow--;
                 size++;
-            } else if (leftToGrow < 0) {
+
+                //Creating application command
+                TimedCommand.BonusTimedLambda applyLambda = snake -> snake.moveGrowing(WalkDirection.FORWARD);
+
+                //Creating cancel command
+                TimedCommand.BonusTimedLambda cancelLambda = snake -> snake.moveShrinking(WalkDirection.BACKWARD);
+
+                movingTimedCommand = new TimedCommandImpl(this, tick, applyLambda, cancelLambda);
 
 
+            }
+            else if (leftToGrow<0) {
+
+                //If the snake must shrink, recording that it has shrank and updating the size
                 leftToGrow++;
                 size--;
 
-                //Removing the tail of the snake
-                //Remove tail
-                tail.setActivated(false);
-                notifySpriteChange(tail.getId(), tail.getPosition(), tail.getGraphicKey());
-                notifyChangeAtPosition(tail.getPosition(), Entity.ONE_LESS_COVER_ON_POSITION);
-                tail = tail.getAtomTowardsHead();
-                notifySpriteChange(tail.getId(), tail.getPosition(), tail.getGraphicKey());
+                //Creating application command
+                TimedCommand.BonusTimedLambda applyLambda = snake -> snake.moveShrinking(WalkDirection.FORWARD);
 
-                //Removing the tail of the snake
-                //Remove tail
-                tail.setActivated(false);
-                notifySpriteChange(tail.getId(), tail.getPosition(), tail.getGraphicKey());
-                notifyChangeAtPosition(tail.getPosition(), Entity.ONE_LESS_COVER_ON_POSITION);
-                tail = tail.getAtomTowardsHead();
-                notifySpriteChange(tail.getId(), tail.getPosition(), tail.getGraphicKey());
-            } else {
-                //Removing the tail of the snake
-                //Remove tail
-                tail.setActivated(false);
-                notifySpriteChange(tail.getId(), tail.getPosition(), tail.getGraphicKey());
-                notifyChangeAtPosition(tail.getPosition(), Entity.ONE_LESS_COVER_ON_POSITION);
-                tail = tail.getAtomTowardsHead();
-                notifySpriteChange(tail.getId(), tail.getPosition(), tail.getGraphicKey());
+                //Creating cancel command
+                TimedCommand.BonusTimedLambda cancelLambda = snake -> snake.moveGrowing(WalkDirection.BACKWARD);
+
+                movingTimedCommand = new TimedCommandImpl(this, tick, applyLambda, cancelLambda);
+
             }
 
+            getEngine().addMovementTimedCommand(movingTimedCommand);
 
-            if (destroyed) {
-                this.destroy();
-            }
 
             return true;
         } else {
@@ -317,11 +446,20 @@ public class SimpleSnake extends Snake {
     @Override
     public boolean coversPosition(Position pos) {
         //For all atoms at position pos
+
+        System.out.print(atoms.size());
+
         for (SnakeAtom sk : atoms.get(pos)) { //At worse the multimap return an empty collection, so no risk of NullPointerException
+
+            System.out.print("| ");
+
             if (sk.isActivated()) {
                 //if an atom at this position is
+                System.out.println("O");
                 return true;
             }
+
+            System.out.println();
         }
         return false;
     }

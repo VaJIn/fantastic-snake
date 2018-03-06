@@ -47,6 +47,7 @@ public class EngineBuilder {
     private final static String ALTER_SIZE = "alter_size";
     private final static String IMMATERIALITY = "immateriality";
     private final static String INVISIBILITY = "invisibility";
+    private final static String TIME_MACHINE = "time_machine";
     private final static String MIN_FOOD = "min_simultaneous_food";
     private final static String MAX_FOOD = "max_simultaneous_food";
     private final static String MIN_BONUSES = "min_simultaneous_bonuses";
@@ -248,6 +249,8 @@ public class EngineBuilder {
                     case ALTER_SIZE:
                         availableBonuses.add(new SizeAlterationBonus(resourceKey, probaWeight, name, bonusTarget, gain, duration));
                         break;
+                    case TIME_MACHINE:
+                        availableBonuses.add(new TimeMachineBonus(resourceKey, probaWeight, name, bonusTarget, gain, duration));
                 }
 
             }

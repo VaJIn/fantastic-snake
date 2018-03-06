@@ -90,6 +90,10 @@ public abstract class SnakeAtom {
         return atomTowardsTail;
     }
 
+    public void setAtomTowardsHead(SnakeAtom atomTowardsHead){
+        this.atomTowardsHead = atomTowardsHead;
+    }
+
     public int getId() {
         return id;
     }
@@ -98,7 +102,7 @@ public abstract class SnakeAtom {
         if (!this.isActivated()) {
             return "";
         }
-        if (this.getAtomTowardsHead() == null) {
+        if (this.getAtomTowardsHead() == null || !this.getAtomTowardsHead().isActivated()) {
             Direction fromDir = Direction.fromPosition(this.getAtomTowardsTail().getPosition(), this.getPosition());
             return "head_" + fromDir.toString().toLowerCase();
         } else if (this.getAtomTowardsTail() == null || !this.getAtomTowardsTail().isActivated()) {

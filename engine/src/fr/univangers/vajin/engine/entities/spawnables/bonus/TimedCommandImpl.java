@@ -32,6 +32,11 @@ public class TimedCommandImpl implements TimedCommand {
         return tick;
     }
 
+    @Override
+    public void delayTick(int delay) {
+        tick+=delay;
+    }
+
     public int compareTo(Object o) {
 
         if (o instanceof TimedCommand){

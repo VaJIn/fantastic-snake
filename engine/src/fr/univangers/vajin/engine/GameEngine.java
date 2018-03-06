@@ -23,7 +23,11 @@ public interface GameEngine {
 
     void removeGameEngineObserver(GameEngineObserver observer);
 
+    void addMovementTimedCommand(TimedCommand timedCommand);
+
     void addBonusTimedCommand(TimedCommand timedCommand);
+
+    void launchTimeMachine();
 
     int getCurrentTick();
 

@@ -16,4 +16,5 @@ public abstract class DynamicEntity extends Entity {
     public abstract boolean computeTick(int tick); //To move
 
     public abstract List<Position> getNewPositions();
+
 }

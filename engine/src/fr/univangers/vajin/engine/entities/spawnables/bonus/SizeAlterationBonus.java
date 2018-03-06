@@ -26,6 +26,8 @@ public class SizeAlterationBonus extends AbstractBonus{
                 s.changeSize(gain);
             });
 
+
+
             //Creating cancel command
             TimedCommand.BonusTimedLambda cancelLambda = (s -> {
                 s.changeSize(-gain);
@@ -33,7 +35,7 @@ public class SizeAlterationBonus extends AbstractBonus{
 
 
             //Getting current tick of the application
-            int applicationTick = ge.getCurrentTick() + 1;
+            int applicationTick = ge.getCurrentTick();
 
             //Creating the command for applying the bonus during the next tick
             TimedCommand timedCommand =  new TimedCommandImpl(snake, applicationTick, applyLambda, cancelLambda);

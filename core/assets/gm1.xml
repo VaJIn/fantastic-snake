@@ -13,6 +13,8 @@
         <bonus name="faster_taker" type="alter_speed" target="taker" resource_key="piment" gain="5" duration="100" proba_weight="2"/>
         <bonus name="slower_taker" type="alter_speed" target="taker" resource_key="tea" gain="-5" duration="100" proba_weight="2"/>
         <bonus name="temporarly_bigger" type="alter_size" target="taker" resource_key="chesse" gain="15" duration="250" proba_weight="2"/>
+        <bonus name="time_machine" type="time_machine" target="taker" resource_key="cookie" gain="0" duration="-1" proba_weight="2"/>
+
     </bonuses>
 
 </mode>

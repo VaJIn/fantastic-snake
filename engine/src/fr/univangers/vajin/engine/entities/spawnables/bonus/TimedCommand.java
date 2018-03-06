@@ -20,5 +20,7 @@ public interface TimedCommand extends Comparable{
 
     int getTick();
 
+    void delayTick(int delay);
+
 
 }
