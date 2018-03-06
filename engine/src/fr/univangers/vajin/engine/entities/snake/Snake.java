@@ -49,6 +49,12 @@ public abstract class Snake extends DynamicEntity {
      */
     private int immaterial;
 
+    /**
+     * True if the user is allowed to choose the direction of its snake
+     * False while the time machine is on
+     */
+    private boolean acceptsUserActions;
+
 
 
 
@@ -60,6 +66,7 @@ public abstract class Snake extends DynamicEntity {
         this.resistance = resistance;
         this.luckFactor = luckFactor;
         this.speed = speed;
+        this.acceptsUserActions = true;
     }
 
 
@@ -104,6 +111,14 @@ public abstract class Snake extends DynamicEntity {
         this.luckFactor = luckFactor;
     }
 
+    public void setAcceptUserActions(boolean val){
+        this.acceptsUserActions = val;
+    }
+
+    public boolean acceptsUserActions(){
+        return this.acceptsUserActions;
+    }
+
     public abstract void move(WalkDirection walkDirection);
 
     public abstract void moveGrowing(WalkDirection walkDirection);
@@ -137,6 +152,8 @@ public abstract class Snake extends DynamicEntity {
     public void stopImmateriality(){
         invisible--;
     }
+
+    public abstract void cancelNextMovements();
 
 
 

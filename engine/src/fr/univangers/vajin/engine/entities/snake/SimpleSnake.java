@@ -144,25 +144,29 @@ public class SimpleSnake extends Snake {
         }
         else if (walkDirection==WalkDirection.BACKWARD){
 
-            SnakeAtom formerTail = tail;
 
             //New tail is the former one
-            tail = tail.getAtomTowardsTail();
-            tail.setActivated(true);
+            if (tail.getAtomTowardsTail()!=null) {
 
-            //Notifying change a new tail position
-            notifyChangeAtPosition(tail.getPosition(), Entity.NEW_COVERED_POSITION);
+                SnakeAtom formerTail = tail;
 
-            //Notifying that the new tail is a tail
-            notifySpriteChange(tail.getId(), tail.getPosition(), tail.getGraphicKey());
+                tail = tail.getAtomTowardsTail();
+                tail.setActivated(true);
 
-            //Notifying that the former tail is no more a tail
-            notifySpriteChange(formerTail.getId(), formerTail.getPosition(), formerTail.getGraphicKey());
+                //Notifying change a new tail position
+                notifyChangeAtPosition(tail.getPosition(), Entity.NEW_COVERED_POSITION);
 
-            //Checking that the new position is valid
-            if (!isValidSnakePosition(tail.getPosition())){
-                System.out.println("Destroy because tail not valid position");
-                this.destroy();
+                //Notifying that the new tail is a tail
+                notifySpriteChange(tail.getId(), tail.getPosition(), tail.getGraphicKey());
+
+                //Notifying that the former tail is no more a tail
+                notifySpriteChange(formerTail.getId(), formerTail.getPosition(), formerTail.getGraphicKey());
+
+                //Checking that the new position is valid
+                if (!isValidSnakePosition(tail.getPosition())) {
+                    System.out.println("Destroy because tail not valid position");
+                    this.destroy();
+                }
             }
 
         }
@@ -234,6 +238,9 @@ public class SimpleSnake extends Snake {
             head.setActivated(true);
             notifySpriteChange(head.getId(), head.getPosition(), head.getGraphicKey());
 
+            //Updating the current direction
+            currentDirection = Direction.getDirectionBetweenAdjPos(head.getAtomTowardsTail().getPosition(), head.getPosition());
+
         }
 
     }
@@ -271,6 +278,11 @@ public class SimpleSnake extends Snake {
     }
 
     @Override
+    public void cancelNextMovements() {
+        nextDirections.clear();
+    }
+
+    @Override
     public int changeSpeed(int howMuch) {
 
         int delta;
@@ -295,23 +307,26 @@ public class SimpleSnake extends Snake {
     @Override
     public void sendAction(int action) {
 
-        switch (action) {
+        if (acceptsUserActions()) {
 
-            case GO_SOUTH:
-                this.nextDirections.addLast(Direction.SOUTH);
-                break;
-            case GO_WEST:
-                this.nextDirections.addLast(Direction.WEST);
-                break;
-            case GO_NORTH:
-                this.nextDirections.addLast(Direction.NORTH);
-                break;
-            case GO_EAST:
-                this.nextDirections.addLast(Direction.EAST);
-                break;
+            switch (action) {
 
-            default:
-                throw new IllegalArgumentException("Unknown action " + action);
+                case GO_SOUTH:
+                    this.nextDirections.addLast(Direction.SOUTH);
+                    break;
+                case GO_WEST:
+                    this.nextDirections.addLast(Direction.WEST);
+                    break;
+                case GO_NORTH:
+                    this.nextDirections.addLast(Direction.NORTH);
+                    break;
+                case GO_EAST:
+                    this.nextDirections.addLast(Direction.EAST);
+                    break;
+
+                default:
+                    throw new IllegalArgumentException("Unknown action " + action);
+            }
         }
     }
 

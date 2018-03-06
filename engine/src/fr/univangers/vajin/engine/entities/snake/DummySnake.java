@@ -74,6 +74,11 @@ public class DummySnake extends Snake {
     }
 
     @Override
+    public void cancelNextMovements() {
+
+    }
+
+    @Override
     public int changeSpeed(int howMuch) {
         return 0;
     }

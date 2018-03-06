@@ -214,7 +214,7 @@ public class GameEngineImpl extends AbstractGameEngine implements EntityObserver
 
                 //If the last tick in the past has been reached, aborting the time machine
                 if (lastTickTimeMachine==stoppingTickTimeMachine){
-                    isTimeMachineActive = false;
+                    endTimeMachine();
                 }
 
                 lastTickTimeMachine--;
@@ -413,12 +413,35 @@ public class GameEngineImpl extends AbstractGameEngine implements EntityObserver
         //Current tick the time machine is going in the past
         lastTickTimeMachine = lastComputedTick;
 
+        //Canceling the next movements the snake wants to make and stop listening to the user input
+        for (Entity e : entityCollection){
+            if (e instanceof Snake){
+                ((Snake) e).cancelNextMovements();
+                ((Snake) e).setAcceptUserActions(false);
+            }
+        }
+
         //Removing all the canceling bonus commands because they will be applied by the time machine
         while (!timedBonusCommands.isEmpty()){
             timedBonusCommands.poll();
         }
 
     }
+
+    private void endTimeMachine(){
+
+        //Listening again to the user input
+        for (Entity e : entityCollection) {
+            if (e instanceof Snake) {
+                ((Snake) e).setAcceptUserActions(true);
+            }
+        }
+
+        //updating the boolean
+        isTimeMachineActive = false;
+
+    }
+
 
     @Override
     public int getCurrentTick() {
