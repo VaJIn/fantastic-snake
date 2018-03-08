@@ -10,6 +10,7 @@ import fr.vajin.snakerpg.gameroom.Receiver;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.DatagramPacket;
+import java.nio.ByteBuffer;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -31,22 +32,21 @@ public class ReceiverImpl implements Receiver {
     public void receivePacket(DatagramPacket packet) {
         byte[] data = packet.getData();
 
-        try {
-            InputStream stream = ByteSource.wrap(data).openStream();
-            Scanner scanner = new Scanner(stream);
 
-            int idProtocol = scanner.nextInt();
-            if (idProtocol == this.idProtocol) {
-                int playerId = scanner.nextInt();
+        ByteBuffer buffer = ByteBuffer.wrap(data);
 
-                if (playerHandlerMap.containsKey(playerId)) {
-                    playerHandlerMap.get(playerId).getPlayerPacketHandler().handleDatagramPacket(packet);
-                } else {
-                    newConnectionHandler.handleDatagramPacket(packet);
-                }
+
+        int idProtocol = buffer.getInt();
+        if (idProtocol == this.idProtocol) {
+            int playerId = buffer.getInt();
+
+            if (playerHandlerMap.containsKey(playerId)) {
+                playerHandlerMap.get(playerId).getPlayerPacketHandler().handleDatagramPacket(packet);
+            } else {
+                newConnectionHandler.handleDatagramPacket(packet);
             }
-        } catch (IOException e) {
         }
+
     }
 
     @Override
