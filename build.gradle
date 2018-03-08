@@ -70,6 +70,15 @@ project(":engine"){
     }
 }
 
+project(":network"){
+
+    apply plugin: "java"
+
+    dependencies{
+        compile project(":engine")
+        compile "com.google.guava:guava:23.6-jre"
+    }
+}
 
 
 tasks.eclipse.doLast {
