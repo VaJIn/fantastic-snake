@@ -42,7 +42,7 @@ public class SimpleSnake extends Snake {
 
 
     public SimpleSnake() {
-        super(100, 100, 0, 0, 10);
+        super(100, 100, 0, 0, 5);
 
         this.atoms = MultimapBuilder.hashKeys().arrayListValues().build();
 
@@ -132,7 +132,9 @@ public class SimpleSnake extends Snake {
             notifySpriteChange(tail.getId(), tail.getPosition(), tail.getGraphicKey());
             notifyChangeAtPosition(tail.getPosition(), Entity.ONE_LESS_COVER_ON_POSITION);
             tail = tail.getAtomTowardsHead();
-            notifySpriteChange(tail.getId(), tail.getPosition(), tail.getGraphicKey());
+            if (tail != null) {
+                notifySpriteChange(tail.getId(), tail.getPosition(), tail.getGraphicKey());
+            }
 
 
             //If the snake has no more body, it dies
@@ -164,7 +166,6 @@ public class SimpleSnake extends Snake {
                 System.out.println("Destroy because tail not valid position");
                 this.destroy();
             }
-
         }
     }
 
@@ -228,10 +229,12 @@ public class SimpleSnake extends Snake {
             head.setActivated(false);
             notifySpriteChange(head.getId(), head.getPosition(), head.getGraphicKey());
             notifyChangeAtPosition(head.getPosition(), Entity.ONE_LESS_COVER_ON_POSITION);
+            this.atoms.remove(head.getPosition(), head);
 
             //Setting up the new head
             head = head.getAtomTowardsTail();
             head.setActivated(true);
+            head.setAtomTowardsHead(null);
             notifySpriteChange(head.getId(), head.getPosition(), head.getGraphicKey());
 
         }
@@ -242,7 +245,7 @@ public class SimpleSnake extends Snake {
 
         boolean isValid = true;
 
-        System.out.println("Pos : "+pos);
+//        System.out.println("Pos : "+pos);
 
         //Check if new head position is valid on the board
         if (pos.getX() < 0 || pos.getX() >= this.getEngine().getField().getWidth() || pos.getY() < 0 || pos.getY() >= this.getEngine().getField().getHeight()) {
@@ -326,7 +329,7 @@ public class SimpleSnake extends Snake {
             //Snake is dead
             return false;
         }
-        //znewPositions = new ArrayList<>();
+
         boolean destroyed = false;
         newPositions = new ArrayList<>();
 
@@ -400,8 +403,6 @@ public class SimpleSnake extends Snake {
      * @return
      */
     private Position computeNextPosition() {
-
-
         //Determining the next direction if the user entered a new direction
         //If the user entered several directions, only computing the first one for this tick
         if (!this.nextDirections.isEmpty()) {
@@ -430,7 +431,6 @@ public class SimpleSnake extends Snake {
             }
         }
 
-
         Position newPosition = new Position(this.head.getPosition());
         newPosition.moveInDirection(currentDirection, 1);
 
@@ -447,15 +447,15 @@ public class SimpleSnake extends Snake {
     public boolean coversPosition(Position pos) {
         //For all atoms at position pos
 
-        System.out.print(atoms.size());
+        //    System.out.print(atoms.size());
 
         for (SnakeAtom sk : atoms.get(pos)) { //At worse the multimap return an empty collection, so no risk of NullPointerException
 
-            System.out.print("| ");
+            //      System.out.print("| ");
 
             if (sk.isActivated()) {
                 //if an atom at this position is
-                System.out.println("O");
+                //         System.out.println("O");
                 return true;
             }
 

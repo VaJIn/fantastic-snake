@@ -1,5 +1,6 @@
 package fr.univangers.vajin.engine;
 
+import com.google.common.collect.ImmutableList;
 import fr.univangers.vajin.engine.entities.DynamicEntity;
 import fr.univangers.vajin.engine.entities.Entity;
 import fr.univangers.vajin.engine.entities.EntityObserver;
@@ -171,7 +172,7 @@ public class GameEngineImpl extends AbstractGameEngine implements EntityObserver
 
     @Override
     public boolean isGameOver() {
-
+//Could be implemented as a strategy if we want different end game condition (time, size, score, etc..)
 
         int nbSnakeAlive = 0;
 
@@ -432,5 +433,10 @@ public class GameEngineImpl extends AbstractGameEngine implements EntityObserver
         }
 
         return players.get(playerId).getSize();
+    }
+
+    @Override
+    public Collection<Entity> getEntities() {
+        return ImmutableList.copyOf(entityCollection);
     }
 }

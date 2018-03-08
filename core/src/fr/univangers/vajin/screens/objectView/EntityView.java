@@ -2,6 +2,7 @@ package fr.univangers.vajin.screens.objectView;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -95,7 +96,12 @@ public class EntityView implements EntityObserver {
         if (resource.equals("")) {
             return null;
         }
-        return new StaticTiledMapTile(this.atlas.findRegion(resource));
+        TextureRegion region = this.atlas.findRegion(resource);
+        if (region == null) {
+            return null;
+//            throw new IllegalArgumentException("Resource " + resource + " not found");
+        }
+        return new StaticTiledMapTile(region);
     }
 
     public void dispose() {
