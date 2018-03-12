@@ -9,10 +9,20 @@ import fr.vajin.snakerpg.gameroom.PlayerPacketCreator;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.DatagramPacket;
+import java.nio.ByteBuffer;
 import java.util.Iterator;
 import java.util.Map;
 
 public class PlayerPacketCreatorImpl implements PlayerPacketCreator {
+
+
+    private static byte[] intToByteArray(int value) {
+        return new byte[]{
+                (byte) (value >>> 24),
+                (byte) (value >>> 16),
+                (byte) (value >>> 8),
+                (byte) value};
+    }
 
     private GameEngine gameEngine;
     private Map<Integer, Entity> entities;
@@ -32,6 +42,7 @@ public class PlayerPacketCreatorImpl implements PlayerPacketCreator {
         this.gameEngine = gameEngine;
         this.gameEngine.addGameEngineObserver(this);
         for (Entity entity : gameEngine.getEntities()) {
+            System.out.println("[Set engine] registering entity " + entity.getEntityId());
             entity.registerObserver(this);
             this.entities.put(entity.getEntityId(), entity);
         }
@@ -42,38 +53,87 @@ public class PlayerPacketCreatorImpl implements PlayerPacketCreator {
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
 
-        stream.write(idProtocol);
+        try {
+            stream.write(intToByteArray(idProtocol));
 
-        stream.write(this.lastIdReceived);
+            stream.write(intToByteArray(this.lastIdReceived));
 
-        stream.write(0xffffffff);
+            stream.write(intToByteArray(0xFFFFFFFF));
 
-        for (Entity entity : entities.values()) {
+            System.out.println("[NEXT PACKET] Map size : " + entities.size());
 
-            Iterator<Entity.EntityTileInfo> it = entity.getEntityTilesInfosIterator();
+            for (Entity entity : entities.values()) {
+                System.out.println("[NEXT PACKET] Entity" + entity.getEntityId());
+                Iterator<Entity.EntityTileInfo> it = entity.getEntityTilesInfosIterator();
 
-            while (it.hasNext()) {
-                Entity.EntityTileInfo tileInfo = it.next();
-                try {
-                    stream.write(tileInfo.getId());
-                    stream.write(tileInfo.getPosition().getX());
-                    stream.write(tileInfo.getPosition().getY());
+                stream.write(intToByteArray(entity.getEntityId()));
+                while (it.hasNext()) {
+                    Entity.EntityTileInfo tileInfo = it.next();
+                    System.out.println("[NEXT PACKET] Tile " + tileInfo.getId());
+                    stream.write(intToByteArray(tileInfo.getId()));
+                    stream.write(intToByteArray(tileInfo.getPosition().getX()));
+                    stream.write(intToByteArray(tileInfo.getPosition().getY()));
                     byte[] resourceKeyBytes = tileInfo.getRessourceKey().getBytes();
-                    stream.write(resourceKeyBytes.length);
+                    stream.write(intToByteArray(resourceKeyBytes.length));
                     stream.write(resourceKeyBytes);
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
+                stream.write(intToByteArray(-1));
+            }
+
+            stream.write(intToByteArray(-1));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        byte[] data = stream.toByteArray();
+
+        System.out.println("Data.length : " + data.length);
+        for (int i = 0; i < data.length; ++i) {
+            System.out.println(i + " " + data[i]);
+        }
+
+//*
+        System.out.println("==================================================================");
+        ByteBuffer buffer = ByteBuffer.wrap(data);
+        int idProtocol = buffer.getInt();
+        System.out.format("idProtocol : 0x%08X", idProtocol);
+        System.out.println();
+
+        int lastIdReceived = buffer.getInt();
+
+        System.out.println("lastIdReceived : " + lastIdReceived);
+
+        int ackbitfield = buffer.getInt();
+
+        System.out.println("ackbitfield : " + ackbitfield);
+
+        while (buffer.hasRemaining()) {
+            int idEntity = buffer.getInt();
+            System.out.println("idEntity : " + idEntity);
+            if (idEntity == -1) {
+                break;
+            }
+            int idTile;
+            while ((idTile = buffer.getInt()) != -1) {
+                System.out.println("idTile : " + idTile);
+                int posX = buffer.getInt();
+                System.out.println("posXTile : " + posX);
+                int posY = buffer.getInt();
+                System.out.println("posYTile : " + posY);
+                int sizeRessourceKeyBytes = buffer.getInt();
+                System.out.println("sizeRessourceKeyBytes : " + sizeRessourceKeyBytes);
+                byte[] ressourceKey = new byte[sizeRessourceKeyBytes];
+                buffer.get(ressourceKey);
+                System.out.println("ressourceKey : " + new String(ressourceKey));
             }
         }
 
-        byte[] data = stream.toByteArray();
+//*/
         return new DatagramPacket(data, data.length);
     }
 
     @Override
     public void acknowledgePacket(int idLastReceived, byte[] ackBitField) {
-
 
     }
 

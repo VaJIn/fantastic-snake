@@ -6,18 +6,24 @@ import fr.vajin.snakerpg.gameroom.PlayerTransmiter;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.nio.ByteBuffer;
 import java.time.Instant;
 
 public class PlayerTransmiterImpl extends Thread implements PlayerTransmiter {
 
     private DatagramSocket socket;
     private PlayerPacketCreator creator;
-    private int packetsPerSecond;
+    private float packetsPerSecond;
+    private final InetAddress inetAdress;
+    private final int port;
 
-    public PlayerTransmiterImpl(DatagramSocket socket, int idProtocol, int packetsPerSecond) {
+    public PlayerTransmiterImpl(DatagramSocket socket, PlayerPacketCreator playerPacketCreator, int idProtocol, float packetsPerSecond, InetAddress inetAdress, int port) {
         this.socket = socket;
         this.packetsPerSecond = packetsPerSecond;
-        this.creator = new PlayerPacketCreatorImpl(idProtocol);
+        this.creator = playerPacketCreator;
+        this.inetAdress = inetAdress;
+        this.port = port;
     }
 
     @Override
@@ -26,10 +32,15 @@ public class PlayerTransmiterImpl extends Thread implements PlayerTransmiter {
         try {
             while (!this.isInterrupted()) {
 
+                System.out.println("Sending packet");
+
                 long start = Instant.now().toEpochMilli();
 
                 DatagramPacket packet = creator.getNextPacket();
 
+
+                packet.setAddress(this.inetAdress);
+                packet.setPort(port);
                 try {
                     socket.send(packet);
                 } catch (IOException e) {
@@ -38,7 +49,7 @@ public class PlayerTransmiterImpl extends Thread implements PlayerTransmiter {
 
                 long end = Instant.now().toEpochMilli();
 
-                sleep(1000 / packetsPerSecond - (end - start));
+                sleep((int) (1000.0 / packetsPerSecond) - (end - start));
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
