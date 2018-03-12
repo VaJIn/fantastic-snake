@@ -1,18 +1,14 @@
 package fr.vajin.snakerpg.gameroom.impl;
 
 import com.google.common.collect.Maps;
-import com.google.common.io.ByteSource;
 import fr.vajin.snakerpg.gameroom.Controller;
 import fr.vajin.snakerpg.gameroom.NewConnectionHandler;
 import fr.vajin.snakerpg.gameroom.PlayerHandler;
 import fr.vajin.snakerpg.gameroom.Receiver;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.DatagramPacket;
 import java.nio.ByteBuffer;
 import java.util.Map;
-import java.util.Scanner;
 
 public class ReceiverImpl implements Receiver {
 

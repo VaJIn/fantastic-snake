@@ -5,7 +5,6 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
-import java.util.Scanner;
 
 public class NetworkTest {
 
@@ -64,17 +63,13 @@ public class NetworkTest {
 
                 }
 
-
-
             }
-
 
         } catch (SocketException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
 
     }
 }
