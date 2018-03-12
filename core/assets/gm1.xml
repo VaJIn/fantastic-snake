@@ -6,13 +6,13 @@
         <food name="Beer" resource_key="beer" gain="2" proba_weight="3"/>
         <food name="Apple" resource_key="apple" gain="1" proba_weight="5"/>
         <food name="Chicken" resource_key="chicken" gain="3" proba_weight="2"/>
-        <food name="Cake" resource_key="cake" gain="-2" proba_weight="5"/>
+        <food name="Cake" resource_key="cake" gain="-2" proba_weight="3"/>
     </kitchen>
 
-    <bonuses min_simultaneous_bonuses="0" max_simultaneous_bonuses="5">
-        <bonus name="faster_taker" type="alter_speed" target="taker" resource_key="piment" gain="5" duration="100" proba_weight="2"/>
-        <bonus name="slower_taker" type="alter_speed" target="taker" resource_key="tea" gain="-5" duration="100" proba_weight="2"/>
-        <bonus name="temporarly_bigger" type="alter_size" target="taker" resource_key="chesse" gain="15" duration="250" proba_weight="2"/>
+    <bonuses min_simultaneous_bonuses="0" max_simultaneous_bonuses="20">
+        <bonus name="faster_taker" type="alter_speed" target="taker" resource_key="piment" gain="5" duration="200" proba_weight="5"/>
+        <bonus name="slower_taker" type="alter_speed" target="taker" resource_key="tea" gain="-5" duration="200" proba_weight="10"/>
+        <bonus name="temporary_bigger" type="alter_size" target="taker" resource_key="chesse" gain="10" duration="200" proba_weight="2"/>
         <bonus name="time_machine" type="time_machine" target="taker" resource_key="cookie" gain="0" duration="-1" proba_weight="2"/>
 
     </bonuses>

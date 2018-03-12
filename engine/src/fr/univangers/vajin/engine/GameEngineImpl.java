@@ -1,14 +1,16 @@
 package fr.univangers.vajin.engine;
 
+import com.google.common.collect.Lists;
 import fr.univangers.vajin.engine.entities.DynamicEntity;
 import fr.univangers.vajin.engine.entities.Entity;
 import fr.univangers.vajin.engine.entities.EntityObserver;
 import fr.univangers.vajin.engine.entities.snake.Snake;
+import fr.univangers.vajin.engine.entities.spawnables.bonus.EmptyTimedCommandImpl;
 import fr.univangers.vajin.engine.entities.spawnables.bonus.TimedCommand;
 import fr.univangers.vajin.engine.entities.spawnables.bonus.BonusTarget;
 import fr.univangers.vajin.engine.field.Field;
 import fr.univangers.vajin.engine.utilities.Direction;
-import fr.univangers.vajin.engine.utilities.PerformedCommandsMap;
+import fr.univangers.vajin.engine.utilities.PerformedCommandsMapImpl;
 import fr.univangers.vajin.engine.utilities.Position;
 import fr.univangers.vajin.engine.utilities.RandomNumberGenerator;
 
@@ -19,7 +21,7 @@ public class GameEngineImpl extends AbstractGameEngine implements EntityObserver
     /**
      * Number of ticks the time machine goes in the past
      */
-    private final int TIME_MACHINE_DURATION = 50;
+    private final int TIME_MACHINE_DURATION = 150;
 
     private int lastComputedTick;
 
@@ -35,7 +37,7 @@ public class GameEngineImpl extends AbstractGameEngine implements EntityObserver
 
     private boolean isTimeMachineActive;
 
-    private PerformedCommandsMap performedCommandsMap;
+    private PerformedCommandsMapImpl performedCommandsMap;
 
 
     /**
@@ -86,7 +88,7 @@ public class GameEngineImpl extends AbstractGameEngine implements EntityObserver
 
         this.isTimeMachineActive = false;
 
-        this.performedCommandsMap = new PerformedCommandsMap(TIME_MACHINE_DURATION);
+        this.performedCommandsMap = new PerformedCommandsMapImpl(TIME_MACHINE_DURATION);
 
     }
 
@@ -204,11 +206,12 @@ public class GameEngineImpl extends AbstractGameEngine implements EntityObserver
 
             if (isTimeMachineActive){
 
+
                 //Reaching the commands of the past at the currently performed tick
                 List<TimedCommand> commands = performedCommandsMap.get(lastTickTimeMachine);
 
                 //Canceling all the commands
-                for (TimedCommand command : commands){
+                for (TimedCommand command : Lists.reverse(commands)){
                     command.cancel();
                 }
 
@@ -219,53 +222,59 @@ public class GameEngineImpl extends AbstractGameEngine implements EntityObserver
 
                 lastTickTimeMachine--;
             }
-            else{
+            else {
+
+
+                //Adding a empty timed command to each tick, so that there is at least one command for each tick in the
+                //performed commands map
+                TimedCommand emptyCommand = new EmptyTimedCommandImpl(tick);
+                performedCommandsMap.put(emptyCommand);
+
                 //Call every entity to compute their moves
                 for (Entity e : entityCollection) {
                     if (e instanceof DynamicEntity) {
                         DynamicEntity de = (DynamicEntity) e;
                         if (de.computeTick(tick)) {
-                            //If there is a change on the entity, we had it on the list
+                            //If there is a change on the entity, we add it on the list
                             updatedEntities.add(de);
                         }
                     }
                 }
-            }
 
 
-            //Applying all the commands coming from the snake to perform their movements
-            while (!timedMovementCommands.isEmpty() && tick == timedMovementCommands.peek().getTick()){
-                TimedCommand command = timedMovementCommands.poll();
-                command.apply();
-                performedCommandsMap.put(command);
-            }
+                //Applying all the commands coming from the snake to perform their movements
+                while (!timedMovementCommands.isEmpty() && tick == timedMovementCommands.peek().getTick()) {
+                    TimedCommand command = timedMovementCommands.poll();
+                    command.apply();
+                    performedCommandsMap.put(command);
+                }
 
-            //For each entity that changed, we check for collision with other entities
-            //No collision search if the time machine is on
-            for (DynamicEntity de : updatedEntities) {
-                List<Position> newPosition = de.getNewPositions();
-                if(! newPosition.isEmpty())
-                for (Position p : newPosition) {
-                    //For every new position we check for collision
-                    for (Entity ce : entityCollection) {
-                        if (de != ce) {
-                            if (ce.coversPosition(p)) {
-                                //If there is a collision we let the entity handle it
-                                de.handleCollisionWith(ce, p, true);
-                                ce.handleCollisionWith(de, p, false);
+                //For each entity that changed, we check for collision with other entities
+                //No collision search if the time machine is on
+                for (DynamicEntity de : updatedEntities) {
+                    List<Position> newPosition = de.getNewPositions();
+                    if (!newPosition.isEmpty())
+                        for (Position p : newPosition) {
+                            //For every new position we check for collision
+                            for (Entity ce : entityCollection) {
+                                if (de != ce) {
+                                    if (ce.coversPosition(p)) {
+                                        //If there is a collision we let the entity handle it
+                                        de.handleCollisionWith(ce, p, true);
+                                        ce.handleCollisionWith(de, p, false);
+                                    }
+                                }
                             }
                         }
-                    }
+                }
+
+                //Applying all the commands coming from the bonuses
+                while (!timedBonusCommands.isEmpty() && tick == timedBonusCommands.peek().getTick()) {
+                    TimedCommand command = timedBonusCommands.poll();
+                    command.apply();
+                    performedCommandsMap.put(command);
                 }
             }
-
-            //Applying all the commands coming from the bonuses
-            while (!timedBonusCommands.isEmpty() && tick == timedBonusCommands.peek().getTick()){
-                TimedCommand command = timedBonusCommands.poll();
-                command.apply();
-                performedCommandsMap.put(command);
-            }
-
 
             //Recording that a snake just died
             players.forEach( ((id, snake) -> {
@@ -384,7 +393,7 @@ public class GameEngineImpl extends AbstractGameEngine implements EntityObserver
     }
 
     /**
-     * Adding a timed command concerning the movement of a snake at the specified tick
+     * Adding a timed command concerning the effect of a bonus at the specified tick
      * @param timedCommand
      */
     @Override
@@ -393,9 +402,10 @@ public class GameEngineImpl extends AbstractGameEngine implements EntityObserver
         if (timedCommand.getTick()>=getCurrentTick()){
             timedBonusCommands.add(timedCommand);
             System.out.println("Adding timedCommand for tick : "+ timedCommand.getTick()+ " current : "+getCurrentTick());
+            System.out.println("ID : "+timedCommand.getId());
         }
         else{
-            System.out.println("Impossible d'ajouter le bonus end");
+            System.out.println("Impossible to add the command because it is in the past");
         }
 
     }
@@ -410,8 +420,14 @@ public class GameEngineImpl extends AbstractGameEngine implements EntityObserver
         //Recording the tick the time machine must stop to go in the past
         stoppingTickTimeMachine = lastComputedTick+1-TIME_MACHINE_DURATION;
 
-        //Current tick the time machine is going in the past
-        lastTickTimeMachine = lastComputedTick;
+        System.out.println("Stopping tick time machine = "+stoppingTickTimeMachine);
+
+
+        //Current tick the time machine is in the past
+        lastTickTimeMachine = lastComputedTick+1;
+
+        System.out.println("Starting tick time machine = "+lastTickTimeMachine);
+
 
         //Canceling the next movements the snake wants to make and stop listening to the user input
         for (Entity e : entityCollection){
@@ -421,14 +437,51 @@ public class GameEngineImpl extends AbstractGameEngine implements EntityObserver
             }
         }
 
-        //Removing all the canceling bonus commands because they will be applied by the time machine
-        while (!timedBonusCommands.isEmpty()){
-            timedBonusCommands.poll();
+
+        //Removing all the reverting bonuses that have been taken by the snake after the state the time machine is going back to
+        //Delaying the others by the time machine duration (cases ¬B5 and ¬B3 and B3)
+        for (TimedCommand command : timedBonusCommands){
+
+            if (performedCommandsMap.containsTimedBonus(command.getId()) //Case ¬B5
+                    && command.isRevertingTimedBonus()
+                    && performedCommandsMap.numberOfCommands(command.getId())==1){
+                System.out.println("Removed command : id="+command.getId());
+                timedBonusCommands.remove(command);
+
+            }
+            else{ //Case B3 and ¬B3
+                System.out.println("Command before time machine found");
+                timedBonusCommands.remove(command);
+                command.delayOf(TIME_MACHINE_DURATION);
+                System.out.println("delayed *1");
+                addBonusTimedCommand(command);
+            }
+
         }
+
+
+        //Managing the bonuses who have been taken before the state the time machine is going back to, but whose associated
+        //reverting command belongs to the performed commands map
+        //The reverting command needs to stay so that it can be canceled, but also to be delayed of twice the time of
+        //the time machine duration (Cases B2 and ¬B2)
+        for (TimedCommand cmd : performedCommandsMap.allCommandsAsList()){
+
+
+            if (cmd.isRevertingTimedBonus() && performedCommandsMap.numberOfCommands(cmd.getId())==1){
+                TimedCommand cmdClone = cmd.clone();
+                cmdClone.delayOf(2*TIME_MACHINE_DURATION);
+                System.out.println("delayed command *2");
+                timedBonusCommands.add(cmdClone);
+            }
+
+        }
+
 
     }
 
     private void endTimeMachine(){
+
+        System.out.println("ENDING TIME MACHINE");
 
         //Listening again to the user input
         for (Entity e : entityCollection) {

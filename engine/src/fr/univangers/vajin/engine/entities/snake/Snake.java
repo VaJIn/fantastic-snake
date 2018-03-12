@@ -92,12 +92,14 @@ public abstract class Snake extends DynamicEntity {
     }
 
     public int getSpeed() {
-        return speed;
+        if (speed>1){
+            return speed;
+        }
+        else{
+            return 1;
+        }
     }
 
-    protected void setSpeed(int speed){
-        this.speed = speed;
-    }
 
     protected void setLifePoint(int lifePoint) {
         this.lifePoint = lifePoint;
@@ -155,9 +157,12 @@ public abstract class Snake extends DynamicEntity {
 
     public abstract void cancelNextMovements();
 
+    public abstract void stopGrowingOrShrinking();
 
 
-    public abstract int changeSpeed(int howMuch);
+    public void changeSpeed(int howMuch){
+        speed+=howMuch;
+    }
 
 
     public static final int GO_NORTH = 0x0000;

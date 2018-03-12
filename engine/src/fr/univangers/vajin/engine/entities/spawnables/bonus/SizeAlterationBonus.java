@@ -2,8 +2,12 @@ package fr.univangers.vajin.engine.entities.spawnables.bonus;
 
 import fr.univangers.vajin.engine.GameEngine;
 import fr.univangers.vajin.engine.entities.snake.Snake;
+import fr.univangers.vajin.engine.entities.snake.WalkDirection;
 
 import java.util.Collection;
+import java.util.function.Consumer;
+
+import static java.lang.Math.abs;
 
 /**
  * Alters the size of the snake
@@ -17,43 +21,38 @@ public class SizeAlterationBonus extends AbstractBonus{
     @Override
     public void buildCommands(Collection<Snake> targets, GameEngine ge) {
 
-        //Iterating over all the snakes the bonus should be applied to
-        targets.forEach( (snake -> {
+        for (Snake snake : targets){
 
-
-            //Creating apply command
-            TimedCommand.BonusTimedLambda applyLambda = (s -> {
+            //Creating apply consumer
+            Consumer<Snake> applyConsumer = (s -> {
                 s.changeSize(gain);
             });
 
-
-
-            //Creating cancel command
-            TimedCommand.BonusTimedLambda cancelLambda = (s -> {
+            //Creating cancel consumer
+            Consumer<Snake> cancelConsumer = (s -> {
                 s.changeSize(-gain);
             });
 
+            TimedCommandBuilder builder = new TimedCommandBuilder();
 
-            //Getting current tick of the application
-            int applicationTick = ge.getCurrentTick();
+            //Creating the application command
+            TimedCommand applicationCommand = builder.setApplyConsumer(applyConsumer)
+                    .setCancelConsumer(cancelConsumer)
+                    .setSnake(snake)
+                    .setTick(ge.getCurrentTick())
+                    .buildApplyCommand();
 
-            //Creating the command for applying the bonus during the next tick
-            TimedCommand timedCommand =  new TimedCommandImpl(snake, applicationTick, applyLambda, cancelLambda);
+            ge.addBonusTimedCommand(applicationCommand);
 
-            //Adding the apply command to the engine
-            ge.addBonusTimedCommand(timedCommand);
-
-
-            //If the bonus has a timeout, adding the reverting command after the specified duration
+            //Creating the reverting command after a definite time if necessary
             if (duration!=-1){
 
-                applicationTick+=duration;
+                TimedCommand revertingCommand = builder.setRevertingTime(duration)
+                        .buildRevertCommand();
 
-                timedCommand =  new TimedCommandImpl(snake, applicationTick, cancelLambda, applyLambda);
-                ge.addBonusTimedCommand(timedCommand);
+                ge.addBonusTimedCommand(revertingCommand);
+
             }
-
-
-        }));
+        }
     }
 }

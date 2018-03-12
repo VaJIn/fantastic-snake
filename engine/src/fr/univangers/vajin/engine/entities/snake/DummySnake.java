@@ -63,6 +63,7 @@ public class DummySnake extends Snake {
 
     }
 
+
     @Override
     public int getSize() {
         return atoms.size();
@@ -79,8 +80,12 @@ public class DummySnake extends Snake {
     }
 
     @Override
-    public int changeSpeed(int howMuch) {
-        return 0;
+    public void stopGrowingOrShrinking() {
+
+    }
+
+    @Override
+    public void changeSpeed(int howMuch) {
     }
 
 
