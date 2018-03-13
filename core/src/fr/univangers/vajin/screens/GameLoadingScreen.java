@@ -12,18 +12,15 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import fr.univangers.vajin.GameConstants;
 import fr.univangers.vajin.IO.TileMapReader;
 import fr.univangers.vajin.SnakeRPG;
 import fr.univangers.vajin.engine.EngineBuilder;
 import fr.univangers.vajin.engine.GameEngine;
 import fr.univangers.vajin.engine.WrongPlayersNumberException;
 import fr.univangers.vajin.engine.entities.snake.SimpleSnake;
-import fr.univangers.vajin.engine.entities.snake.Snake;
 import fr.vajin.snakerpg.gameroom.PlayerPacketCreator;
-import fr.vajin.snakerpg.gameroom.PlayerTransmiter;
 import fr.vajin.snakerpg.gameroom.impl.PlayerPacketCreatorImpl;
-import fr.vajin.snakerpg.gameroom.impl.PlayerTransmiterImpl;
+import fr.vajin.snakerpg.gameroom.impl.PlayerTransmiter;
 
 import java.net.*;
 import java.util.Map;
@@ -131,7 +128,7 @@ public class GameLoadingScreen implements Screen, InputProcessor {
                 DatagramSocket datagramSocket = new DatagramSocket(6970);
                 PlayerPacketCreator playerPacketCreator = new PlayerPacketCreatorImpl(idProtocol);
                 playerPacketCreator.setEngine(classicEngine);
-                PlayerTransmiterImpl transmiter = new PlayerTransmiterImpl(datagramSocket, playerPacketCreator, idProtocol, 2f, receiverInetAddress, receiverPort);
+                PlayerTransmiter transmiter = new PlayerTransmiter(datagramSocket, playerPacketCreator, idProtocol, 2f, receiverInetAddress, receiverPort);
                 transmiter.start();
             } catch (SocketException e) {
                 e.printStackTrace();

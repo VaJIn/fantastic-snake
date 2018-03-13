@@ -1,4 +1,4 @@
-package fr.vajin.snakerpg.network;
+package fr.univangers.vajin.network;
 
 import java.io.IOException;
 import java.net.DatagramPacket;

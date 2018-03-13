@@ -1,7 +1,6 @@
 package fr.vajin.snakerpg.gameroom.impl;
 
 import fr.vajin.snakerpg.gameroom.PlayerPacketCreator;
-import fr.vajin.snakerpg.gameroom.PlayerTransmiter;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -9,7 +8,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.time.Instant;
 
-public class PlayerTransmiterImpl extends Thread implements PlayerTransmiter {
+public class PlayerTransmiter extends Thread {
 
     private DatagramSocket socket;
     private PlayerPacketCreator creator;
@@ -17,7 +16,7 @@ public class PlayerTransmiterImpl extends Thread implements PlayerTransmiter {
     private final InetAddress inetAdress;
     private final int port;
 
-    public PlayerTransmiterImpl(DatagramSocket socket, PlayerPacketCreator playerPacketCreator, int idProtocol, float packetsPerSecond, InetAddress inetAdress, int port) {
+    public PlayerTransmiter(DatagramSocket socket, PlayerPacketCreator playerPacketCreator, int idProtocol, float packetsPerSecond, InetAddress inetAdress, int port) {
         this.socket = socket;
         this.packetsPerSecond = packetsPerSecond;
         this.creator = playerPacketCreator;

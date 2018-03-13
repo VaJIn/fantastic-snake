@@ -36,7 +36,7 @@ public class NewConnectionHandlerNoFilterImpl implements NewConnectionHandler {
                 playerPacketCreator.setEngine(gameEngine);
             }
 
-            PlayerTransmiterImpl playerTransmiter = new PlayerTransmiterImpl(datagramSocket, playerPacketCreator, Controller.ID_PROTOCOL, 2f, address, port);
+            PlayerTransmiter playerTransmiter = new PlayerTransmiter(datagramSocket, playerPacketCreator, Controller.ID_PROTOCOL, 2f, address, port);
 
             PlayerPacketHandler playerPacketHandler = new PlayerPacketHandlerImpl(playerPacketCreator, playerTransmiter);
 

@@ -14,7 +14,6 @@ import java.util.Map;
 
 public class PlayerPacketCreatorImpl implements PlayerPacketCreator {
 
-
     private static byte[] intToByteArray(int value) {
         return new byte[]{
                 (byte) (value >>> 24),

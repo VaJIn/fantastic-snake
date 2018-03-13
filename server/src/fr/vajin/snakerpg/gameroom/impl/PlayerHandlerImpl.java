@@ -3,7 +3,6 @@ package fr.vajin.snakerpg.gameroom.impl;
 import fr.vajin.snakerpg.gameroom.PlayerHandler;
 import fr.vajin.snakerpg.gameroom.PlayerPacketCreator;
 import fr.vajin.snakerpg.gameroom.PlayerPacketHandler;
-import fr.vajin.snakerpg.gameroom.PlayerTransmiter;
 
 public class PlayerHandlerImpl implements PlayerHandler {
 
