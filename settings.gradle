@@ -1,6 +1,5 @@
 include 'desktop', 'core'
 include 'server'
-include 'server'
 include 'engine'
 include 'network'
 
