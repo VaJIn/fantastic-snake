@@ -20,7 +20,12 @@ import fr.univangers.vajin.engine.GameEngine;
 import fr.univangers.vajin.engine.WrongPlayersNumberException;
 import fr.univangers.vajin.engine.entities.snake.SimpleSnake;
 import fr.univangers.vajin.engine.entities.snake.Snake;
+import fr.vajin.snakerpg.gameroom.PlayerPacketCreator;
+import fr.vajin.snakerpg.gameroom.PlayerTransmiter;
+import fr.vajin.snakerpg.gameroom.impl.PlayerPacketCreatorImpl;
+import fr.vajin.snakerpg.gameroom.impl.PlayerTransmiterImpl;
 
+import java.net.*;
 import java.util.Map;
 
 public class GameLoadingScreen implements Screen, InputProcessor {
@@ -117,6 +122,22 @@ public class GameLoadingScreen implements Screen, InputProcessor {
                 e.printStackTrace();
             }
 
+            try {
+                int idProtocol = 0x685fa053;
+                InetAddress receiverInetAddress = InetAddress.getLocalHost();
+                int receiverPort = 6969;
+
+
+                DatagramSocket datagramSocket = new DatagramSocket(6970);
+                PlayerPacketCreator playerPacketCreator = new PlayerPacketCreatorImpl(idProtocol);
+                playerPacketCreator.setEngine(classicEngine);
+                PlayerTransmiterImpl transmiter = new PlayerTransmiterImpl(datagramSocket, playerPacketCreator, idProtocol, 2f, receiverInetAddress, receiverPort);
+                transmiter.start();
+            } catch (SocketException e) {
+                e.printStackTrace();
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+            }
 
             game.setScreen(new GameScreen(game, reader, assetManager, classicEngine, mapFileName));
             dispose();
