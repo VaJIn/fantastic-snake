@@ -9,7 +9,6 @@ import fr.vajin.snakerpg.gameroom.PlayerPacketCreator;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.DatagramPacket;
-import java.nio.ByteBuffer;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -27,8 +26,9 @@ public class PlayerPacketCreatorImpl implements PlayerPacketCreator {
     private GameEngine gameEngine;
     private Map<Integer, Entity> entities;
     private int idProtocol;
-    private int lastIdReceived;
-    private byte[] ackBitfield;
+    private int lastIdReceived = 0;
+    private int ackBitfield = 0;
+    private int numSequence = 0;
 
     public PlayerPacketCreatorImpl(int idProtocol) {
 
@@ -56,20 +56,35 @@ public class PlayerPacketCreatorImpl implements PlayerPacketCreator {
         }
     }
 
+    private ByteArrayOutputStream getPacketStream() throws IOException {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+
+        numSequence++;
+
+        stream.write(intToByteArray(idProtocol));
+
+        stream.write(intToByteArray(numSequence));
+
+        stream.write(intToByteArray(this.lastIdReceived));
+
+        stream.write(intToByteArray(ackBitfield));
+
+        return stream;
+    }
+
     @Override
     public DatagramPacket getNextPacket() {
 
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        byte[] data = new byte[0];
 
         try {
-            stream.write(intToByteArray(idProtocol));
 
-            stream.write(intToByteArray(this.lastIdReceived));
+            ByteArrayOutputStream stream = this.getPacketStream();
 
-            stream.write(intToByteArray(0xFFFFFFFF));
+
+            stream.write(GAME);
 
             System.out.println("[NEXT PACKET] Map size : " + entities.size());
-
             for (Entity entity : entities.values()) {
                 System.out.println("[NEXT PACKET] Entity" + entity.getEntityId());
                 Iterator<Entity.EntityTileInfo> it = entity.getEntityTilesInfosIterator();
@@ -90,59 +105,33 @@ public class PlayerPacketCreatorImpl implements PlayerPacketCreator {
 
             stream.write(intToByteArray(-1));
 
+            data = stream.toByteArray();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
-        byte[] data = stream.toByteArray();
 
         System.out.println("Data.length : " + data.length);
         for (int i = 0; i < data.length; ++i) {
             System.out.println(i + " " + data[i]);
         }
 
-//*
-        System.out.println("==================================================================");
-        ByteBuffer buffer = ByteBuffer.wrap(data);
-        int idProtocol = buffer.getInt();
-        System.out.format("idProtocol : 0x%08X", idProtocol);
-        System.out.println();
-
-        int lastIdReceived = buffer.getInt();
-
-        System.out.println("lastIdReceived : " + lastIdReceived);
-
-        int ackbitfield = buffer.getInt();
-
-        System.out.println("ackbitfield : " + ackbitfield);
-
-        while (buffer.hasRemaining()) {
-            int idEntity = buffer.getInt();
-            System.out.println("idEntity : " + idEntity);
-            if (idEntity == -1) {
-                break;
-            }
-            int idTile;
-            while ((idTile = buffer.getInt()) != -1) {
-                System.out.println("idTile : " + idTile);
-                int posX = buffer.getInt();
-                System.out.println("posXTile : " + posX);
-                int posY = buffer.getInt();
-                System.out.println("posYTile : " + posY);
-                int sizeRessourceKeyBytes = buffer.getInt();
-                System.out.println("sizeRessourceKeyBytes : " + sizeRessourceKeyBytes);
-                byte[] ressourceKey = new byte[sizeRessourceKeyBytes];
-                buffer.get(ressourceKey);
-                System.out.println("ressourceKey : " + new String(ressourceKey));
-            }
-        }
-
-//*/
         return new DatagramPacket(data, data.length);
     }
 
     @Override
-    public void acknowledgePacket(int idLastReceived, byte[] ackBitField) {
+    public void acknowledgePacket(int idReceived) {
 
+        if (idReceived > this.lastIdReceived) {
+            int predId = this.lastIdReceived;
+            this.ackBitfield = this.ackBitfield >>> (idReceived - lastIdReceived);
+            this.lastIdReceived = idReceived;
+            this.acknowledgePacket(predId);
+        } else if (idReceived < this.lastIdReceived && idReceived >= this.lastIdReceived - 32) {
+            int mask = 0x80000000;
+            mask = mask >>> (this.lastIdReceived - idReceived - 1);
+            this.ackBitfield = this.ackBitfield | mask;
+        }
     }
 
 

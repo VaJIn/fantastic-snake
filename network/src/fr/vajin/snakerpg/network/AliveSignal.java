@@ -28,7 +28,7 @@ public class AliveSignal extends Thread {
 
         this.idJoueur = idJoueur;
         this.tokenJoueur = tokenJoueur;
-        
+
         this.frequency = frequency;
     }
 
@@ -38,9 +38,6 @@ public class AliveSignal extends Thread {
         try {
 
             while (!interrupted()){
-
-
-                //idprotocole idjoueur tokenjoueur 0
 
                 byte data[] = new byte[16]; //4 ints
 
@@ -60,7 +57,6 @@ public class AliveSignal extends Thread {
                 packet.setPort(port);
 
                 socket.send(packet);
-
 
                 sleep((long) (1000/frequency));
 

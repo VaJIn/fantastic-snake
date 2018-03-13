@@ -13,6 +13,16 @@ import java.net.DatagramPacket;
  */
 public interface PlayerPacketCreator extends EntityObserver, GameEngineObserver {
 
+    int JOIN = 1;
+    int RESP_JOIN = 2;
+    int LIFELINE = 3;
+    int GAMEROOM_DESC = 4;
+    int GAME_START = 5;
+    int GAME = 6;
+    int GAME_END = 7;
+    int PLAYER_ACTION = 8;
+
+
     /**
      * @param gameEngine
      */
@@ -27,7 +37,6 @@ public interface PlayerPacketCreator extends EntityObserver, GameEngineObserver 
 
     /**
      * @param idLastReceived
-     * @param ackBitField
      */
-    void acknowledgePacket(int idLastReceived, byte[] ackBitField);
+    void acknowledgePacket(int idLastReceived);
 }
