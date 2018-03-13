@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.nio.ByteBuffer;
 import java.time.Instant;
 
 public class PlayerTransmiterImpl extends Thread implements PlayerTransmiter {
@@ -37,7 +36,6 @@ public class PlayerTransmiterImpl extends Thread implements PlayerTransmiter {
                 long start = Instant.now().toEpochMilli();
 
                 DatagramPacket packet = creator.getNextPacket();
-
 
                 packet.setAddress(this.inetAdress);
                 packet.setPort(port);

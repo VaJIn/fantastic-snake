@@ -34,11 +34,19 @@ public class PlayerPacketCreatorImpl implements PlayerPacketCreator {
 
         this.entities = Maps.newHashMap();
         this.idProtocol = idProtocol;
+        this.gameEngine = null;
     }
 
 
     @Override
     public void setEngine(GameEngine gameEngine) {
+        if (this.gameEngine != null) {
+            for (Entity entity : entities.values()) {
+                entity.removeObserver(this);
+                this.gameEngine.removeGameEngineObserver(this);
+            }
+        }
+
         this.gameEngine = gameEngine;
         this.gameEngine.addGameEngineObserver(this);
         for (Entity entity : gameEngine.getEntities()) {

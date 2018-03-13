@@ -8,9 +8,11 @@ import java.net.DatagramPacket;
 public class PlayerPacketHandlerImpl implements PlayerPacketHandler {
 
     private PlayerPacketCreator packetCreator;
+    private PlayerTransmiterImpl playerTransmiter;
 
-    public PlayerPacketHandlerImpl(PlayerPacketCreator packetCreator) {
+    public PlayerPacketHandlerImpl(PlayerPacketCreator packetCreator, PlayerTransmiterImpl playerTransmiter) {
         this.packetCreator = packetCreator;
+        this.playerTransmiter = playerTransmiter;
     }
 
     @Override
