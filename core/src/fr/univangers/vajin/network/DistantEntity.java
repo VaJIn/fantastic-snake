@@ -150,4 +150,20 @@ public class DistantEntity extends Entity {
         this.oldEntityTileInfoMap = null;
         this.updating = false;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        DistantEntity that = (DistantEntity) o;
+
+        return distantId == that.distantId;
+    }
+
+    @Override
+    public int hashCode() {
+        return distantId;
+    }
 }
