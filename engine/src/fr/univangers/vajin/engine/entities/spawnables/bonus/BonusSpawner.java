@@ -64,9 +64,9 @@ public class BonusSpawner extends DynamicEntity {
             int y = randomGenerator.nextInt(this.getEngine().getField().getHeight());
 
             Position pos = new Position(x, y);
-            System.out.println("Try food at " + pos);
+//            System.out.println("Try food at " + pos);
             if (!this.getEngine().doesAnEntityCoverPosition(pos) && this.getEngine().getField().getFieldUnits(pos).isBonusSpawnArea()) {
-                System.out.println("Success !!");
+//                System.out.println("Success !!");
                 return pos;
             }
         }
@@ -150,7 +150,7 @@ public class BonusSpawner extends DynamicEntity {
                     Position p = entry.getKey();
 
                     @Override
-                    public String getRessourceKey() {
+                    public String getResourceKey() {
                         return b.getResourceKey();
                     }
 

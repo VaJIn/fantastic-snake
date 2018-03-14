@@ -105,7 +105,13 @@ public class DistantEngine implements GameEngine {
     }
 
     public void endChange() {
+        for (DistantEntity entity : leftToUpdate) {
+            distantEntityMap.remove(entity.getDistantId());
+            notifyOfRemovedEntity(entity);
+        }
 
+        leftToUpdate = null;
+        this.updating = false;
     }
 
     public DistantEntity getEntity(int distantId) {
@@ -124,6 +130,12 @@ public class DistantEngine implements GameEngine {
     private void notifyOfNewEntity(Entity entity) {
         for (GameEngineObserver observer : observers) {
             observer.notifyNewEntity(entity);
+        }
+    }
+
+    private void notifyOfRemovedEntity(Entity entity) {
+        for (GameEngineObserver observer : observers) {
+            observer.notifyRemovedEntity(entity);
         }
     }
 

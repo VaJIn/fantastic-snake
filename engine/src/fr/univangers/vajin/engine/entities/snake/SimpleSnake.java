@@ -539,7 +539,7 @@ public class SimpleSnake extends Snake {
                 final int id = current.getId();
 
                 @Override
-                public String getRessourceKey() {
+                public String getResourceKey() {
                     return ressourceKey;
                 }
 

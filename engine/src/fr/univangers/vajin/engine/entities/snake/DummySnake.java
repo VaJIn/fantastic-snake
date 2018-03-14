@@ -213,7 +213,7 @@ public class DummySnake extends Snake {
                 SnakeAtom atom = it.next();
                 return new Entity.EntityTileInfo() {
                     @Override
-                    public String getRessourceKey() {
+                    public String getResourceKey() {
                         return atom.getGraphicKey();
                     }
 

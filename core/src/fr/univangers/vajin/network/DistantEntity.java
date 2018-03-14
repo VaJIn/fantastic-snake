@@ -140,13 +140,13 @@ public class DistantEntity extends Entity {
         }
     }
 
-    void beginUpdate() {
+    public void beginUpdate() {
         this.oldEntityTileInfoMap = this.entityTileInfoMap;
         this.entityTileInfoMap = Maps.newHashMap();
         this.updating = true;
     }
 
-    void endUpdate() {
+    public void endUpdate() {
         this.oldEntityTileInfoMap = null;
         this.updating = false;
     }
