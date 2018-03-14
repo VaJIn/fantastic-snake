@@ -8,7 +8,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
-public class TransmiterImpl implements Transmiter{
+public class TransmiterImpl extends Thread implements Transmiter{
 
     private PacketCreator packetCreator;
 
@@ -17,20 +17,51 @@ public class TransmiterImpl implements Transmiter{
     private InetAddress address;
     private int port;
 
+    private double frequency;
 
-    public TransmiterImpl(PacketCreator packetCreator, DatagramSocket socket, InetAddress address, int port){
+    public TransmiterImpl(PacketCreator packetCreator, DatagramSocket socket, InetAddress address, int port, double frequency){
         this.packetCreator = packetCreator;
         this.socket = socket;
 
         this.address = address;
         this.port = port;
+
+        this.frequency = frequency;
     }
 
-    public void send(){
+    @Override
+    public void run(){
 
         try {
 
-            DatagramPacket packet = this.packetCreator.getPacket(PacketCreator.PLAYER_ACTION);
+            while (!interrupted()){
+
+                DatagramPacket packet = this.packetCreator.getPacket();
+
+                packet.setAddress(address);
+                packet.setPort(port);
+
+                socket.send(packet);
+
+                sleep((long) (1000/frequency));
+
+            }
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void setPacketCreator(PacketCreator packetCreator) {
+        this.packetCreator = packetCreator;
+    }
+
+    public synchronized void send(DatagramPacket packet){
+
+        try {
 
             packet.setAddress(this.address);
             packet.setPort(this.port);

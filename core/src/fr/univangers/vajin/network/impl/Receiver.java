@@ -45,32 +45,6 @@ public class Receiver extends Thread {
 
                     this.packetHandler.handlePacket(packet);
 
-//                    int num_sequence = buffer.getInt();
-//                    int lastIdReceived = buffer.getInt();
-//                    int ackbitfield = buffer.getInt();
-//
-//                    int type = buffer.getInt();
-//
-//
-//                    //TYPE = GAME;
-//                    while(buffer.hasRemaining()){
-//
-//                        int  idEntity = buffer.getInt();
-//                        if(idEntity==-1){
-//                            break;
-//                        }
-//                        int idTile;
-//                        while( (idTile = buffer.getInt()) != -1){
-//                            int posX = buffer.getInt();
-//                            int posY = buffer.getInt();
-//                            int sizeRessourceKeyBytes = buffer.getInt();
-//                            byte [] ressourceKey = new byte[sizeRessourceKeyBytes];
-//
-//                            buffer.get(ressourceKey);
-//
-//                        }
-//
-//                    }
                 }
 
 

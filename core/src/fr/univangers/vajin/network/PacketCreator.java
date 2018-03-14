@@ -1,5 +1,6 @@
 package fr.univangers.vajin.network;
 
+import java.io.IOException;
 import java.net.DatagramPacket;
 
 public interface PacketCreator {
@@ -13,8 +14,12 @@ public interface PacketCreator {
     int GAME_END = 7;
     int PLAYER_ACTION = 8;
 
-    DatagramPacket getPacket(int type);
+    DatagramPacket getPacket() throws IOException;
 
-    void setLastIdReceived(int idReceived);
+    void setTransmiter(Transmiter transmiter);
+
+    void sendPlayerAction(int action);
+
+    void acknowledgePacket(int idReceived);
 
 }
