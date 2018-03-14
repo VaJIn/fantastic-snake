@@ -26,7 +26,7 @@ public abstract class Entity {
 
     public interface EntityTileInfo {
 
-        String getRessourceKey();
+        String getResourceKey();
 
         Position getPosition();
 
@@ -51,7 +51,7 @@ public abstract class Entity {
 
     public abstract String getGraphicRessourceKeyForPosition(Position pos);
 
-    public abstract Iterator<EntityTileInfo> getEntityTilesInfosIterator();
+    public abstract Iterator<? extends EntityTileInfo> getEntityTilesInfosIterator();
 
 
     //Observable Pattern related methods

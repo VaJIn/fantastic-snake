@@ -13,58 +13,72 @@ public class NetworkTest {
 
         try {
             DatagramSocket socket = new DatagramSocket(6969);
+            int i = 0;
 
             while(true){
+
 
                 byte [] data = new byte[8192];
                 DatagramPacket packet = new DatagramPacket(data,data.length);
 
-                System.out.println("==================================================================");
 
                 socket.receive(packet);
 
+//*
                 ByteBuffer buffer = ByteBuffer.wrap(packet.getData());
 
+                int dataSize = 0;
 
                 int idProtocol = buffer.getInt();
-                System.out.format("idProtocol : 0x%08X", idProtocol);
-                System.out.println();
+                dataSize += 4;
+                //    System.out.format("idProtocol : 0x%08X", idProtocol);
+                //    System.out.println();
                 int lastIdReceived = buffer.getInt();
-                System.out.println("lastIdReceived : "+lastIdReceived);
+                dataSize += 4;
+//                System.out.println("lastIdReceived : "+lastIdReceived);
                 int ackbitfield = buffer.getInt();
-                System.out.format("ackbitfield : 0x%08X", ackbitfield);
+                dataSize += 4;
+//                System.out.format("ackbitfield : 0x%08X", ackbitfield);
 
-                System.out.println();
+//              System.out.println();
 
 
                 while(buffer.hasRemaining()){
 
                     int  idEntity = buffer.getInt();
-                    System.out.println("idEntity : " + idEntity);
+                    dataSize += 4;
+//                    System.out.println("idEntity : " + idEntity);
                     if(idEntity==-1){
                         break;
                     }
                     int idTile;
                     while( (idTile = buffer.getInt()) != -1){
-                        System.out.println("idTile : "+idTile);
+                        dataSize += 4;
+//                        System.out.println("idTile : "+idTile);
                         int posX = buffer.getInt();
-                        System.out.println("posXTile : "+posX);
+                        dataSize += 4;
+//                        System.out.println("posXTile : "+posX);
                         int posY = buffer.getInt();
-                        System.out.println("posYTile : "+posY);
+                        dataSize += 4;
+//                        System.out.println("posYTile : "+posY);
                         int sizeRessourceKeyBytes = buffer.getInt();
-                        System.out.println("sizeRessourceKeyBytes : "+sizeRessourceKeyBytes);
+                        dataSize += 4;
+//                        System.out.println("sizeRessourceKeyBytes : "+sizeRessourceKeyBytes);
                         byte [] ressourceKey = new byte[sizeRessourceKeyBytes];
-
+                        dataSize += sizeRessourceKeyBytes;
                         buffer.get(ressourceKey);
 
-                        System.out.println("ressourceKey : "+new String(ressourceKey));
+//                        System.out.println("ressourceKey : "+new String(ressourceKey));
 
                     }
 
                 }
+                dataSize += 4;
+                ++i;
+                System.out.println("Received Packet #" + i + "( " + dataSize + " bytes)");
 
+//*/
             }
-
         } catch (SocketException e) {
             e.printStackTrace();
         } catch (IOException e) {

@@ -22,7 +22,10 @@ import fr.vajin.snakerpg.gameroom.PlayerPacketCreator;
 import fr.vajin.snakerpg.gameroom.impl.PlayerPacketCreatorImpl;
 import fr.vajin.snakerpg.gameroom.impl.PlayerTransmiter;
 
-import java.net.*;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.Map;
 
 public class GameLoadingScreen implements Screen, InputProcessor {

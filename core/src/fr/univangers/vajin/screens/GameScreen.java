@@ -169,7 +169,6 @@ public class GameScreen implements Screen, GameEngineObserver, InputProcessor {
     }
 
     /* INPUT HANDLING METHOD */
-
     @Override
     public boolean keyDown(int keycode) {
         if (engine.isGameOver()) {

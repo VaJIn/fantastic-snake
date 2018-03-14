@@ -95,7 +95,7 @@ public class PlayerPacketCreatorImpl implements PlayerPacketCreator {
                     stream.write(intToByteArray(tileInfo.getId()));
                     stream.write(intToByteArray(tileInfo.getPosition().getX()));
                     stream.write(intToByteArray(tileInfo.getPosition().getY()));
-                    byte[] resourceKeyBytes = tileInfo.getRessourceKey().getBytes();
+                    byte[] resourceKeyBytes = tileInfo.getResourceKey().getBytes();
                     stream.write(intToByteArray(resourceKeyBytes.length));
                     stream.write(resourceKeyBytes);
                 }

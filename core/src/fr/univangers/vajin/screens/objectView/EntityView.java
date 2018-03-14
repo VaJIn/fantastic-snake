@@ -44,13 +44,13 @@ public class EntityView implements EntityObserver {
 
         entity.registerObserver(this);
 
-        Iterator<Entity.EntityTileInfo> it = entity.getEntityTilesInfosIterator();
+        Iterator<? extends Entity.EntityTileInfo> it = entity.getEntityTilesInfosIterator();
 
         while (it.hasNext()) {
             TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
             Entity.EntityTileInfo info = it.next();
 
-            this.tileChange(info.getPosition(), info.getRessourceKey());
+            this.tileChange(info.getPosition(), info.getResourceKey());
 
         }
 
