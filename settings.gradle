@@ -1,7 +1,6 @@
 include 'desktop', 'core'
 include 'server'
 include 'engine'
-include 'network'
 include 'webserver'
 include 'database'
 include 'commons'
