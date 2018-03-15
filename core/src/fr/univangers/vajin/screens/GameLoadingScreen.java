@@ -79,6 +79,11 @@ public class GameLoadingScreen implements Screen, InputProcessor {
         Gdx.input.setInputProcessor(this);
     }
 
+
+    public void loadGame(String mapFileName) {
+        this.assetManager.load(mapFileName, TiledMap.class);
+    }
+
     @Override
     public void show() {
 

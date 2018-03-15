@@ -9,19 +9,18 @@ import fr.univangers.vajin.network.PacketHandler;
 import java.net.DatagramPacket;
 import java.nio.ByteBuffer;
 
-public class PacketHandlerImpl implements PacketHandler {
+/**
+ * Handle packet with the game type
+ */
+public class GamePacketHandler implements PacketHandler {
 
-    private PacketCreator packetCreator;
     private DistantEngine distantEngine;
 
-    public PacketHandlerImpl(PacketCreator packetCreator, DistantEngine distantEngine) {
-
-        this.packetCreator = packetCreator;
-
-        this.distantEngine = distantEngine;
-
+    public GamePacketHandler() {
+        this.distantEngine = new DistantEngine();
     }
 
+    private static final int BUFFER_START_POS = 16;
 
     @Override
     public void handlePacket(DatagramPacket packet) {
@@ -29,25 +28,19 @@ public class PacketHandlerImpl implements PacketHandler {
 
         ByteBuffer buffer = ByteBuffer.wrap(packet.getData());
 
-
-        int idProtocol = buffer.getInt();
-        int num_sequence = buffer.getInt();
-        int lastIdReceived = buffer.getInt();
-
-        this.packetCreator.acknowledgePacket(lastIdReceived);
-
-        int ackbitfield = buffer.getInt();
+        buffer.position(BUFFER_START_POS);
 
         int type = buffer.getInt();
 
-
-        //TYPE = GAME;
+        if (type != PacketCreator.GAME) {
+            throw new IllegalArgumentException("Not a game packet !");
+        }
 
         this.distantEngine.beginChange();
 
         while (buffer.hasRemaining()) {
-
             int idEntity = buffer.getInt();
+
             if (idEntity == -1) {
                 break;
             }
@@ -61,12 +54,12 @@ public class PacketHandlerImpl implements PacketHandler {
             while ((idTile = buffer.getInt()) != -1) {
                 int posX = buffer.getInt();
                 int posY = buffer.getInt();
-                int sizeRessourceKeyBytes = buffer.getInt();
-                byte[] ressourceKey = new byte[sizeRessourceKeyBytes];
+                int sizeResourceKeyBytes = buffer.getInt();
+                byte[] resourceKey = new byte[sizeResourceKeyBytes];
 
-                buffer.get(ressourceKey);
+                buffer.get(resourceKey);
 
-                entity.setTile(idTile, new Position(posX,posY),String.valueOf(ressourceKey));
+                entity.setTile(idTile, new Position(posX, posY), String.valueOf(resourceKey));
 
             }
 
@@ -75,5 +68,9 @@ public class PacketHandlerImpl implements PacketHandler {
         }
 
         distantEngine.endChange();
+    }
+
+    public DistantEngine getDistantEngine() {
+        return distantEngine;
     }
 }

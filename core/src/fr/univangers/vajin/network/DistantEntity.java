@@ -16,7 +16,7 @@ public class DistantEntity extends Entity {
         Position position;
         String resourceKey;
 
-        public DistantEntityTileInfo(int id, Position position, String resourceKey) {
+        DistantEntityTileInfo(int id, Position position, String resourceKey) {
             this.id = id;
             this.position = position;
             this.resourceKey = resourceKey;

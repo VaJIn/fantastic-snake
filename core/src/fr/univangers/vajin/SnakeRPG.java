@@ -9,10 +9,16 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import fr.univangers.vajin.IO.TileMapReader;
 import fr.univangers.vajin.engine.*;
 import fr.univangers.vajin.engine.entities.snake.SimpleSnake;
+import fr.univangers.vajin.network.NetworkController;
+import fr.univangers.vajin.network.PacketCreator;
+import fr.univangers.vajin.network.Transmiter;
+import fr.univangers.vajin.network.impl.Receiver;
+import fr.univangers.vajin.screens.DirectConnectionScreen;
 import fr.univangers.vajin.screens.GameLoadingScreen;
 import fr.univangers.vajin.screens.GameScreen;
 
@@ -20,19 +26,24 @@ import java.util.Map;
 
 public class SnakeRPG extends Game implements ApplicationListener {
 
-	private AssetManager assetManager;
+    private AssetManager assetManager;
 
+    private GameScreen gameScreen;
+    private GameLoadingScreen gameLoadingScreen;
+    private DirectConnectionScreen directConnectionScreen;
 
-	@Override
-	public void create () {
+    NetworkController networkController;
+
+    @Override
+    public void create() {
 
         String mapFileName = "simple_map.tmx";
 
-		assetManager = new AssetManager();
+        assetManager = new AssetManager();
 
-		assetManager.setLoader(TiledMap.class, new TmxMapLoader(new InternalFileHandleResolver()));
+        assetManager.setLoader(TiledMap.class, new TmxMapLoader(new InternalFileHandleResolver()));
 
-		assetManager.setLoader(TextureAtlas.class, new TextureAtlasLoader(new InternalFileHandleResolver()));
+        assetManager.setLoader(TextureAtlas.class, new TextureAtlasLoader(new InternalFileHandleResolver()));
 
         Map<String, Class> filesToLoad = Maps.newHashMap();
 
@@ -42,13 +53,33 @@ public class SnakeRPG extends Game implements ApplicationListener {
         this.setScreen(new GameLoadingScreen(this, assetManager, mapFileName, filesToLoad));
     }
 
-	@Override
-	public void render () {
-		super.render();
-	}
+    @Override
+    public void render() {
+        super.render();
+    }
 
-	@Override
-	public void dispose () {
-		assetManager.dispose();
-	}
+    @Override
+    public void dispose() {
+        assetManager.dispose();
+    }
+
+    public GameScreen getGameScreen() {
+        return gameScreen;
+    }
+
+    public GameLoadingScreen getGameLoadingScreen() {
+        return gameLoadingScreen;
+    }
+
+    public DirectConnectionScreen getDirectConnectionScreen() {
+        return directConnectionScreen;
+    }
+
+    public AssetManager getAssetManager() {
+        return assetManager;
+    }
+
+    public NetworkController getNetworkController() {
+        return networkController;
+    }
 }
