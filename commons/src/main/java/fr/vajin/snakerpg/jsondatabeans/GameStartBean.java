@@ -1,20 +1,22 @@
-package fr.vajin.snakerpg.gameroom.jsondatabeans;
+package fr.vajin.snakerpg.jsondatabeans;
+
+import fr.vajin.snakerpg.database.entities.GameModeEntity;
 
 public class GameStartBean {
 
 
-    int gameMode;
-    String map;
+    private GameModeEntity gameMode;
+    private String map;
 
     public GameStartBean(){
 
     }
 
-    public int getGameMode() {
+    public GameModeEntity getGameMode() {
         return gameMode;
     }
 
-    public void setGameMode(int gameMode) {
+    public void setGameMode(GameModeEntity gameMode) {
         this.gameMode = gameMode;
     }
 

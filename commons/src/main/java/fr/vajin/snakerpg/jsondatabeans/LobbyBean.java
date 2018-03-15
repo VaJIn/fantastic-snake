@@ -1,4 +1,4 @@
-package fr.univangers.vajin.network.jsondatabeans;
+package fr.vajin.snakerpg.jsondatabeans;
 
 import java.util.Collection;
 

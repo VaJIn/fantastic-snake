@@ -3,7 +3,7 @@ package fr.univangers.vajin.network.impl;
 import com.google.gson.Gson;
 import fr.univangers.vajin.network.PacketCreator;
 import fr.univangers.vajin.network.PacketHandler;
-import fr.univangers.vajin.network.jsondatabeans.LobbyBean;
+import fr.vajin.snakerpg.jsondatabeans.LobbyBean;
 
 import java.net.DatagramPacket;
 import java.nio.ByteBuffer;
