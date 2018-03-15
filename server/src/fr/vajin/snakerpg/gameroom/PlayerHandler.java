@@ -4,7 +4,7 @@ public interface PlayerHandler {
 
     int getUserId();
 
-    byte[] getUserToken();
+    int getUserToken();
 
     PlayerPacketHandler getPlayerPacketHandler();
 

@@ -1,5 +1,6 @@
 package fr.vajin.snakerpg.gameroom.impl;
 
+import fr.vajin.snakerpg.gameroom.Controller;
 import fr.vajin.snakerpg.gameroom.PlayerHandler;
 import fr.vajin.snakerpg.gameroom.PlayerPacketCreator;
 import fr.vajin.snakerpg.gameroom.PlayerPacketHandler;
@@ -9,13 +10,20 @@ import java.nio.ByteBuffer;
 
 public class PlayerPacketHandlerImpl implements PlayerPacketHandler {
 
+    private Controller controller;
     private PlayerPacketCreator packetCreator;
     private PlayerTransmiter playerTransmiter;
     private PlayerHandler playerHandler;
 
-    public PlayerPacketHandlerImpl(PlayerPacketCreator packetCreator, PlayerTransmiter playerTransmiter) {
+    private ActionPacketHandler actionPacketHandler;
+
+    public PlayerPacketHandlerImpl(PlayerPacketCreator packetCreator, PlayerTransmiter playerTransmiter, Controller controller) {
+        this.controller = controller;
         this.packetCreator = packetCreator;
         this.playerTransmiter = playerTransmiter;
+
+        this.actionPacketHandler = new ActionPacketHandler();
+        this.actionPacketHandler.setEngine(this.controller.getCurrentEngine());
     }
 
     @Override
@@ -45,18 +53,12 @@ public class PlayerPacketHandlerImpl implements PlayerPacketHandler {
                     this.playerHandler.aliveSignalReceive();
                     break;
                 case PlayerPacketCreator.PLAYER_ACTION:
+                    this.actionPacketHandler.handleDatagramPacket(datagramPacket);
                     break;
             }
         }
 
         return false;
-    }
-
-
-
-    @Override
-    public PlayerHandler getPlayerHandler() {
-        return playerHandler;
     }
 
     @Override

@@ -9,7 +9,7 @@ import java.time.Instant;
 public class PlayerHandlerImpl implements PlayerHandler {
 
     int userId;
-    byte[] userToken;
+    int userToken;
 
     PlayerPacketHandler playerPacketHandler;
     PlayerTransmiter playerTransmiter;
@@ -18,7 +18,7 @@ public class PlayerHandlerImpl implements PlayerHandler {
     private long lastAliveSignalReceived;
 
     public PlayerHandlerImpl(int userId,
-                             byte[] userToken,
+                             int userToken,
                              PlayerPacketHandler playerPacketHandler,
                              PlayerTransmiter playerTransmiter,
                              PlayerPacketCreator playerPacketCreator) {
@@ -37,7 +37,7 @@ public class PlayerHandlerImpl implements PlayerHandler {
     }
 
     @Override
-    public byte[] getUserToken() {
+    public int getUserToken() {
         return userToken;
     }
 

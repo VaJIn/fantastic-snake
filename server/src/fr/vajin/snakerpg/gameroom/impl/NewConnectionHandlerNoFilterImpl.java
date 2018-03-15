@@ -21,7 +21,7 @@ public class NewConnectionHandlerNoFilterImpl implements NewConnectionHandler {
         if (controller.getCurrentPlayerCount() < controller.getGameRoomSize()) {
 
             int userId = 0;
-            byte[] token = new byte[4];
+            int token = 0;
             //TODO retreive from packet (or add argument on the method ??? Since we read it in the receiver)
 
 
@@ -38,10 +38,9 @@ public class NewConnectionHandlerNoFilterImpl implements NewConnectionHandler {
 
             PlayerTransmiter playerTransmiter = new PlayerTransmiter(datagramSocket, playerPacketCreator, Controller.ID_PROTOCOL, 2f, address, port);
 
-            PlayerPacketHandler playerPacketHandler = new PlayerPacketHandlerImpl(playerPacketCreator, playerTransmiter);
-
-
+            PlayerPacketHandler playerPacketHandler = new PlayerPacketHandlerImpl(playerPacketCreator, playerTransmiter, controller);
             PlayerHandler playerHandler = new PlayerHandlerImpl(userId, token, playerPacketHandler, playerTransmiter, playerPacketCreator);
+            playerPacketHandler.setPlayerHandler(playerHandler);
 
             playerTransmiter.start();
 
