@@ -45,8 +45,14 @@ public class PacketHandlerDistribuer implements PacketHandler {
                 case PacketCreator.RESP_JOIN:
                     connectionPacketHandler.handlePacket(packet);
                     break;
+                case PacketCreator.GAMEROOM_DESC:
+                    break;
                 case PacketCreator.GAME:
                     gamePacketHandler.handlePacket(packet);
+                    break;
+                case PacketCreator.GAME_START:
+                    break;
+                case PacketCreator.GAME_END:
                     break;
             }
         }//else discard packet
