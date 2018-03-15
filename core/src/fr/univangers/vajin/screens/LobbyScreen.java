@@ -1,7 +1,7 @@
 package fr.univangers.vajin.screens;
 
 import com.badlogic.gdx.Screen;
-import fr.vajin.snakerpg.gameroom.jsondatabeans.LobbyBean;
+import fr.vajin.snakerpg.jsondatabeans.LobbyBean;
 
 public class LobbyScreen implements Screen {
 
