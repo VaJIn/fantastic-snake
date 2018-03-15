@@ -1,4 +1,4 @@
-package fr.univangers.vajin.engine.utilities;
+package fr.vajin.snakerpg.utilities;
 
 
 import java.util.*;

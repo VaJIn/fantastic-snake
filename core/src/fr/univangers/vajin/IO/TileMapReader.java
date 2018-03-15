@@ -10,8 +10,8 @@ import fr.univangers.vajin.engine.field.Field;
 import fr.univangers.vajin.engine.field.FieldUnit;
 import fr.univangers.vajin.engine.field.FieldUnitEnum;
 import fr.univangers.vajin.engine.field.StaticField;
-import fr.univangers.vajin.engine.utilities.Matrix;
-import fr.univangers.vajin.engine.utilities.StaticMatrix;
+import fr.vajin.snakerpg.utilities.Matrix;
+import fr.vajin.snakerpg.utilities.StaticMatrix;
 
 import java.util.ArrayList;
 import java.util.List;
