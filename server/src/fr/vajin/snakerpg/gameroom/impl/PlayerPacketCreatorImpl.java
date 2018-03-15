@@ -5,6 +5,7 @@ import fr.univangers.vajin.engine.GameEngine;
 import fr.univangers.vajin.engine.entities.Entity;
 import fr.univangers.vajin.engine.utilities.Position;
 import fr.vajin.snakerpg.gameroom.PlayerPacketCreator;
+import fr.vajin.snakerpg.gameroom.utilities.CustomByteArrayOutputStream;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -13,14 +14,6 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class PlayerPacketCreatorImpl implements PlayerPacketCreator {
-
-    private static byte[] intToByteArray(int value) {
-        return new byte[]{
-                (byte) (value >>> 24),
-                (byte) (value >>> 16),
-                (byte) (value >>> 8),
-                (byte) value};
-    }
 
     private GameEngine gameEngine;
     private Map<Integer, Entity> entities;
@@ -55,18 +48,18 @@ public class PlayerPacketCreatorImpl implements PlayerPacketCreator {
         }
     }
 
-    private ByteArrayOutputStream getPacketStream() throws IOException {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+    private CustomByteArrayOutputStream getPacketStream() throws IOException {
+        CustomByteArrayOutputStream stream = new CustomByteArrayOutputStream();
 
         numSequence++;
 
-        stream.write(intToByteArray(idProtocol));
+        stream.writeInt(idProtocol);
 
-        stream.write(intToByteArray(numSequence));
+        stream.writeInt(numSequence);
 
-        stream.write(intToByteArray(this.lastIdReceived));
+        stream.writeInt(this.lastIdReceived);
 
-        stream.write(intToByteArray(ackBitfield));
+        stream.writeInt(ackBitfield);
 
         return stream;
     }
@@ -78,7 +71,7 @@ public class PlayerPacketCreatorImpl implements PlayerPacketCreator {
 
         try {
 
-            ByteArrayOutputStream stream = this.getPacketStream();
+            CustomByteArrayOutputStream stream = this.getPacketStream();
 
 
             stream.write(GAME);
@@ -88,21 +81,21 @@ public class PlayerPacketCreatorImpl implements PlayerPacketCreator {
                 System.out.println("[NEXT PACKET] Entity" + entity.getEntityId());
                 Iterator<? extends Entity.EntityTileInfo> it = entity.getEntityTilesInfosIterator();
 
-                stream.write(intToByteArray(entity.getEntityId()));
+                stream.writeInt(entity.getEntityId());
                 while (it.hasNext()) {
                     Entity.EntityTileInfo tileInfo = it.next();
                     System.out.println("[NEXT PACKET] Tile " + tileInfo.getId());
-                    stream.write(intToByteArray(tileInfo.getId()));
-                    stream.write(intToByteArray(tileInfo.getPosition().getX()));
-                    stream.write(intToByteArray(tileInfo.getPosition().getY()));
+                    stream.writeInt(tileInfo.getId());
+                    stream.writeInt(tileInfo.getPosition().getX());
+                    stream.writeInt(tileInfo.getPosition().getY());
                     byte[] resourceKeyBytes = tileInfo.getResourceKey().getBytes();
-                    stream.write(intToByteArray(resourceKeyBytes.length));
+                    stream.writeInt(resourceKeyBytes.length);
                     stream.write(resourceKeyBytes);
                 }
-                stream.write(intToByteArray(-1));
+                stream.writeInt(-1);
             }
 
-            stream.write(intToByteArray(-1));
+            stream.writeInt(-1);
 
             data = stream.toByteArray();
 
