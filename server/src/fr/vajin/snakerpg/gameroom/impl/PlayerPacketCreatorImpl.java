@@ -86,7 +86,7 @@ public class PlayerPacketCreatorImpl implements PlayerPacketCreator {
             System.out.println("[NEXT PACKET] Map size : " + entities.size());
             for (Entity entity : entities.values()) {
                 System.out.println("[NEXT PACKET] Entity" + entity.getEntityId());
-                Iterator<Entity.EntityTileInfo> it = entity.getEntityTilesInfosIterator();
+                Iterator<? extends Entity.EntityTileInfo> it = entity.getEntityTilesInfosIterator();
 
                 stream.write(intToByteArray(entity.getEntityId()));
                 while (it.hasNext()) {

@@ -5,6 +5,8 @@ import java.net.DatagramPacket;
 
 public interface PacketCreator {
 
+    int ID_PROTOCOL = 0x685fa053;
+
     int JOIN = 1;
     int RESP_JOIN = 2;
     int LIFELINE = 3;

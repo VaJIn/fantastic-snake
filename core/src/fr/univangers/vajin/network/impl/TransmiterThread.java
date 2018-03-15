@@ -9,7 +9,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.time.Instant;
 
-public class TransmiterImpl extends Thread implements Transmiter{
+public class TransmiterThread extends Thread implements Transmiter {
 
     private PacketCreator packetCreator;
 
@@ -20,7 +20,7 @@ public class TransmiterImpl extends Thread implements Transmiter{
 
     private double frequency;
 
-    public TransmiterImpl(PacketCreator packetCreator, DatagramSocket socket, InetAddress address, int port, double frequency){
+    public TransmiterThread(PacketCreator packetCreator, DatagramSocket socket, InetAddress address, int port, double frequency) {
         this.packetCreator = packetCreator;
         this.socket = socket;
 
