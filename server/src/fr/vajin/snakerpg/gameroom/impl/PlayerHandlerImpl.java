@@ -4,6 +4,8 @@ import fr.vajin.snakerpg.gameroom.PlayerHandler;
 import fr.vajin.snakerpg.gameroom.PlayerPacketCreator;
 import fr.vajin.snakerpg.gameroom.PlayerPacketHandler;
 
+import java.time.Instant;
+
 public class PlayerHandlerImpl implements PlayerHandler {
 
     int userId;
@@ -12,6 +14,8 @@ public class PlayerHandlerImpl implements PlayerHandler {
     PlayerPacketHandler playerPacketHandler;
     PlayerTransmiter playerTransmiter;
     PlayerPacketCreator playerPacketCreator;
+
+    private long lastAliveSignalReceived;
 
     public PlayerHandlerImpl(int userId,
                              byte[] userToken,
@@ -23,6 +27,8 @@ public class PlayerHandlerImpl implements PlayerHandler {
         this.playerPacketHandler = playerPacketHandler;
         this.playerTransmiter = playerTransmiter;
         this.playerPacketCreator = playerPacketCreator;
+
+        lastAliveSignalReceived = Instant.now().toEpochMilli();
     }
 
     @Override
@@ -43,5 +49,15 @@ public class PlayerHandlerImpl implements PlayerHandler {
     @Override
     public PlayerPacketCreator getPlayerTransmitter() {
         return playerPacketCreator;
+    }
+
+    @Override
+    public void aliveSignalReceive() {
+        lastAliveSignalReceived = Instant.now().toEpochMilli();
+    }
+
+    @Override
+    public long getLastAliveSignalReceived() {
+        return this.lastAliveSignalReceived;
     }
 }

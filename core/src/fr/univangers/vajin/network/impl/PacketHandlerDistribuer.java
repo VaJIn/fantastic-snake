@@ -11,13 +11,11 @@ public class PacketHandlerDistribuer implements PacketHandler {
 
     private PacketCreator packetCreator;
 
-    private ConnectionPacketHandler connectionPacketHandler;
-
-    private LobbyPacketHandler lobbyPacketHandler;
-
-    private GameStartPacketHandler gameStartPacketHandler;
-    private GamePacketHandler gamePacketHandler;
-    private GameEndPacketHandler gameEndPacketHandler;
+    private PacketHandler connectionPacketHandler;
+    private PacketHandler lobbyPacketHandler;
+    private PacketHandler gameStartPacketHandler;
+    private PacketHandler gamePacketHandler;
+    private PacketHandler gameEndPacketHandler;
 
     public PacketHandlerDistribuer(PacketCreator packetCreator) {
 

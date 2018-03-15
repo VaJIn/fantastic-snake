@@ -10,4 +10,8 @@ public interface PlayerHandler {
 
     PlayerPacketCreator getPlayerTransmitter();
 
+    void aliveSignalReceive();
+
+    long getLastAliveSignalReceived();
+
 }
