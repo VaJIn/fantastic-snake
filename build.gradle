@@ -62,6 +62,9 @@ project(":core") {
     dependencies {
         compile project(":engine")
         compile project(":server")
+
+        compile 'com.google.code.gson:gson:2.8.2'
+
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
