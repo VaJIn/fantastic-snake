@@ -5,9 +5,8 @@ import fr.univangers.vajin.engine.GameEngine;
 import fr.univangers.vajin.engine.entities.Entity;
 import fr.univangers.vajin.engine.utilities.Position;
 import fr.vajin.snakerpg.gameroom.PlayerPacketCreator;
-import fr.vajin.snakerpg.gameroom.utilities.CustomByteArrayOutputStream;
+import fr.vajin.snakerpg.utilities.CustomByteArrayOutputStream;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.util.Iterator;
