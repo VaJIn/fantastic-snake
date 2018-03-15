@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.time.Instant;
 
 public class TransmiterImpl extends Thread implements Transmiter{
 
@@ -36,6 +37,8 @@ public class TransmiterImpl extends Thread implements Transmiter{
 
             while (!interrupted()){
 
+                long start = Instant.now().toEpochMilli();
+
                 DatagramPacket packet = this.packetCreator.getPacket();
 
                 packet.setAddress(address);
@@ -43,7 +46,9 @@ public class TransmiterImpl extends Thread implements Transmiter{
 
                 socket.send(packet);
 
-                sleep((long) (1000/frequency));
+                long end = Instant.now().toEpochMilli();
+
+                sleep((int) (1000.0 / frequency) - (end - start));
 
             }
 
