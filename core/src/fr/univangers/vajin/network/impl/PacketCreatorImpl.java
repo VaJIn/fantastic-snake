@@ -2,9 +2,8 @@ package fr.univangers.vajin.network.impl;
 
 import fr.univangers.vajin.network.PacketCreator;
 import fr.univangers.vajin.network.Transmiter;
-import fr.univangers.vajin.network.utilities.CustomByteArrayOutputStream;
+import fr.vajin.snakerpg.utilities.CustomByteArrayOutputStream;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.DatagramPacket;
 

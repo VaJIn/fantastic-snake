@@ -1,4 +1,4 @@
-package fr.vajin.snakerpg.gameroom.utilities;
+package fr.vajin.snakerpg.utilities;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
