@@ -30,22 +30,7 @@ public class NewConnectionHandlerNoFilterImpl implements NewConnectionHandler {
 
             int port = datagramPacket.getPort();
             InetAddress address = datagramPacket.getAddress();
-
-            PlayerPacketCreator playerPacketCreator = new PlayerPacketCreatorImpl(Controller.ID_PROTOCOL);
-            GameEngine gameEngine = controller.getCurrentEngine();
-
-
-            if (gameEngine != null) { //Only if the is a game being played
-                playerPacketCreator.setEngine(gameEngine);
-            }
-
-            PlayerTransmiter playerTransmiter = new PlayerTransmiter(datagramSocket, playerPacketCreator, Controller.ID_PROTOCOL, 2f, address, port);
-
-            PlayerPacketHandler playerPacketHandler = new PlayerPacketHandlerImpl(playerPacketCreator, playerTransmiter, controller);
-            PlayerHandler playerHandler = new PlayerHandlerImpl(userId, token, playerPacketHandler, playerTransmiter, playerPacketCreator);
-            playerPacketHandler.setPlayerHandler(playerHandler);
-
-            playerTransmiter.start();
+            PlayerHandler playerHandler = new PlayerHandlerImpl(datagramSocket,address, port, controller,userId, token);
 
             receiver.addPlayerHandler(playerHandler);
             controller.addPlayerHandler(playerHandler);

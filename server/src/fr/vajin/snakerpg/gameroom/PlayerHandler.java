@@ -6,6 +6,8 @@ public interface PlayerHandler {
 
     int getUserToken();
 
+    Controller getController();
+
     PlayerPacketHandler getPlayerPacketHandler();
 
     PlayerPacketCreator getPlayerTransmitter();

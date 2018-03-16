@@ -1,7 +1,6 @@
 package fr.vajin.snakerpg.gameroom.impl.creators;
 
-import fr.univangers.vajin.engine.entities.Entity;
-import fr.univangers.vajin.engine.utilities.Position;
+import fr.vajin.snakerpg.gameroom.PlayerHandler;
 import fr.vajin.snakerpg.gameroom.PlayerPacketCreator;
 import fr.vajin.snakerpg.utilities.CustomByteArrayOutputStream;
 
@@ -18,6 +17,8 @@ public class PlayerPacketCreatorImpl implements PlayerPacketCreator {
 
     private PlayerPacketCreatorState currentState;
 
+    private PlayerHandler playerHandler;
+
     private final int idProtocol;
     private int lastIdReceived = 0;
     private int ackBitfield = 0;
@@ -32,6 +33,8 @@ public class PlayerPacketCreatorImpl implements PlayerPacketCreator {
         this.gameStartState = new GameStartState();
         this.gameState = new GameState();
         this.gameEndState = new GameEndState();
+
+
     }
 
     CustomByteArrayOutputStream getPacketStream() throws IOException {
@@ -97,5 +100,15 @@ public class PlayerPacketCreatorImpl implements PlayerPacketCreator {
 
     public PlayerPacketCreatorState getGameEndState() {
         return gameEndState;
+    }
+
+    @Override
+    public void setPlayerHandler(PlayerHandler playerHandler){
+        this.playerHandler = playerHandler;
+    }
+
+    @Override
+    public PlayerHandler getPlayerHandler(){
+        return this.playerHandler;
     }
 }

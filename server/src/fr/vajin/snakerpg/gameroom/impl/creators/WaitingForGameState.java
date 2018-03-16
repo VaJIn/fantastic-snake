@@ -1,6 +1,8 @@
 package fr.vajin.snakerpg.gameroom.impl.creators;
 
 import fr.vajin.snakerpg.gameroom.PlayerPacketCreator;
+import fr.vajin.snakerpg.jsondatabeans.GameStartBean;
+import fr.vajin.snakerpg.jsondatabeans.LobbyBean;
 import fr.vajin.snakerpg.utilities.CustomByteArrayOutputStream;
 
 import java.io.IOException;
@@ -14,6 +16,9 @@ public class WaitingForGameState implements PlayerPacketCreator.PlayerPacketCrea
 
 
         stream.writeInt(PlayerPacketCreator.GAMEROOM_DESC);
+
+        LobbyBean lobbyBean = new LobbyBean();
+
 
 
         data = stream.toByteArray();
