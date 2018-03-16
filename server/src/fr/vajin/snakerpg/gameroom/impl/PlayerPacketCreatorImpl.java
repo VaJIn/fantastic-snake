@@ -60,6 +60,8 @@ public class PlayerPacketCreatorImpl implements PlayerPacketCreator {
 
         stream.writeInt(ackBitfield);
 
+
+
         return stream;
     }
 
@@ -71,6 +73,9 @@ public class PlayerPacketCreatorImpl implements PlayerPacketCreator {
         try {
 
             CustomByteArrayOutputStream stream = this.getPacketStream();
+
+
+            //TODO etats
 
 
             stream.write(GAME);

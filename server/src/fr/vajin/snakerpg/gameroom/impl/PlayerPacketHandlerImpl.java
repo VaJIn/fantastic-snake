@@ -34,28 +34,32 @@ public class PlayerPacketHandlerImpl implements PlayerPacketHandler {
         int idProtocol = buffer.getInt();
 
         if(idProtocol==PlayerPacketCreator.ID_PROTOCOL){
+
             int idPlayer = buffer.getInt();
             int tokenPlayer = buffer.getInt();
 
-            int numSequence = buffer.getInt();
+            if((idPlayer==this.playerHandler.getUserId())&&(tokenPlayer==this.playerHandler.getUserToken())){
+                int numSequence = buffer.getInt();
 
-            int ack = buffer.getInt();
-            this.packetCreator.acknowledgePacket(ack);
+                int ack = buffer.getInt();
+                this.packetCreator.acknowledgePacket(ack);
 
-            int ackbitfield = buffer.getInt();
+                int ackbitfield = buffer.getInt();
 
-            int type = buffer.getInt();
+                int type = buffer.getInt();
 
-            switch (type){
-                case PlayerPacketCreator.JOIN:
-                    break;
-                case PlayerPacketCreator.LIFELINE:
-                    this.playerHandler.aliveSignalReceive();
-                    break;
-                case PlayerPacketCreator.PLAYER_ACTION:
-                    this.actionPacketHandler.handleDatagramPacket(datagramPacket);
-                    break;
+                switch (type){
+                    case PlayerPacketCreator.JOIN:
+                        break;
+                    case PlayerPacketCreator.LIFELINE:
+                        this.playerHandler.aliveSignalReceive();
+                        return true;
+                    case PlayerPacketCreator.PLAYER_ACTION:
+                        return this.actionPacketHandler.handleDatagramPacket(datagramPacket);
+                }
             }
+
+
         }
 
         return false;

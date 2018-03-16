@@ -8,12 +8,12 @@ import java.time.Instant;
 
 public class PlayerHandlerImpl implements PlayerHandler {
 
-    int userId;
-    int userToken;
+    private int userId;
+    private int userToken;
 
-    PlayerPacketHandler playerPacketHandler;
-    PlayerTransmiter playerTransmiter;
-    PlayerPacketCreator playerPacketCreator;
+    private PlayerPacketHandler playerPacketHandler;
+    private PlayerTransmiter playerTransmiter;
+    private PlayerPacketCreator playerPacketCreator;
 
     private long lastAliveSignalReceived;
 
@@ -52,12 +52,12 @@ public class PlayerHandlerImpl implements PlayerHandler {
     }
 
     @Override
-    public void aliveSignalReceive() {
+    public synchronized void aliveSignalReceive() {
         lastAliveSignalReceived = Instant.now().toEpochMilli();
     }
 
     @Override
-    public long getLastAliveSignalReceived() {
+    public synchronized long getLastAliveSignalReceived() {
         return this.lastAliveSignalReceived;
     }
 }
