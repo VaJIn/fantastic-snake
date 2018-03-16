@@ -97,10 +97,10 @@ public class TileMapReader {
                 }
                 //END TEMPORATY CODE
 
-                this.field = new StaticField(fieldMatrix);
-
             }
         }
+        this.field = new StaticField(fieldMatrix);
+
     }
 
     public Field getField() {

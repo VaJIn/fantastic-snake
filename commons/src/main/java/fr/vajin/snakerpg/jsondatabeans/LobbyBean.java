@@ -1,5 +1,6 @@
 package fr.vajin.snakerpg.jsondatabeans;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 public class LobbyBean {
@@ -9,7 +10,8 @@ public class LobbyBean {
     private String map;
 
     public LobbyBean(){
-
+        this.players = new ArrayList<>();
+        this.map = "";
     }
 
     public Collection<PlayerBean> getPlayers() {

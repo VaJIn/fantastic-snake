@@ -6,8 +6,15 @@ public class PlayerBean {
     private String alias;
     private int snakeEntityId;
 
+
     public PlayerBean(){
 
+    }
+
+    public PlayerBean(int localId, String alias, int snakeEntityId) {
+        this.localId = localId;
+        this.alias = alias;
+        this.snakeEntityId = snakeEntityId;
     }
 
     public int getLocalId() {

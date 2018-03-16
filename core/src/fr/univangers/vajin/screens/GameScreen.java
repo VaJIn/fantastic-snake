@@ -116,7 +116,7 @@ public class GameScreen implements Screen, GameEngineObserver, InputProcessor {
         font.draw(batch, "Score : " + engine.getPlayerScore(0), Gdx.graphics.getWidth() - 100, Gdx.graphics.getHeight() - 50);
 
         if (engine.isGameOver()) {
-            font.draw(batch, "GAME OVER\nPress any key to restart", Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
+            font.draw(batch, "GAME OVER\nPress any key to go back to the menu", Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
         }
 
         batch.end();
@@ -124,7 +124,6 @@ public class GameScreen implements Screen, GameEngineObserver, InputProcessor {
 
     @Override
     public void resize(int width, int height) {
-
     }
 
     @Override
@@ -172,7 +171,7 @@ public class GameScreen implements Screen, GameEngineObserver, InputProcessor {
     @Override
     public boolean keyDown(int keycode) {
         if (engine.isGameOver()) {
-            game.setScreen(new GameLoadingScreen(game, assetManager, mapFileName));
+            game.changeScreen(SnakeRPG.MENU_SCREEN);
             dispose();
             return true;
         } else {

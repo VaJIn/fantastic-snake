@@ -3,15 +3,17 @@ package fr.univangers.vajin.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.assets.loaders.TextureAtlasLoader;
-import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import fr.univangers.vajin.IO.TileMapReader;
 import fr.univangers.vajin.SnakeRPG;
 import fr.univangers.vajin.engine.EngineBuilder;
@@ -26,94 +28,144 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.Map;
 
 public class GameLoadingScreen implements Screen, InputProcessor {
 
-    private AssetManager assetManager;
-    private SnakeRPG game;
-    private String mapFileName;
+    private final Texture background;
+    private String gameAtlas = "snake.atlas";
+
+    private SnakeRPG parent;
 
     private SpriteBatch batch;
 
-    private BitmapFont font;
+    private Stage stage;
+    private Label loadingInfoLabel;
+    private TextButton startButton;
 
-    private float width;
-    private float height;
 
-    public GameLoadingScreen(SnakeRPG game, AssetManager assetManager, String mapFileName) {
-        this.game = game;
-        this.assetManager = assetManager;
-        this.mapFileName = mapFileName;
+    int currentLoadingStage;
 
-        this.font = new BitmapFont();
+    private String mapFileName;
+
+
+    public GameLoadingScreen(SnakeRPG parent) {
+        this.parent = parent;
+        this.stage = new Stage(new ScreenViewport());
+        this.stage.setDebugAll(true);
+
         this.batch = new SpriteBatch();
 
-        width = Gdx.graphics.getWidth();
-        height = Gdx.graphics.getHeight();
+        parent.getAssetManager().queueLoadingScreenAssets();
+        parent.getAssetManager().getManager().finishLoading();
 
-        Gdx.input.setInputProcessor(this);
-    }
-
-    public GameLoadingScreen(SnakeRPG game, AssetManager assetManager, String mapFileName, Map<String, Class> files) {
-        this.game = game;
-        this.assetManager = assetManager;
-        this.mapFileName = mapFileName;
-
-        this.font = new BitmapFont();
-        this.batch = new SpriteBatch();
-
-        width = Gdx.graphics.getWidth();
-        height = Gdx.graphics.getHeight();
-
-
-        assetManager.setLoader(TiledMap.class, new TmxMapLoader(new InternalFileHandleResolver()));
-
-        assetManager.setLoader(TextureAtlas.class, new TextureAtlasLoader(new InternalFileHandleResolver()));
-
-        for (Map.Entry<String, Class> entry : files.entrySet()) {
-            assetManager.load(entry.getKey(), entry.getValue());
-        }
+        this.background = parent.getAssetManager().getManager().get("background/menu1280x720.jpg", Texture.class);
 
 
         Gdx.input.setInputProcessor(this);
-    }
-
-
-    public void loadGame(String mapFileName) {
-        this.assetManager.load(mapFileName, TiledMap.class);
     }
 
     @Override
     public void show() {
+        this.currentLoadingStage = 0;
+
+        this.loadingInfoLabel = new Label("Starting loading....", parent.getUISkin());
+
+        Table table = new Table();
+        table.setFillParent(true);
+
+        stage.addActor(table);
+
+
+        this.startButton = new TextButton("Start !", parent.getUISkin());
+        startButton.setDisabled(true);
+        startButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                startGame();
+            }
+        });
+
+
+        table.add(this.loadingInfoLabel).fillX().uniformX();
+        table.row().pad(10, 0, 0, 0);
+        table.add(this.startButton);
+
+
+        Gdx.input.setInputProcessor(stage);
 
     }
 
+
+    public void setMapFileName(String mapFileName) {
+        this.mapFileName = mapFileName;
+    }
+
+
+    private static final int FONT = 1;        // loading fonts
+    private static final int PARTY = FONT + 1;        // loading particle effects
+    private static final int SOUND = PARTY + 1;        // loading sounds
+    private static final int MUSIC = SOUND + 1;        // loading music
+    private static final int IMAGE = MUSIC + 1;
+    private static final int MAP = IMAGE + 1;
+    private static final int FINAL = MAP + 1;
     @Override
     public void render(float delta) {
 
-        Gdx.gl.glClearColor(100f / 255f, 100f / 255f, 250f / 255f, 1f);
+        Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        batch.begin();
+        this.batch.begin();
+        this.batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        this.batch.end();
 
-        if (assetManager.update()) {
-            font.draw(batch, "Press any key to start", width / 2, height / 2 - 50);
+
+        if (parent.getAssetManager().getManager().update()) {
+            currentLoadingStage++;
+            switch (currentLoadingStage) {
+                case FONT:
+                    loadingInfoLabel.setText("Loading fonts");
+                    parent.getAssetManager().queueAddFonts(); // first load done, now start fonts
+                    break;
+                case PARTY:
+                    loadingInfoLabel.setText("Loading fonts");
+                    parent.getAssetManager().queueAddParticleEffects(); // fonts are done now do party effects
+                    break;
+                case SOUND:
+                    loadingInfoLabel.setText("Loading sounds...");
+                    parent.getAssetManager().queueAddSounds();
+                    break;
+                case MUSIC:
+                    loadingInfoLabel.setText("Loading music...");
+                    parent.getAssetManager().queueAddMusic();
+                    break;
+                case IMAGE:
+                    loadingInfoLabel.setText("Loading textures...");
+                    parent.getAssetManager().queueAddGameImages();
+                    break;
+                case MAP:
+                    loadingInfoLabel.setText("Loading map...");
+                    parent.getAssetManager().getManager().load(mapFileName, TiledMap.class);
+                    break;
+                case FINAL:
+                    loadingInfoLabel.setText("Finished");
+                    if (startButton.isDisabled()) {
+                        startButton.setDisabled(false);
+                    }
+                    break;
+            }
         }
 
-        float progress = assetManager.getProgress();
 
-        font.draw(batch, "Progress : " + progress, width / 2, height / 2);
-
-        batch.end();
-
+        stage.act();
+        stage.draw();
 
     }
 
-    @Override
-    public boolean keyDown(int keycode) {
-        if (assetManager.update()) {
-            TileMapReader reader = new TileMapReader(assetManager.get(mapFileName));
+    private void startGame() {
+        System.out.println("StartGame");
+        if (currentLoadingStage >= FINAL) {
+
+            TileMapReader reader = new TileMapReader(parent.getAssetManager().getManager().get(mapFileName));
 
             EngineBuilder classicEngineBuilder = new EngineBuilder(reader.getField(), 1);
             classicEngineBuilder.addSnake(0, new SimpleSnake());
@@ -126,29 +178,34 @@ public class GameLoadingScreen implements Screen, InputProcessor {
             } catch (WrongPlayersNumberException e) {
                 e.printStackTrace();
             }
+/*
+        try {
+            int idProtocol = 0x685fa053;
+            InetAddress receiverInetAddress = InetAddress.getLocalHost();
+            int receiverPort = 6969;
 
-            try {
-                int idProtocol = 0x685fa053;
-                InetAddress receiverInetAddress = InetAddress.getLocalHost();
-                int receiverPort = 6969;
 
-
-                DatagramSocket datagramSocket = new DatagramSocket(6970);
-                PlayerPacketCreator playerPacketCreator = new PlayerPacketCreatorImpl(idProtocol);
-                playerPacketCreator.setEngine(classicEngine);
-                PlayerTransmiter transmiter = new PlayerTransmiter(datagramSocket, playerPacketCreator, idProtocol, 2f, receiverInetAddress, receiverPort);
-                transmiter.start();
-            } catch (SocketException e) {
-                e.printStackTrace();
-            } catch (UnknownHostException e) {
-                e.printStackTrace();
-            }
-
-            game.setScreen(new GameScreen(game, reader, assetManager, classicEngine, mapFileName));
-            dispose();
-            return true;
+            DatagramSocket datagramSocket = new DatagramSocket(6970);
+            PlayerPacketCreator playerPacketCreator = new PlayerPacketCreatorImpl(idProtocol);
+            playerPacketCreator.setEngine(classicEngine);
+            PlayerTransmiter transmiter = new PlayerTransmiter(datagramSocket, playerPacketCreator, idProtocol, 2f, receiverInetAddress, receiverPort);
+            transmiter.start();
+        } catch (SocketException e) {
+            e.printStackTrace();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
         }
-        return false;
+*/
+            parent.setScreen(new GameScreen(parent, reader, parent.getAssetManager().getManager(), classicEngine, mapFileName));
+        } else {
+            System.out.println("Not done loading !");
+        }
+    }
+
+    @Override
+    public boolean keyDown(int keycode) {
+        startGame();
+            return true;
     }
 
     @Override
@@ -208,6 +265,6 @@ public class GameLoadingScreen implements Screen, InputProcessor {
 
     @Override
     public void dispose() {
-
+        stage.dispose();
     }
 }

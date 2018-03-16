@@ -67,6 +67,12 @@ public class StaticMatrix<E> extends AbstractMatrix<E> {
      */
     @Override
     public E get(int rowIndex, int columnIndex) {
+        if (rowIndex >= this.getRowDimension() || rowIndex < 0) {
+            throw new IndexOutOfBoundsException("Row Index: " + rowIndex + ", Row dimension: " + getRowDimension());
+        }
+        if (columnIndex >= this.getColumnDimension() || columnIndex < 0) {
+            throw new IndexOutOfBoundsException("Column Index: " + rowIndex + ", Column dimension: " + getRowDimension());
+        }
         return content.get(rowIndex * columns + columnIndex);
     }
 

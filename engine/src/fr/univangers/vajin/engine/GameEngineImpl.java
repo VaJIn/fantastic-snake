@@ -95,6 +95,8 @@ public class GameEngineImpl extends AbstractGameEngine implements EntityObserver
 
     private void initSnakePositions(){
 
+        System.out.println("Field size : " + field.getWidth() + " : " + field.getHeight());
+
         List<Position> alreadyAssignedPositions = new ArrayList<>();
         RandomNumberGenerator randGen = new RandomNumberGenerator();
 

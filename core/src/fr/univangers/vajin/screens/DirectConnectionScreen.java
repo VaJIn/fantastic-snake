@@ -1,8 +1,19 @@
 package fr.univangers.vajin.screens;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import fr.univangers.vajin.SnakeRPG;
 
+import javax.xml.soap.Text;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
@@ -11,7 +22,8 @@ import java.net.InetAddress;
  */
 public class DirectConnectionScreen implements Screen {
 
-    private SnakeRPG game;
+    private final Stage stage;
+    private final SnakeRPG game;
 
     private DatagramSocket socket; //UDP socket
 
@@ -23,10 +35,9 @@ public class DirectConnectionScreen implements Screen {
     int timeoutPeriod; //Time we wait before stoping to try to connect to a given server.
 
 
-    public DirectConnectionScreen(SnakeRPG game, DatagramSocket socket, int timeoutPeriod) {
+    public DirectConnectionScreen(SnakeRPG game) {
         this.game = game;
-        this.socket = socket;
-        this.timeoutPeriod = timeoutPeriod;
+        this.stage = new Stage(new ScreenViewport());
     }
 
     /**
@@ -49,12 +60,48 @@ public class DirectConnectionScreen implements Screen {
 
     @Override
     public void show() {
+        this.currentState = this.initialState;
 
+        Skin skin = game.getUISkin();
+
+
+        Table table = new Table(skin);
+        table.setFillParent(true);
+        table.debugAll();
+
+        stage.addActor(table);
+
+        TextField ipTextField = new TextField("127.0.0.0", skin);
+
+        TextField portTextField = new TextField("7989", skin);
+
+        TextButton connect = new TextButton("Connect", skin);
+        TextButton backToMenu = new TextButton("Back", skin);
+
+        table.add(ipTextField).colspan(2);
+        table.row().pad(10, 0, 10, 0);
+        table.add(portTextField).colspan(2);
+        table.row();
+        table.add(connect);
+        table.add(backToMenu);
+
+        backToMenu.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                game.changeScreen(SnakeRPG.MENU_SCREEN);
+            }
+        });
+
+
+        Gdx.input.setInputProcessor(stage);
     }
 
     @Override
     public void render(float delta) {
-        //TODO
+        Gdx.gl.glClearColor(0f, 0f, 0f, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
+        stage.draw();
     }
 
     @Override
@@ -79,7 +126,7 @@ public class DirectConnectionScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        stage.dispose();
     }
 
     void goToLobbyScreen() {

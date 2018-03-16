@@ -10,11 +10,12 @@ public class StaticField implements Field {
 
     public StaticField(Matrix<FieldUnit> content) {
         this.content = new StaticMatrix<FieldUnit>(content);
+        System.out.println("Matrix size " + content.getRowDimension() + ", " + content.getColumnDimension());
     }
 
     @Override
     public FieldUnit getFieldUnits(Position position) {
-        return this.content.get(position.getX(), position.getY());
+        return this.content.get(position.getY(), position.getX());
     }
 
     @Override
