@@ -8,8 +8,6 @@ import java.util.Collection;
 
 public interface Controller {
 
-    int ID_PROTOCOL = 0x685fa053;
-
     int getCurrentPlayerCount();
 
     /**
@@ -27,6 +25,10 @@ void addPlayerHandler(PlayerHandler playerHandler);
 
     GameModeEntity currentGameMode();
 
+    Collection<PlayerHandler> getPlayerHandlers();
+
     Collection<GameParticipationEntity> getLastGameResults();
+
+    String getMapRessource();
 
 }

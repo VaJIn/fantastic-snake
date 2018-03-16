@@ -1,12 +1,14 @@
 package fr.vajin.snakerpg.jsondatabeans;
 
+import fr.vajin.snakerpg.database.entities.GameModeEntity;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
 public class LobbyBean {
 
     private Collection<PlayerBean> players;
-    private int gameMode;
+    private GameModeEntity gameMode;
     private String map;
 
     public LobbyBean(){
@@ -22,11 +24,11 @@ public class LobbyBean {
         this.players = players;
     }
 
-    public int getGameMode() {
+    public GameModeEntity getGameMode() {
         return gameMode;
     }
 
-    public void setGameMode(int gameMode) {
+    public void setGameMode(GameModeEntity gameMode) {
         this.gameMode = gameMode;
     }
 
