@@ -4,10 +4,14 @@ public interface PlayerHandler {
 
     int getUserId();
 
-    byte[] getUserToken();
+    int getUserToken();
 
     PlayerPacketHandler getPlayerPacketHandler();
 
     PlayerPacketCreator getPlayerTransmitter();
+
+    void aliveSignalReceive();
+
+    long getLastAliveSignalReceived();
 
 }

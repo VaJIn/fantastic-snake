@@ -4,17 +4,21 @@ import fr.vajin.snakerpg.gameroom.PlayerHandler;
 import fr.vajin.snakerpg.gameroom.PlayerPacketCreator;
 import fr.vajin.snakerpg.gameroom.PlayerPacketHandler;
 
+import java.time.Instant;
+
 public class PlayerHandlerImpl implements PlayerHandler {
 
-    int userId;
-    byte[] userToken;
+    private int userId;
+    private int userToken;
 
-    PlayerPacketHandler playerPacketHandler;
-    PlayerTransmiter playerTransmiter;
-    PlayerPacketCreator playerPacketCreator;
+    private PlayerPacketHandler playerPacketHandler;
+    private PlayerTransmiter playerTransmiter;
+    private PlayerPacketCreator playerPacketCreator;
+
+    private long lastAliveSignalReceived;
 
     public PlayerHandlerImpl(int userId,
-                             byte[] userToken,
+                             int userToken,
                              PlayerPacketHandler playerPacketHandler,
                              PlayerTransmiter playerTransmiter,
                              PlayerPacketCreator playerPacketCreator) {
@@ -23,6 +27,8 @@ public class PlayerHandlerImpl implements PlayerHandler {
         this.playerPacketHandler = playerPacketHandler;
         this.playerTransmiter = playerTransmiter;
         this.playerPacketCreator = playerPacketCreator;
+
+        lastAliveSignalReceived = Instant.now().toEpochMilli();
     }
 
     @Override
@@ -31,7 +37,7 @@ public class PlayerHandlerImpl implements PlayerHandler {
     }
 
     @Override
-    public byte[] getUserToken() {
+    public int getUserToken() {
         return userToken;
     }
 
@@ -43,5 +49,15 @@ public class PlayerHandlerImpl implements PlayerHandler {
     @Override
     public PlayerPacketCreator getPlayerTransmitter() {
         return playerPacketCreator;
+    }
+
+    @Override
+    public synchronized void aliveSignalReceive() {
+        lastAliveSignalReceived = Instant.now().toEpochMilli();
+    }
+
+    @Override
+    public synchronized long getLastAliveSignalReceived() {
+        return this.lastAliveSignalReceived;
     }
 }

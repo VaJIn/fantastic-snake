@@ -3,17 +3,14 @@ package fr.univangers.vajin.network.impl;
 import com.google.gson.Gson;
 import fr.univangers.vajin.network.PacketCreator;
 import fr.univangers.vajin.network.PacketHandler;
-import fr.univangers.vajin.screens.LobbyScreen;
-import fr.vajin.snakerpg.jsondatabeans.LobbyBean;
+import fr.vajin.snakerpg.jsondatabeans.GameEndBean;
 
 import java.net.DatagramPacket;
 import java.nio.ByteBuffer;
 
-public class LobbyPacketHandler implements PacketHandler {
+public class GameEndPacketHandler implements PacketHandler{
 
     private static int BUFFER_START_POS = 16;
-    private LobbyScreen lobbyScreen;
-
 
     @Override
     public void handlePacket(DatagramPacket packet) {
@@ -24,7 +21,7 @@ public class LobbyPacketHandler implements PacketHandler {
 
         int type = buffer.getInt();
 
-        if(type!= PacketCreator.GAMEROOM_DESC){
+        if(type!= PacketCreator.GAME_END){
             throw new IllegalArgumentException("Error packet type");
         }
 
@@ -36,9 +33,10 @@ public class LobbyPacketHandler implements PacketHandler {
 
         Gson gson = new Gson();
 
-        LobbyBean lobbyBean = gson.fromJson(String.valueOf(jsonData),LobbyBean.class);
+        GameEndBean gameEndBean = gson.fromJson(String.valueOf(jsonData),GameEndBean.class);
 
-        this.lobbyScreen.setLobbyBean(lobbyBean);
+        //TODO
+
 
     }
 }

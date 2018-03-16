@@ -13,6 +13,8 @@ import java.net.DatagramPacket;
  */
 public interface PlayerPacketCreator extends EntityObserver, GameEngineObserver {
 
+    int ID_PROTOCOL = 0x685fa053;
+
     int JOIN = 1;
     int RESP_JOIN = 2;
     int LIFELINE = 3;
