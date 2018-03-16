@@ -28,11 +28,11 @@ public class PlayerPacketCreatorImpl implements PlayerPacketCreator {
 
         this.idProtocol = idProtocol;
 
-        this.respJoinState = new RespJoinState();
-        this.waitingForGameState = new WaitingForGameState();
-        this.gameStartState = new GameStartState();
-        this.gameState = new GameState();
-        this.gameEndState = new GameEndState();
+        this.respJoinState = new RespJoinState(this);
+        this.waitingForGameState = new WaitingForGameState(this);
+        this.gameStartState = new GameStartState(this);
+        this.gameState = new GameState(this);
+        this.gameEndState = new GameEndState(this);
 
 
     }

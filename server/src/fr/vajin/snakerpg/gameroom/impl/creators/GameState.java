@@ -13,8 +13,9 @@ public class GameState implements PlayerPacketCreator.PlayerPacketCreatorState {
 
     private GameEngine gameEngine;
 
-    public GameState() {
+    public GameState(PlayerPacketCreator creator) {
 
+        this.gameEngine = creator.getPlayerHandler().getController().getCurrentEngine();
     }
 
     @Override

@@ -8,14 +8,21 @@ import java.net.DatagramPacket;
 
 public class RespJoinState implements PlayerPacketCreator.PlayerPacketCreatorState {
 
+    private PlayerPacketCreator creator;
+
+    public RespJoinState(PlayerPacketCreator creator){
+        this.creator = creator;
+    }
+
     @Override
     public DatagramPacket getNextPacket(CustomByteArrayOutputStream stream) throws IOException {
-        byte[] data;
+
 
         stream.writeInt(PlayerPacketCreator.RESP_JOIN);
 
+        stream.writeInt(1);
 
-        data = stream.toByteArray();
+        byte [] data = stream.toByteArray();
 
         return new DatagramPacket(data, data.length);
     }
