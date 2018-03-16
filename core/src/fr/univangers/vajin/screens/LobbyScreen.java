@@ -3,9 +3,13 @@ package fr.univangers.vajin.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import fr.univangers.vajin.SnakeRPG;
 import fr.vajin.snakerpg.jsondatabeans.LobbyBean;
@@ -42,20 +46,47 @@ public class LobbyScreen implements Screen {
     @Override
     public void show() {
 
+        Table mainTable = new Table();
+        mainTable.setFillParent(true);
+
+        Table optionTable = new Table();
+
+        TextButton exitLobby = new TextButton("Exit lobby", game.getUISkin());
+
         playerTable = new Table();
-        playerTable.setFillParent(true);
-        playerTable.setDebug(true);
 
         setLobbyBean(this.getLobbyBean());
 
         stage.setDebugAll(true);
-        stage.addActor(playerTable);
+        stage.addActor(mainTable);
+
+        SelectBox<String> mapSelectBox = new SelectBox<String>(game.getUISkin());
+        mapSelectBox.setItems("simple_map.tmx", "sample_map.tmx");
+
+        mainTable.row().pad(0, 0, 0, 10);
+
+        optionTable.add(new Label("Map", game.getUISkin())).fillX().uniformX();
+        optionTable.add(mapSelectBox).fillX().uniformX();
+        optionTable.row().pad(10, 0, 0, 10);
+        optionTable.add(new Label("Random option", game.getUISkin()));
+
+        mainTable.add(optionTable);
+        mainTable.add(playerTable).colspan(2).fillX();
+        mainTable.row();
+        mainTable.add(exitLobby).fillX().uniformX();
+
+        exitLobby.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                game.changeScreen(SnakeRPG.MENU_SCREEN);
+            }
+        });
 
         Gdx.input.setInputProcessor(stage);
 
     }
 
-    public void updateTable() {
+    private void updateTable() {
         if (game.getScreen() == this) {
             playerTable.reset();
 
