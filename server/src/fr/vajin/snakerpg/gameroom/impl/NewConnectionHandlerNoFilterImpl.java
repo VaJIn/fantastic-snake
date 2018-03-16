@@ -2,6 +2,9 @@ package fr.vajin.snakerpg.gameroom.impl;
 
 import fr.univangers.vajin.engine.GameEngine;
 import fr.vajin.snakerpg.gameroom.*;
+import fr.vajin.snakerpg.gameroom.impl.creators.PlayerPacketCreatorImpl;
+import fr.vajin.snakerpg.gameroom.impl.handlers.PlayerHandlerImpl;
+import fr.vajin.snakerpg.gameroom.impl.handlers.PlayerPacketHandlerImpl;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;

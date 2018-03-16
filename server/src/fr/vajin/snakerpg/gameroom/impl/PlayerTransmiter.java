@@ -50,6 +50,8 @@ public class PlayerTransmiter extends Thread {
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
     }

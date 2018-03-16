@@ -20,14 +20,6 @@ import fr.univangers.vajin.engine.EngineBuilder;
 import fr.univangers.vajin.engine.GameEngine;
 import fr.univangers.vajin.engine.WrongPlayersNumberException;
 import fr.univangers.vajin.engine.entities.snake.SimpleSnake;
-import fr.vajin.snakerpg.gameroom.PlayerPacketCreator;
-import fr.vajin.snakerpg.gameroom.impl.PlayerPacketCreatorImpl;
-import fr.vajin.snakerpg.gameroom.impl.PlayerTransmiter;
-
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.SocketException;
-import java.net.UnknownHostException;
 
 public class GameLoadingScreen implements Screen, InputProcessor {
 

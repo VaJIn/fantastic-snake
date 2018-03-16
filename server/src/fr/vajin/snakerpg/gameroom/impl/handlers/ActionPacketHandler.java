@@ -1,4 +1,4 @@
-package fr.vajin.snakerpg.gameroom.impl;
+package fr.vajin.snakerpg.gameroom.impl.handlers;
 
 import fr.univangers.vajin.engine.GameEngine;
 

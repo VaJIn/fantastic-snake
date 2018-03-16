@@ -1,9 +1,11 @@
-package fr.vajin.snakerpg.gameroom.impl;
+package fr.vajin.snakerpg.gameroom.impl.handlers;
 
 import fr.vajin.snakerpg.gameroom.Controller;
 import fr.vajin.snakerpg.gameroom.PlayerHandler;
 import fr.vajin.snakerpg.gameroom.PlayerPacketCreator;
 import fr.vajin.snakerpg.gameroom.PlayerPacketHandler;
+import fr.vajin.snakerpg.gameroom.impl.PlayerTransmiter;
+import fr.vajin.snakerpg.gameroom.impl.handlers.ActionPacketHandler;
 
 import java.net.DatagramPacket;
 import java.nio.ByteBuffer;
