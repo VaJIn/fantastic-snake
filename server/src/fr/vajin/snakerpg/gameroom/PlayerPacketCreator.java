@@ -46,4 +46,8 @@ public interface PlayerPacketCreator{
     void acknowledgePacket(int idLastReceived);
 
     void setState(PlayerPacketCreatorState playerPacketCreatorState);
+
+    void setPlayerHandler(PlayerHandler playerHandler);
+
+    PlayerHandler getPlayerHandler();
 }
