@@ -37,7 +37,7 @@ public class MenuScreen implements Screen {
         // Create a table that fills the screen. Everything else will go inside this table.
         Table table = new Table();
         table.setFillParent(true);
-        table.setDebug(true);
+        //  table.setDebug(true);
         stage.addActor(table);
 
         Skin skin = parent.getUISkin();
@@ -47,6 +47,7 @@ public class MenuScreen implements Screen {
         TextButton joinLocalMultiplayer = new TextButton("Join local Multiplayer", skin);
         TextButton playOnline = new TextButton("Play Online", skin);
         TextButton exit = new TextButton("Exit", skin);
+        TextButton creditButton = new TextButton("Credit", skin);
 
         table.add(startSPGame).fillX().uniformX();
         table.row().pad(10, 0, 0, 0);
@@ -55,6 +56,8 @@ public class MenuScreen implements Screen {
         table.add(joinLocalMultiplayer).fillX().uniformX();
         table.row().pad(10, 0, 0, 0);
         table.add(playOnline).fillX().uniformX();
+        table.row().pad(10, 0, 0, 0);
+        table.add(creditButton).fillX().uniformX();
         table.row().pad(10, 0, 0, 0);
         table.add(exit).fillX().uniformX();
 
@@ -87,6 +90,13 @@ public class MenuScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 parent.changeScreen(SnakeRPG.LOBBY_SCREEN);
+            }
+        });
+
+        creditButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                parent.changeScreen(SnakeRPG.CREDIT_SCREEN);
             }
         });
 

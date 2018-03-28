@@ -34,6 +34,7 @@ public class SnakeRPG extends Game implements ApplicationListener {
 
     NetworkController networkController;
     private DatagramSocket datagramSocket;
+    private CreditScreen creditScreen;
 
     @Override
     public void create() {
@@ -81,6 +82,7 @@ public class SnakeRPG extends Game implements ApplicationListener {
     public static final int GAME_LOADING_SCREEN = 3;
     public static final int GAME_SCREEN = 4;
     public static final int LOBBY_SCREEN = 5;
+    public static final int CREDIT_SCREEN = 6;
 
     public void changeScreen(int screen) {
         switch (screen) {
@@ -107,6 +109,12 @@ public class SnakeRPG extends Game implements ApplicationListener {
                     this.lobbyScreen = new LobbyScreen(this);
                 }
                 this.setScreen(lobbyScreen);
+                break;
+            case CREDIT_SCREEN:
+                if (this.creditScreen == null) {
+                    this.creditScreen = new CreditScreen(this);
+                }
+                this.setScreen(creditScreen);
                 break;
         }
     }
