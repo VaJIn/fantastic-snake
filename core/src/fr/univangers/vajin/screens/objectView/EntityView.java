@@ -9,6 +9,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import fr.univangers.vajin.engine.entities.Entity;
 import fr.univangers.vajin.engine.entities.EntityObserver;
+import fr.univangers.vajin.engine.entities.snake.Snake;
 import fr.univangers.vajin.engine.utilities.Position;
 
 import java.util.HashMap;
@@ -54,6 +55,13 @@ public class EntityView implements EntityObserver {
 
         }
 
+
+        if(entity instanceof Snake){
+            if(entity.getEntityId() % 2 == 0){
+                layer.setOpacity(0.75f);
+            }
+        }
+
         tileMap.getLayers().add(this.layer);
     }
 
@@ -97,6 +105,8 @@ public class EntityView implements EntityObserver {
             return null;
         }
         TextureRegion region = this.atlas.findRegion(resource);
+
+
         if (region == null) {
             return null;
 //            throw new IllegalArgumentException("Resource " + resource + " not found");

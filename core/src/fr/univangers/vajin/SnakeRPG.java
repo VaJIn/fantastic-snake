@@ -10,6 +10,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import fr.univangers.vajin.network.NetworkController;
 import fr.univangers.vajin.screens.*;
+import fr.vajin.snakerpg.database.entities.GameModeEntity;
 import fr.vajin.snakerpg.jsondatabeans.LobbyBean;
 import fr.vajin.snakerpg.jsondatabeans.PlayerBean;
 
@@ -56,7 +57,8 @@ public class SnakeRPG extends Game implements ApplicationListener {
         this.UISkin = new Skin(Gdx.files.internal(UISkinJSON), assetManager.getManager().get(UISkinAtlas, TextureAtlas.class));
 
         LobbyBean lobbyBean = new LobbyBean();
-        lobbyBean.setGameMode(1);
+        GameModeEntity gameModeEntity = new GameModeEntity(1, "Classic Deathmatch", 2, 8);
+        lobbyBean.setGameMode(gameModeEntity);
         lobbyBean.setMap("sample_map");
 
 

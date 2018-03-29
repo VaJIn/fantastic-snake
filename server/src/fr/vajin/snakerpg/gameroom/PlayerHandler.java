@@ -1,5 +1,6 @@
 package fr.vajin.snakerpg.gameroom;
 
+
 import fr.vajin.snakerpg.database.entities.UserEntity;
 
 public interface PlayerHandler {

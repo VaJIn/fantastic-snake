@@ -42,7 +42,7 @@ public class GameEngineImpl extends AbstractGameEngine implements EntityObserver
     /**
      * Contains the commands concerning the effects of the bonuses sorted by priority (application tick)
      */
-    private PriorityQueue<TimedCommand> timedBonusCommands;
+        private PriorityQueue<TimedCommand> timedBonusCommands;
 
     /**
      * Contains the commands concerning the movement of a snake sorted by priority (application tick)
