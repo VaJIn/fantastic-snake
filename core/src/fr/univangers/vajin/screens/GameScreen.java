@@ -103,7 +103,7 @@ public class GameScreen implements Screen, GameEngineObserver, InputProcessor {
         }
 
 
-        Gdx.gl.glClearColor(100f / 255f, 100f / 255f, 250f / 255f, 1f);
+        Gdx.gl.glClearColor(141f / 255f, 196f / 255f, 53f / 255f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         camera.update();
 

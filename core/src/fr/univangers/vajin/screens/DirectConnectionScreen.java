@@ -20,10 +20,7 @@ import java.net.InetAddress;
 /*
  Écran permettant de se connecter directement sur un serveur.
  */
-public class DirectConnectionScreen implements Screen {
-
-    private final Stage stage;
-    private final SnakeRPG game;
+public class DirectConnectionScreen extends AbstractMenuScreen {
 
     private DatagramSocket socket; //UDP socket
 
@@ -32,12 +29,13 @@ public class DirectConnectionScreen implements Screen {
     private WaitingForResponseState waitingForResponseState = new WaitingForResponseState();
     private InitialState initialState = new InitialState();
 
-    int timeoutPeriod; //Time we wait before stoping to try to connect to a given server.
+    int timeoutPeriod = 10; //Time we wait before stoping to try to connect to a given server.
 
 
-    public DirectConnectionScreen(SnakeRPG game) {
-        this.game = game;
-        this.stage = new Stage(new ScreenViewport());
+    public DirectConnectionScreen(SnakeRPG parent) {
+        super(parent);
+
+        this.currentState = initialState;
     }
 
     /**
@@ -62,14 +60,14 @@ public class DirectConnectionScreen implements Screen {
     public void show() {
         this.currentState = this.initialState;
 
-        Skin skin = game.getUISkin();
+        Skin skin = this.getParent().getUISkin();
 
 
         Table table = new Table(skin);
         table.setFillParent(true);
         table.debugAll();
 
-        stage.addActor(table);
+        this.getStage().addActor(table);
 
         TextField ipTextField = new TextField("127.0.0.0", skin);
 
@@ -88,25 +86,12 @@ public class DirectConnectionScreen implements Screen {
         backToMenu.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.changeScreen(SnakeRPG.MENU_SCREEN);
+                getParent().changeScreen(SnakeRPG.MENU_SCREEN);
             }
         });
 
 
-        Gdx.input.setInputProcessor(stage);
-    }
-
-    @Override
-    public void render(float delta) {
-        Gdx.gl.glClearColor(0f, 0f, 0f, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
-        stage.draw();
-    }
-
-    @Override
-    public void resize(int width, int height) {
-
+        Gdx.input.setInputProcessor(this.getStage());
     }
 
     @Override
@@ -122,11 +107,6 @@ public class DirectConnectionScreen implements Screen {
     @Override
     public void hide() {
 
-    }
-
-    @Override
-    public void dispose() {
-        stage.dispose();
     }
 
     void goToLobbyScreen() {

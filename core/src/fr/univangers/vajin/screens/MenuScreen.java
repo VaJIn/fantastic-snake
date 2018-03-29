@@ -14,22 +14,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import fr.univangers.vajin.SnakeRPG;
 
-public class MenuScreen implements Screen {
-
-    SnakeRPG parent;
-    Stage stage;
-
-    Texture background;
-    SpriteBatch batch;
+public class MenuScreen extends AbstractMenuScreen {
 
     public MenuScreen(SnakeRPG parent) {
-        this.parent = parent;
-
-        this.background = parent.getAssetManager().getManager().get("background/menu1280x720.jpg", Texture.class);
-
-        this.batch = new SpriteBatch();
-
-        this.stage = new Stage(new ScreenViewport());
+        super(parent);
     }
 
     @Override
@@ -38,9 +26,9 @@ public class MenuScreen implements Screen {
         Table table = new Table();
         table.setFillParent(true);
         //  table.setDebug(true);
-        stage.addActor(table);
+        this.getStage().addActor(table);
 
-        Skin skin = parent.getUISkin();
+        Skin skin = this.getParent().getUISkin();
 
         TextButton startSPGame = new TextButton("Single Player", skin);
         TextButton hostLocalMultiplayer = new TextButton("Host Local Multiplayer", skin);
@@ -51,14 +39,19 @@ public class MenuScreen implements Screen {
 
         table.add(startSPGame).fillX().uniformX();
         table.row().pad(10, 0, 0, 0);
+
         table.add(hostLocalMultiplayer).fillX().uniformX();
         table.row().pad(10, 0, 0, 0);
+
         table.add(joinLocalMultiplayer).fillX().uniformX();
         table.row().pad(10, 0, 0, 0);
+
         table.add(playOnline).fillX().uniformX();
         table.row().pad(10, 0, 0, 0);
+
         table.add(creditButton).fillX().uniformX();
         table.row().pad(10, 0, 0, 0);
+
         table.add(exit).fillX().uniformX();
 
         //Adding listener
@@ -74,54 +67,34 @@ public class MenuScreen implements Screen {
         startSPGame.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                parent.getGameLoadingScreen().setMapFileName("simple_map.tmx");
-                parent.changeScreen(SnakeRPG.GAME_LOADING_SCREEN);
+                getParent().getGameLoadingScreen().setMapFileName("simple_map.tmx");
+                getParent().changeScreen(SnakeRPG.GAME_LOADING_SCREEN);
             }
         });
 
         joinLocalMultiplayer.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                parent.changeScreen(SnakeRPG.DIRECT_CONNECTION_SCREEN);
+                getParent().changeScreen(SnakeRPG.DIRECT_CONNECTION_SCREEN);
             }
         });
 
         hostLocalMultiplayer.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                parent.changeScreen(SnakeRPG.LOBBY_SCREEN);
+                getParent().changeScreen(SnakeRPG.LOBBY_SCREEN);
             }
         });
 
         creditButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                parent.changeScreen(SnakeRPG.CREDIT_SCREEN);
+                getParent().changeScreen(SnakeRPG.CREDIT_SCREEN);
             }
         });
 
-        Gdx.input.setInputProcessor(stage);
+        Gdx.input.setInputProcessor(this.getStage());
 
-    }
-
-    @Override
-    public void render(float delta) {
-        Gdx.gl.glClearColor(0f, 0f, 0f, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        this.batch.begin();
-        this.batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        this.batch.end();
-
-
-        this.stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
-        this.stage.draw();
-
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        stage.getViewport().update(width, height, true);
     }
 
     @Override
@@ -137,10 +110,5 @@ public class MenuScreen implements Screen {
     @Override
     public void hide() {
 
-    }
-
-    @Override
-    public void dispose() {
-        stage.dispose();
     }
 }

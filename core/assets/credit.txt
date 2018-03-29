@@ -3,7 +3,10 @@ Jules LEGUY
 Valentine RAHIER
 Paulin VIOLETTE
 
-In game asset by Kenney
+In game map assets by Kenney
 http://www.kenney.nl/
+
+Snake assets by eugeneloza
+https://opengameart.org/content/snake-sprites-sound
 
 Menu background : Created by Macrovector - Freepik.com
