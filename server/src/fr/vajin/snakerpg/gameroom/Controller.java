@@ -3,6 +3,7 @@ package fr.vajin.snakerpg.gameroom;
 import fr.univangers.vajin.engine.GameEngine;
 import fr.vajin.snakerpg.database.entities.GameModeEntity;
 import fr.vajin.snakerpg.database.entities.GameParticipationEntity;
+import fr.vajin.snakerpg.database.entities.UserEntity;
 
 import java.util.Collection;
 
@@ -17,11 +18,11 @@ public interface Controller {
 
     GameEngine getCurrentEngine();
 
-//    void addPlayerWaitingForConnection(UserEntity userEntity);
+    void addPlayerWaitingForConnection(UserEntity userEntity);
 //
 void addPlayerHandler(PlayerHandler playerHandler);
 //
-//    UserEntity acceptConnection(int userId, byte[] token);
+    UserEntity acceptConnection(int userId, byte[] token);
 
     GameModeEntity currentGameMode();
 

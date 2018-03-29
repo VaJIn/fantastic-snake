@@ -1,5 +1,6 @@
 package fr.vajin.snakerpg.gameroom.impl.handlers;
 
+import fr.vajin.snakerpg.database.entities.UserEntity;
 import fr.vajin.snakerpg.gameroom.Controller;
 import fr.vajin.snakerpg.gameroom.PlayerHandler;
 import fr.vajin.snakerpg.gameroom.PlayerPacketCreator;
@@ -46,6 +47,11 @@ public class PlayerHandlerImpl implements PlayerHandler {
     @Override
     public int getUserToken() {
         return userToken;
+    }
+
+    @Override
+    public UserEntity getUserEntity() {
+        return null;
     }
 
     @Override

@@ -1,5 +1,7 @@
 package fr.univangers.vajin.network;
 
+import fr.vajin.snakerpg.database.entities.GameModeEntity;
+
 import java.net.InetAddress;
 
 public interface NetworkController {
@@ -17,5 +19,7 @@ public interface NetworkController {
     void startTransmiter();
 
     void stopNetwork();
+
+
 
 }
