@@ -15,6 +15,7 @@ public class UserEntity {
     private String alias;
     private String password;
     private Set<SnakeEntity> snakes;
+    private byte[] token;
 
     public UserEntity() {
         id = -1;
@@ -108,5 +109,13 @@ public class UserEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, email, accountName, alias, password);
+    }
+
+    public byte[] getToken() {
+        return token;
+    }
+
+    public void setToken(byte[] token) {
+        this.token = token;
     }
 }

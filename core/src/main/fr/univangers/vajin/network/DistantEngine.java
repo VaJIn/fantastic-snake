@@ -27,6 +27,7 @@ public class DistantEngine implements GameEngine {
         this.distantEntityMap = Maps.newHashMap();
         this.observers = new ArrayList<>();
         this.updating = false;
+        this.leftToUpdate = new TreeSet<>(Comparator.comparing(DistantEntity::getDistantId));
     }
 
     @Override
@@ -105,7 +106,7 @@ public class DistantEngine implements GameEngine {
     }
 
     public void beginChange() {
-        this.leftToUpdate = new TreeSet<>((distantEntity, t1) -> distantEntity.getDistantId() - t1.getDistantId());
+        this.leftToUpdate = new TreeSet<>(Comparator.comparingInt(DistantEntity::getDistantId));
         leftToUpdate.addAll(distantEntityMap.values());
         this.updating = true;
     }
@@ -113,21 +114,24 @@ public class DistantEngine implements GameEngine {
     public void endChange() {
         for (DistantEntity entity : leftToUpdate) {
             distantEntityMap.remove(entity.getDistantId());
+            entity.destroy();
             notifyOfRemovedEntity(entity);
         }
 
-        leftToUpdate = null;
         this.updating = false;
     }
 
     public DistantEntity getEntity(int distantId) {
         DistantEntity entity = distantEntityMap.get(distantId);
 
-        if (entity == null) {
-            entity = new DistantEntity(distantId);
-            notifyOfNewEntity(entity);
-        } else {
-            leftToUpdate.remove(entity);
+        if (updating) {
+            if (entity == null) {
+                entity = new DistantEntity(distantId);
+                distantEntityMap.put(distantId, entity);
+                notifyOfNewEntity(entity);
+            } else {
+                leftToUpdate.remove(entity);
+            }
         }
 
         return entity;

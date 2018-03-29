@@ -30,7 +30,7 @@ public class WaitingForGameState implements PlayerPacketCreator.PlayerPacketCrea
         LobbyBean lobbyBean = new LobbyBean();
 
         lobbyBean.setGameMode(this.creator.getPlayerHandler().getController().currentGameMode());
-        lobbyBean.setMap(this.creator.getPlayerHandler().getController().getMapRessource());
+        lobbyBean.setMap(this.creator.getPlayerHandler().getController().getMapName());
 
         Collection<PlayerBean> players = new ArrayList<>();
 

@@ -30,6 +30,8 @@ void addPlayerHandler(PlayerHandler playerHandler);
 
     Collection<GameParticipationEntity> getLastGameResults();
 
-    String getMapRessource();
+    String getMapName();
+
+    void startGame();
 
 }

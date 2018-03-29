@@ -46,7 +46,7 @@ public class DistantEntity extends Entity {
     }
 
     @Override
-    public String getGraphicRessourceKeyForPosition(Position pos) {
+    public String getGraphicResourceKeyForPosition(Position pos) {
         throw new UnsupportedOperationException();
     }
 
@@ -72,18 +72,33 @@ public class DistantEntity extends Entity {
 
         DistantEntityTileInfo oldTileInfo = (DistantEntityTileInfo) oldEntityTileInfoMap.get(id);
 
+
+        boolean spriteChange = false;
+        boolean posChange = false;
+        Position oldPos = oldTileInfo.getPosition();
+
         if (!oldTileInfo.getResourceKey().equals(resource)) {
-            notifySpriteChange(id, pos, resource);
+            spriteChange = true;
         }
 
         if (!oldTileInfo.getPosition().equals(pos)) {
-            Position oldPos = oldTileInfo.getPosition();
+            posChange = true;
+        }
 
+        if (posChange) {
             notifySpriteChange(id, pos, resource);
             notifySpriteChange(id, oldPos, "");
             notifyChangeAtPosition(oldPos, NOT_COVER_POSITION_ANYMORE);
             notifyChangeAtPosition(pos, NEW_COVERED_POSITION);
+        } else if (spriteChange) {
+            notifySpriteChange(id, pos, resource);
         }
+
+        oldTileInfo.setPosition(pos);
+        oldTileInfo.setResourceKey(resource);
+
+        oldEntityTileInfoMap.remove(id);
+        entityTileInfoMap.put(id, oldTileInfo);
     }
 
     public void setTile(int id, Position pos, String resource) {
@@ -105,6 +120,11 @@ public class DistantEntity extends Entity {
     }
 
     public void endUpdate() {
+        for (EntityTileInfo entityTileInfo : oldEntityTileInfoMap.values()) {
+            notifyChangeAtPosition(entityTileInfo.getPosition(), NOT_COVER_POSITION_ANYMORE);
+            notifySpriteChange(entityTileInfo.getId(), entityTileInfo.getPosition(), entityTileInfo.getResourceKey());
+        }
+
         this.oldEntityTileInfoMap = null;
         this.updating = false;
     }
@@ -162,6 +182,15 @@ public class DistantEntity extends Entity {
 
         public void setPosition(Position position) {
             this.position = position;
+        }
+
+        @Override
+        public String toString() {
+            return "DistantEntityTileInfo{" +
+                    "id=" + id +
+                    ", position=" + position +
+                    ", resourceKey='" + resourceKey + '\'' +
+                    '}';
         }
     }
 }
