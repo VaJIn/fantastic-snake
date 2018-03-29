@@ -1,10 +1,11 @@
 package fr.univangers.vajin.IO;
 
-import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.loaders.resolvers.ExternalFileHandleResolver;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import fr.univangers.vajin.GameConstants;
 import fr.univangers.vajin.engine.entities.Entity;
 import fr.univangers.vajin.engine.field.Field;
@@ -32,6 +33,12 @@ public class TileMapReader {
 
     public TiledMap getTiledMap() {
         return tiledMap;
+    }
+
+    public static TileMapReader newTileMapReader(String mapFilePath) {
+        TiledMap tiledMap = new TmxMapLoader(new ExternalFileHandleResolver()).load(mapFilePath);
+
+        return new TileMapReader(tiledMap);
     }
 
     public TileMapReader(TiledMap map) {

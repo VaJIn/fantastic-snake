@@ -24,7 +24,7 @@ public class GameStartState implements PlayerPacketCreator.PlayerPacketCreatorSt
 
         GameStartBean gameStartBean = new GameStartBean();
         gameStartBean.setGameMode(creator.getPlayerHandler().getController().currentGameMode());
-        gameStartBean.setMap(creator.getPlayerHandler().getController().getMapRessource());
+        gameStartBean.setMap(creator.getPlayerHandler().getController().getMapName());
 
         Gson gson = new Gson();
 
