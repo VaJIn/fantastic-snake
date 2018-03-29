@@ -18,7 +18,8 @@ public class GameDAOTest {
     @DisplayName("Test GameDAO getGame(int id)")
     void testGetGame() {
 
-        Assertions.assertFalse(gameDAO.getGame(-1).isPresent());
+        Optional<GameEntity> optionalGameEntity = gameDAO.getGame(-1);
+        Assertions.assertFalse(optionalGameEntity.isPresent());
 
         Optional<GameEntity> optionalGame1 = gameDAO.getGame(1);
 

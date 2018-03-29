@@ -1,5 +1,6 @@
 package fr.vajin.snakerpg.gameroom.impl.handlers;
 
+import fr.vajin.snakerpg.database.entities.UserEntity;
 import fr.vajin.snakerpg.gameroom.Controller;
 import fr.vajin.snakerpg.gameroom.PlayerHandler;
 import fr.vajin.snakerpg.gameroom.PlayerPacketCreator;
@@ -49,6 +50,11 @@ public class PlayerHandlerImpl implements PlayerHandler {
     }
 
     @Override
+    public UserEntity getUserEntity() {
+        return null;
+    }
+
+    @Override
     public Controller getController() {
         return this.controller;
     }
@@ -72,4 +78,5 @@ public class PlayerHandlerImpl implements PlayerHandler {
     public synchronized long getLastAliveSignalReceived() {
         return this.lastAliveSignalReceived;
     }
+
 }
