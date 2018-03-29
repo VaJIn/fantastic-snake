@@ -1,6 +1,8 @@
 package fr.univangers.vajin.network;
 
+import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Maps;
 import fr.univangers.vajin.engine.GameEngine;
 import fr.univangers.vajin.engine.GameEngineObserver;
 import fr.univangers.vajin.engine.entities.Entity;
@@ -10,9 +12,7 @@ import fr.univangers.vajin.engine.entities.spawnables.bonus.TimedCommand;
 import fr.univangers.vajin.engine.field.Field;
 import fr.univangers.vajin.engine.utilities.Position;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.TreeSet;
+import java.util.*;
 
 public class DistantEngine implements GameEngine {
 
@@ -22,6 +22,12 @@ public class DistantEngine implements GameEngine {
 
     Collection<DistantEntity> leftToUpdate;
     private boolean updating;
+
+    public DistantEngine() {
+        this.distantEntityMap = Maps.newHashMap();
+        this.observers = new ArrayList<>();
+        this.updating = false;
+    }
 
     @Override
     public Collection<Entity> getEntityCollection() {

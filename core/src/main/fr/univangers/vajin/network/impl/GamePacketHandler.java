@@ -24,8 +24,6 @@ public class GamePacketHandler implements PacketHandler {
 
     @Override
     public void handlePacket(DatagramPacket packet) {
-
-
         ByteBuffer buffer = ByteBuffer.wrap(packet.getData());
 
         buffer.position(BUFFER_START_POS);
@@ -38,36 +36,46 @@ public class GamePacketHandler implements PacketHandler {
 
         this.distantEngine.beginChange();
 
+        boolean hasEntityLeft = true;
         while (buffer.hasRemaining()) {
-            int idEntity = buffer.getInt();
-
-            if (idEntity == -1) {
-                break;
-            }
-
-
-            DistantEntity entity = this.distantEngine.getEntity(idEntity);
-
-            entity.beginUpdate();
-
-            int idTile;
-            while ((idTile = buffer.getInt()) != -1) {
-                int posX = buffer.getInt();
-                int posY = buffer.getInt();
-                int sizeResourceKeyBytes = buffer.getInt();
-                byte[] resourceKey = new byte[sizeResourceKeyBytes];
-
-                buffer.get(resourceKey);
-
-                entity.setTile(idTile, new Position(posX, posY), String.valueOf(resourceKey));
-
-            }
-
-            entity.endUpdate();
-
+            hasEntityLeft = updateEntity(buffer);
         }
+        ;
 
         distantEngine.endChange();
+    }
+
+    /**
+     * Do the update of one Entity. Return false if there's no entity left
+     *
+     * @param buffer
+     * @return
+     */
+    public boolean updateEntity(ByteBuffer buffer) {
+        int idEntity = buffer.getInt();
+
+        if (idEntity == -1) {
+            return false;
+        }
+
+        DistantEntity entity = this.distantEngine.getEntity(idEntity);
+
+        entity.beginUpdate();
+
+        int idTile;
+        while ((idTile = buffer.getInt()) != -1) {
+            int posX = buffer.getInt();
+            int posY = buffer.getInt();
+            int sizeResourceKeyBytes = buffer.getInt();
+            byte[] resourceKey = new byte[sizeResourceKeyBytes];
+
+            buffer.get(resourceKey);
+
+            entity.setTile(idTile, new Position(posX, posY), String.valueOf(resourceKey));
+        }
+        entity.endUpdate();
+
+        return true;
     }
 
     public DistantEngine getDistantEngine() {

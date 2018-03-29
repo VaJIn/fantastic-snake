@@ -9,57 +9,15 @@ import java.util.Map;
 
 public class DistantEntity extends Entity {
 
-
-    public class DistantEntityTileInfo implements EntityTileInfo {
-
-        int id;
-        Position position;
-        String resourceKey;
-
-        DistantEntityTileInfo(int id, Position position, String resourceKey) {
-            this.id = id;
-            this.position = position;
-            this.resourceKey = resourceKey;
-        }
-
-        @Override
-        public String getResourceKey() {
-            return resourceKey;
-        }
-
-        public void setResourceKey(String resourceKey) {
-            this.resourceKey = resourceKey;
-        }
-
-        @Override
-        public int getId() {
-            return id;
-        }
-
-        public void setId(int id) {
-            this.id = id;
-        }
-
-        @Override
-        public Position getPosition() {
-            return position;
-        }
-
-        public void setPosition(Position position) {
-            this.position = position;
-        }
-    }
-
+    private final int distantId;
     private Map<Integer, DistantEntityTileInfo> oldEntityTileInfoMap;
     private Map<Integer, DistantEntityTileInfo> entityTileInfoMap;
-
-    private final int distantId;
-
     private boolean updating;
-
 
     public DistantEntity(int distantId) {
         this.distantId = distantId;
+        this.entityTileInfoMap = Maps.newHashMap();
+        this.updating = false;
     }
 
     @Override
@@ -165,5 +123,45 @@ public class DistantEntity extends Entity {
     @Override
     public int hashCode() {
         return distantId;
+    }
+
+    public class DistantEntityTileInfo implements EntityTileInfo {
+
+        int id;
+        Position position;
+        String resourceKey;
+
+        DistantEntityTileInfo(int id, Position position, String resourceKey) {
+            this.id = id;
+            this.position = position;
+            this.resourceKey = resourceKey;
+        }
+
+        @Override
+        public String getResourceKey() {
+            return resourceKey;
+        }
+
+        public void setResourceKey(String resourceKey) {
+            this.resourceKey = resourceKey;
+        }
+
+        @Override
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        @Override
+        public Position getPosition() {
+            return position;
+        }
+
+        public void setPosition(Position position) {
+            this.position = position;
+        }
     }
 }
