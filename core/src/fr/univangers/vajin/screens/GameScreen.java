@@ -191,16 +191,16 @@ public class GameScreen implements Screen, GameEngineObserver, InputProcessor {
 
 
                 case Input.Keys.UP:
-                    engine.sendInput(0, Snake.GO_NORTH);
+                    engine.sendInput(1, Snake.GO_NORTH);
                     break;
                 case Input.Keys.LEFT:
-                    engine.sendInput(0, Snake.GO_WEST);
+                    engine.sendInput(1, Snake.GO_WEST);
                     break;
                 case Input.Keys.DOWN:
-                    engine.sendInput(0, Snake.GO_SOUTH);
+                    engine.sendInput(1, Snake.GO_SOUTH);
                     break;
                 case Input.Keys.RIGHT:
-                    engine.sendInput(0, Snake.GO_EAST);
+                    engine.sendInput(1, Snake.GO_EAST);
                     break;
             }
             return true;

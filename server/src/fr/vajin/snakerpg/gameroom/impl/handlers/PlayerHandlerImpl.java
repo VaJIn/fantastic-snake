@@ -78,4 +78,5 @@ public class PlayerHandlerImpl implements PlayerHandler {
     public synchronized long getLastAliveSignalReceived() {
         return this.lastAliveSignalReceived;
     }
+
 }
