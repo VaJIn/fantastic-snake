@@ -25,6 +25,9 @@ public class RespJoinState implements PlayerPacketCreator.PlayerPacketCreatorSta
 
         stream.writeInt(1);
 
+        stream.writeInt(this.creator.getPlayerHandler().getUserId());
+        stream.writeInt(this.creator.getPlayerHandler().getUserToken());
+
         byte [] data = stream.toByteArray();
 
         StringBuilder stringBuilderInfo = new StringBuilder();
