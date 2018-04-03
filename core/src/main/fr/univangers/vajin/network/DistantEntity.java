@@ -46,11 +46,6 @@ public class DistantEntity extends Entity {
     }
 
     @Override
-    public String getGraphicResourceKeyForPosition(Position pos) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public Iterator<? extends EntityTileInfo> getEntityTilesInfosIterator() {
         return entityTileInfoMap.values().iterator();
     }

@@ -49,8 +49,6 @@ public abstract class Entity {
 
     public abstract void destroy();
 
-    public abstract String getGraphicResourceKeyForPosition(Position pos);
-
     public abstract Iterator<? extends EntityTileInfo> getEntityTilesInfosIterator();
 
 
