@@ -17,6 +17,20 @@ public class UserEntity {
     private Set<SnakeEntity> snakes;
     private byte[] token;
 
+    public void setSnakes(Set<SnakeEntity> snakes) {
+        this.snakes = snakes;
+    }
+
+    public int getSessionToken() {
+        return sessionToken;
+    }
+
+    public void setSessionToken(int sessionToken) {
+        this.sessionToken = sessionToken;
+    }
+
+    private int sessionToken;
+
     public UserEntity() {
         id = -1;
         email = "";

@@ -38,7 +38,6 @@ public class NewConnectionHandlerNoFilterImpl implements NewConnectionHandler {
 
             receiver.addPlayerHandler(playerHandler);
             controller.addPlayerHandler(playerHandler);
-
         } else {
 
             CustomByteArrayOutputStream stream = new CustomByteArrayOutputStream();

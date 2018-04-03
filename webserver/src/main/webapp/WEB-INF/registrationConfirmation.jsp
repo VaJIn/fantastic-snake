@@ -29,9 +29,6 @@
 <%@ include file="navbar.jsp" %>
 
 <div id="main" class="p-2 m-auto">
-    <jsp:include page="/leaderboard/today">
-        <jsp:param name="max_entry" value="50"/>
-    </jsp:include>
     Votre compte a bien été créé.
 </div>
 

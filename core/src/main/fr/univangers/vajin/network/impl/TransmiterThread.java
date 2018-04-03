@@ -32,11 +32,8 @@ public class TransmiterThread extends Thread implements Transmiter {
 
     @Override
     public void run(){
-
         try {
-
             while (!interrupted()){
-
                 long start = Instant.now().toEpochMilli();
 
                 DatagramPacket packet = this.packetCreator.getPacket();
@@ -49,9 +46,7 @@ public class TransmiterThread extends Thread implements Transmiter {
                 long end = Instant.now().toEpochMilli();
 
                 sleep((int) (1000.0 / frequency) - (end - start));
-
             }
-
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -67,13 +62,10 @@ public class TransmiterThread extends Thread implements Transmiter {
     public synchronized void send(DatagramPacket packet){
 
         try {
-
             packet.setAddress(this.address);
             packet.setPort(this.port);
 
             this.socket.send(packet);
-
-
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -31,9 +31,6 @@ public class ControllerNoFilterImpl implements Controller{
         this.map = map;
     }
 
-
-
-
     @Override
     public int getCurrentPlayerCount() {
         return playerHandlers.size();
@@ -108,14 +105,11 @@ public class ControllerNoFilterImpl implements Controller{
             gameEngineBuilder.addSnake(id, new SimpleSnake());
 
         }
-
         try {
             this.gameEngine = gameEngineBuilder.build();
         } catch (WrongPlayersNumberException e) {
             e.printStackTrace();
         }
-
-
     }
 
 }

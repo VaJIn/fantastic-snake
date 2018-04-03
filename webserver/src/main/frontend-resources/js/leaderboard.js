@@ -23,7 +23,7 @@ $(".leaderboard-player").click(function () {
     if (!leaderboard_cached.has(gameId)) {
         console.log("Retrieving game info view for #" + gameId + " from server");
         $.ajax({
-                url: "/game/" + gameId,
+            url: "/snakerpg/game/" + gameId,
                 method: "POST",
                 success: function (data) {
                     console.log(data);

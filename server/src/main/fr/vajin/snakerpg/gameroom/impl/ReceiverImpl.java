@@ -42,7 +42,6 @@ public class ReceiverImpl implements Receiver {
                 newConnectionHandler.handleDatagramPacket(packet);
             }
         }
-
     }
 
     @Override

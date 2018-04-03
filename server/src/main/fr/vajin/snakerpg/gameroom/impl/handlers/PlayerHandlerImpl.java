@@ -41,6 +41,11 @@ public class PlayerHandlerImpl implements PlayerHandler {
     }
 
     @Override
+    public UserEntity getUserEntity() {
+        return null; //TODO
+    }
+
+    @Override
     public int getUserId() {
         return userId;
     }
@@ -48,11 +53,6 @@ public class PlayerHandlerImpl implements PlayerHandler {
     @Override
     public int getUserToken() {
         return userToken;
-    }
-
-    @Override
-    public UserEntity getUserEntity() {
-        return null;
     }
 
     @Override
