@@ -25,7 +25,7 @@ public class ReceiverImpl implements Receiver {
     }
 
     @Override
-    public void receivePacket(DatagramPacket packet) {
+    public void managePacket(DatagramPacket packet) {
         byte[] data = packet.getData();
 
 
@@ -58,5 +58,10 @@ public class ReceiverImpl implements Receiver {
     @Override
     public void removePlayerHandler(PlayerHandler handler) {
         playerHandlerMap.remove(handler.getUserId());
+    }
+
+    @Override
+    public void run() {
+
     }
 }

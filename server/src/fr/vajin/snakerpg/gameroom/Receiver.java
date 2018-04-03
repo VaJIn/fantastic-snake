@@ -2,9 +2,9 @@ package fr.vajin.snakerpg.gameroom;
 
 import java.net.DatagramPacket;
 
-public interface Receiver {
+public interface Receiver extends Runnable {
 
-    void receivePacket(DatagramPacket packet);
+    void managePacket(DatagramPacket packet);
 
     void setNewConnectionHandler(NewConnectionHandler newConnectionHandler);
 

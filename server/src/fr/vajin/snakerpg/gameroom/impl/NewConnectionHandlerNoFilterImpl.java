@@ -17,12 +17,10 @@ public class NewConnectionHandlerNoFilterImpl implements NewConnectionHandler {
     DatagramSocket datagramSocket;
     Receiver receiver;
 
-    public NewConnectionHandlerNoFilterImpl(Controller controller, DatagramSocket socket, Receiver receiver){
+    public NewConnectionHandlerNoFilterImpl(Controller controller, DatagramSocket socket){
 
         this.controller = controller;
         this.datagramSocket = socket;
-        this.receiver = receiver;
-
     }
 
     @Override
@@ -69,5 +67,10 @@ public class NewConnectionHandlerNoFilterImpl implements NewConnectionHandler {
 
         }
         return true;
+    }
+
+    @Override
+    public void setReceiver(Receiver receiver) {
+        this.receiver = receiver;
     }
 }
