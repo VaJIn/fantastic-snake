@@ -29,7 +29,7 @@ public class ActionPacketHandler implements PlayerPacketHandler{
 
             int action = buffer.getInt();
 
-            this.engine.sendInput(this.playerHandler.getUserId(),action);
+            this.playerHandler.getController().getCurrentEngine().sendInput(this.playerHandler.getUserId(),action);
 
             return true;
         }
@@ -40,9 +40,5 @@ public class ActionPacketHandler implements PlayerPacketHandler{
     @Override
     public void setPlayerHandler(PlayerHandler playerHandler) {
         this.playerHandler = playerHandler;
-    }
-
-    public void setEngine(GameEngine engine){
-        this.engine = engine;
     }
 }
