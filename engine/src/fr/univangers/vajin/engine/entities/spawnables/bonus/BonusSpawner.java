@@ -122,16 +122,6 @@ public class BonusSpawner extends DynamicEntity {
     }
 
     @Override
-    public String getGraphicRessourceKeyForPosition(Position pos) {
-        Bonus b = spawnedBonuses.get(pos);
-        if (b == null) {
-            return "";
-        } else {
-            return b.getResourceKey();
-        }
-    }
-
-    @Override
     public Iterator<EntityTileInfo> getEntityTilesInfosIterator() {
         return new Iterator<EntityTileInfo>() {
 

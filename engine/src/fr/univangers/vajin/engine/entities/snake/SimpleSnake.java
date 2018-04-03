@@ -493,11 +493,6 @@ public class SimpleSnake extends Snake {
     }
 
     @Override
-    public String getGraphicRessourceKeyForPosition(Position pos) {
-        return null;
-    }
-
-    @Override
     public Iterator<Entity.EntityTileInfo> getEntityTilesInfosIterator() {
         return new EntityTileInfoInterator(head);
     }

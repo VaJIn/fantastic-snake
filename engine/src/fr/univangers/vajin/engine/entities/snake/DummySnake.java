@@ -192,12 +192,6 @@ public class DummySnake extends Snake {
     }
 
     @Override
-    public String getGraphicRessourceKeyForPosition(Position pos) {
-        //TODO
-        return null;
-    }
-
-    @Override
     public Iterator<Entity.EntityTileInfo> getEntityTilesInfosIterator() {
         return new Iterator<Entity.EntityTileInfo>() {
 
