@@ -22,9 +22,7 @@ public class PlayerPacketHandlerImpl implements PlayerPacketHandler {
         this.controller = controller;
         this.packetCreator = packetCreator;
         this.playerTransmiter = playerTransmiter;
-
         this.actionPacketHandler = new ActionPacketHandler();
-        this.actionPacketHandler.setEngine(this.controller.getCurrentEngine());
     }
 
     @Override

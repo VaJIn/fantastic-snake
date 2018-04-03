@@ -17,6 +17,16 @@ public class SnakeRPGGameRoom {
 
         try {
 
+            Integer port = null;
+
+            try{
+                port = Integer.valueOf(args[0]);
+            }
+            catch (NumberFormatException e){
+                System.exit(1);
+            }
+
+
 
             GameModeEntity gameMode = new GameModeEntity();
             gameMode.setId(1);
@@ -26,7 +36,7 @@ public class SnakeRPGGameRoom {
 
             Controller controller = new ControllerNoFilterImpl(gameMode, "");
 
-            DatagramSocket socket = new DatagramSocket(Integer.valueOf(args[0]));
+            DatagramSocket socket = new DatagramSocket(port);
 
 
             NewConnectionHandler newConnectionHandler = new NewConnectionHandlerNoFilterImpl(controller, socket);
