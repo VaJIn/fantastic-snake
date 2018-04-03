@@ -1,5 +1,6 @@
 package fr.vajin.snakerpg.gameroom.impl;
 
+import fr.vajin.snakerpg.database.entities.UserEntity;
 import fr.vajin.snakerpg.gameroom.*;
 import fr.vajin.snakerpg.gameroom.impl.handlers.PlayerHandlerImpl;
 import fr.vajin.snakerpg.utilities.CustomByteArrayOutputStream;
@@ -8,14 +9,19 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class NewConnectionHandlerNoFilterImpl implements NewConnectionHandler {
 
+    final static Logger logger = Logger.getLogger(NewConnectionHandler.class.toString());
 
     Controller controller;
     DatagramSocket datagramSocket;
     Receiver receiver;
+
+    int nextId = 1;
 
     public NewConnectionHandlerNoFilterImpl(Controller controller, DatagramSocket socket){
 
@@ -27,9 +33,19 @@ public class NewConnectionHandlerNoFilterImpl implements NewConnectionHandler {
     public synchronized boolean handleDatagramPacket(DatagramPacket datagramPacket) {
         if (controller.getCurrentPlayerCount() < controller.getGameRoomSize()) {
 
-            int userId = 0;
-            int token = 0;
-            //TODO retreive from packet (or add argument on the method ??? Since we read it in the receiver)
+            UserEntity userEntity = controller.acceptConnection(0,new byte[4], datagramPacket.getAddress() , datagramPacket.getPort() );
+
+            if(userEntity == null){
+                logger.log(Level.INFO, "Already waiting for response from " + datagramPacket.getAddress() + ":" + datagramPacket.getPort());
+                return true; // TODO delegate
+            }
+
+            logger.log(Level.INFO, "New connection for " + datagramPacket.getAddress() + ":" + datagramPacket.getPort() + "\n" +
+                    "User id : " + userEntity.getId());
+
+            int userId = userEntity.getId();
+            byte[] token = userEntity.getToken();
+            //TODO retrieve from packet (or add argument on the method ??? Since we read it in the receiver)
 
 
             int port = datagramPacket.getPort();

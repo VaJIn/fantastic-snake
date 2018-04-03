@@ -15,7 +15,7 @@ import java.time.Instant;
 public class PlayerHandlerImpl implements PlayerHandler {
 
     private int userId;
-    private int userToken;
+    private byte[] userToken;
 
     private PlayerPacketHandler playerPacketHandler;
     private PlayerTransmiter playerTransmiter;
@@ -25,14 +25,14 @@ public class PlayerHandlerImpl implements PlayerHandler {
 
     private long lastAliveSignalReceived;
 
-    public PlayerHandlerImpl(DatagramSocket socket, InetAddress address, int port, Controller controller, int userId, int userToken) {
+    public PlayerHandlerImpl(DatagramSocket socket, InetAddress address, int port, Controller controller, int userId, byte[] userToken) {
         this.controller = controller;
 
         this.userId = userId;
         this.userToken = userToken;
 
         this.playerPacketCreator = new PlayerPacketCreatorImpl(PlayerPacketCreator.ID_PROTOCOL, this);
-        this.playerTransmiter = new PlayerTransmiter(socket,playerPacketCreator,PlayerPacketCreator.ID_PROTOCOL,2f,address,port);
+        this.playerTransmiter = new PlayerTransmiter(socket,playerPacketCreator,PlayerPacketCreator.ID_PROTOCOL,0.5f,address,port);
         this.playerPacketHandler = new PlayerPacketHandlerImpl(playerPacketCreator,playerTransmiter,this.controller);
         this.playerPacketHandler.setPlayerHandler(this);
         lastAliveSignalReceived = Instant.now().toEpochMilli();
@@ -51,7 +51,7 @@ public class PlayerHandlerImpl implements PlayerHandler {
     }
 
     @Override
-    public int getUserToken() {
+    public byte[] getUserToken() {
         return userToken;
     }
 

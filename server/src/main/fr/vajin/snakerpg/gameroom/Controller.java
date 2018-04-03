@@ -5,6 +5,7 @@ import fr.vajin.snakerpg.database.entities.GameModeEntity;
 import fr.vajin.snakerpg.database.entities.GameParticipationEntity;
 import fr.vajin.snakerpg.database.entities.UserEntity;
 
+import java.net.InetAddress;
 import java.util.Collection;
 
 public interface Controller {
@@ -22,7 +23,7 @@ public interface Controller {
 //
 void addPlayerHandler(PlayerHandler playerHandler);
 //
-    UserEntity acceptConnection(int userId, byte[] token);
+    UserEntity acceptConnection(int userId, byte[] token, InetAddress inetAddress, int port);
 
     GameModeEntity currentGameMode();
 
@@ -33,5 +34,6 @@ void addPlayerHandler(PlayerHandler playerHandler);
     String getMapName();
 
     void startGame();
+
 
 }

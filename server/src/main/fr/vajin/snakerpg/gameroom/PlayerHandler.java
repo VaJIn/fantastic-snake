@@ -7,7 +7,7 @@ public interface PlayerHandler {
 
     int getUserId();
 
-    int getUserToken();
+    byte[] getUserToken();
 
     UserEntity getUserEntity();
 

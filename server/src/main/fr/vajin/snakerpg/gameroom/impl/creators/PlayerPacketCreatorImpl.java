@@ -63,8 +63,8 @@ public class PlayerPacketCreatorImpl implements PlayerPacketCreator {
     @Override
     public DatagramPacket getNextPacket() throws IOException {
 
-        return this.currentState.getNextPacket(getPacketStream());
-
+        DatagramPacket packet = this.currentState.getNextPacket(getPacketStream());
+        return packet;
     }
 
     @Override

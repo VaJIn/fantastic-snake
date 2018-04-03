@@ -164,8 +164,8 @@ public class PlayerPacketCreatorTest {
         Assertions.assertEquals(1,numSequence);
         int lastIdReceived = buffer.getInt();
         Assertions.assertEquals(0,lastIdReceived);
-        int ackBitFiels = buffer.getInt();
-        Assertions.assertEquals(0,ackBitFiels);
+        int ackBitField = buffer.getInt();
+        Assertions.assertEquals(0,ackBitField);
 
         int idState = buffer.getInt();
         Assertions.assertEquals(PlayerPacketCreator.GAME_END,idState);

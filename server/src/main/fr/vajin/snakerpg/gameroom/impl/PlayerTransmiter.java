@@ -7,8 +7,12 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.time.Instant;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class PlayerTransmiter extends Thread {
+
+    private final static Logger logger =  Logger.getLogger(PlayerTransmiter.class.toString());
 
     private DatagramSocket socket;
     private PlayerPacketCreator creator;
@@ -36,6 +40,16 @@ public class PlayerTransmiter extends Thread {
 
                 packet.setAddress(this.inetAdress);
                 packet.setPort(port);
+
+                byte[] data = packet.getData();
+
+                StringBuilder debugMessageBuilder = new StringBuilder("Sending packet to " + packet.getAddress() + ":" + port + "\n");
+                for(int i = 0; i < data.length; i += 4){
+                    debugMessageBuilder.append(String.format("%02X%02X%02X%02X\t", data[i], data[i + 1], data[i + 2], data[i + 3]));
+                }
+
+                logger.log(Level.INFO, debugMessageBuilder.toString());
+
                 try {
                     socket.send(packet);
                 } catch (IOException e) {

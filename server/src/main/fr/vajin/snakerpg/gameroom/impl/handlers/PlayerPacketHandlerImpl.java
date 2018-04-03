@@ -8,6 +8,7 @@ import fr.vajin.snakerpg.gameroom.impl.PlayerTransmiter;
 
 import java.net.DatagramPacket;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 public class PlayerPacketHandlerImpl implements PlayerPacketHandler {
 
@@ -35,9 +36,10 @@ public class PlayerPacketHandlerImpl implements PlayerPacketHandler {
         if(idProtocol==PlayerPacketCreator.ID_PROTOCOL){
 
             int idPlayer = buffer.getInt();
-            int tokenPlayer = buffer.getInt();
+            byte tokenPlayer[] = new byte[4];
+            buffer.get(tokenPlayer);
 
-            if((idPlayer==this.playerHandler.getUserId())&&(tokenPlayer==this.playerHandler.getUserToken())){
+            if((idPlayer==this.playerHandler.getUserId()) && ( Arrays.equals( tokenPlayer,this.playerHandler.getUserToken() ) ) ){
                 int numSequence = buffer.getInt();
 
                 int ack = buffer.getInt();

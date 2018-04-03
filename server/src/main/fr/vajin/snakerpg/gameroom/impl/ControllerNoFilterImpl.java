@@ -1,5 +1,7 @@
 package fr.vajin.snakerpg.gameroom.impl;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import fr.univangers.vajin.IO.TileMapReader;
 import fr.univangers.vajin.engine.EngineBuilder;
 import fr.univangers.vajin.engine.GameEngine;
@@ -11,6 +13,7 @@ import fr.vajin.snakerpg.database.entities.UserEntity;
 import fr.vajin.snakerpg.gameroom.Controller;
 import fr.vajin.snakerpg.gameroom.PlayerHandler;
 
+import java.net.InetAddress;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,6 +25,7 @@ public class ControllerNoFilterImpl implements Controller{
     private Collection<PlayerHandler> playerHandlers;
     private int lastId;
     private String map;
+    private BiMap<Integer, String> idAddressMap;
 
     public ControllerNoFilterImpl(GameModeEntity gameMode, String map){
         this.gameMode = gameMode;
@@ -29,6 +33,7 @@ public class ControllerNoFilterImpl implements Controller{
         this.playerHandlers = new ArrayList<>();
         this.lastId = 0;
         this.map = map;
+        this.idAddressMap = HashBiMap.create();
     }
 
     @Override
@@ -57,20 +62,28 @@ public class ControllerNoFilterImpl implements Controller{
     }
 
     @Override
-    public UserEntity acceptConnection(int userId, byte[] token) {
+    public UserEntity acceptConnection(int userId, byte[] token, InetAddress inetAddress, int port) {
 
         userId = ++this.lastId;
         SecureRandom random = new SecureRandom();
-        token = new byte[20];
+        token = new byte[4];
         random.nextBytes(token);
 
+        String adrStr = inetAddress.toString() + ":" + port;
+
+        if(idAddressMap.inverse().containsKey(adrStr)){
+            return null;
+        }
+
+        idAddressMap.put(userId, adrStr);
+
         UserEntity userEntity = new UserEntity();
+        userEntity.setId(userId);
         userEntity.setAlias("user"+String.valueOf(userId));
         userEntity.setAccountName("account"+String.valueOf(userId));
         userEntity.setToken(token);
 
         return userEntity;
-
     }
 
     @Override
@@ -111,5 +124,4 @@ public class ControllerNoFilterImpl implements Controller{
             e.printStackTrace();
         }
     }
-
 }
