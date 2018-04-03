@@ -1,5 +1,6 @@
 package fr.vajin.snakerpg.gameroom.impl.creators;
 
+import fr.vajin.snakerpg.gameroom.Controller;
 import fr.vajin.snakerpg.gameroom.PlayerHandler;
 import fr.vajin.snakerpg.gameroom.PlayerPacketCreator;
 import fr.vajin.snakerpg.utilities.CustomByteArrayOutputStream;
@@ -22,9 +23,12 @@ public class PlayerPacketCreatorImpl implements PlayerPacketCreator {
     private final int idProtocol;
     private int lastIdReceived = 0;
     private int ackBitfield = 0;
+
     private int numSequence = 0;
 
-    public PlayerPacketCreatorImpl(int idProtocol) {
+    public PlayerPacketCreatorImpl(int idProtocol, PlayerHandler playerHandler) {
+
+        this.playerHandler = playerHandler;
 
         this.idProtocol = idProtocol;
 
@@ -34,6 +38,7 @@ public class PlayerPacketCreatorImpl implements PlayerPacketCreator {
         this.gameState = new GameState(this);
         this.gameEndState = new GameEndState(this);
 
+        this.currentState = respJoinState;
 
     }
 

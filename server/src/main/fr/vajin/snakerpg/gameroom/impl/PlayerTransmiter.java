@@ -30,8 +30,6 @@ public class PlayerTransmiter extends Thread {
         try {
             while (!this.isInterrupted()) {
 
-                System.out.println("Sending packet");
-
                 long start = Instant.now().toEpochMilli();
 
                 DatagramPacket packet = creator.getNextPacket();

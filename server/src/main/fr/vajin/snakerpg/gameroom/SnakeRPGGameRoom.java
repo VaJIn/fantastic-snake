@@ -8,11 +8,14 @@ import fr.vajin.snakerpg.gameroom.impl.ReceiverThread;
 
 import java.net.DatagramSocket;
 import java.net.SocketException;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 public class SnakeRPGGameRoom {
 
-    public static void main(String[] args) {
+    public final static Logger logger = Logger.getAnonymousLogger();
 
+    public static void main(String[] args) {
 
 
         try {
@@ -46,6 +49,7 @@ public class SnakeRPGGameRoom {
             ReceiverThread receiverThread = new ReceiverThread(receiver, socket);
             receiverThread.start();
 
+            logger.info("Server started on port " + port);
 
         } catch (SocketException e) {
             e.printStackTrace();

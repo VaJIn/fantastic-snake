@@ -9,8 +9,11 @@ import fr.vajin.snakerpg.gameroom.Receiver;
 import java.net.DatagramPacket;
 import java.nio.ByteBuffer;
 import java.util.Map;
+import java.util.logging.Logger;
 
 public class ReceiverImpl implements Receiver {
+
+    private final static Logger logger = Logger.getLogger(ReceiverImpl.class.toString());
 
     private final int idProtocol;
     private Controller controller;
@@ -31,8 +34,12 @@ public class ReceiverImpl implements Receiver {
 
         ByteBuffer buffer = ByteBuffer.wrap(data);
 
+        logger.info("Received packet from " + packet.getAddress());
 
         int idProtocol = buffer.getInt();
+
+        logger.info("Id protocol : " + idProtocol);
+
         if (idProtocol == this.idProtocol) {
             int playerId = buffer.getInt();
 
@@ -41,6 +48,8 @@ public class ReceiverImpl implements Receiver {
             } else {
                 newConnectionHandler.handleDatagramPacket(packet);
             }
+        }else{
+            logger.info("Wrong protocol id");
         }
     }
 

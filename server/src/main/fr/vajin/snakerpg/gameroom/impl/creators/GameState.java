@@ -2,6 +2,8 @@ package fr.vajin.snakerpg.gameroom.impl.creators;
 
 import fr.univangers.vajin.engine.GameEngine;
 import fr.univangers.vajin.engine.entities.Entity;
+import fr.vajin.snakerpg.gameroom.Controller;
+import fr.vajin.snakerpg.gameroom.PlayerHandler;
 import fr.vajin.snakerpg.gameroom.PlayerPacketCreator;
 import fr.vajin.snakerpg.utilities.CustomByteArrayOutputStream;
 
@@ -15,7 +17,10 @@ public class GameState implements PlayerPacketCreator.PlayerPacketCreatorState {
 
     public GameState(PlayerPacketCreator creator) {
 
-        this.gameEngine = creator.getPlayerHandler().getController().getCurrentEngine();
+        PlayerHandler playerHandler = creator.getPlayerHandler();
+        Controller controller = playerHandler.getController();
+
+        this.gameEngine = controller.getCurrentEngine();
     }
 
     @Override

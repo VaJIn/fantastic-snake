@@ -31,7 +31,7 @@ public class PlayerHandlerImpl implements PlayerHandler {
         this.userId = userId;
         this.userToken = userToken;
 
-        this.playerPacketCreator = new PlayerPacketCreatorImpl(PlayerPacketCreator.ID_PROTOCOL);
+        this.playerPacketCreator = new PlayerPacketCreatorImpl(PlayerPacketCreator.ID_PROTOCOL, this);
         this.playerTransmiter = new PlayerTransmiter(socket,playerPacketCreator,PlayerPacketCreator.ID_PROTOCOL,2f,address,port);
         this.playerPacketHandler = new PlayerPacketHandlerImpl(playerPacketCreator,playerTransmiter,this.controller);
         this.playerPacketHandler.setPlayerHandler(this);

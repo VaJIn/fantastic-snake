@@ -20,7 +20,7 @@ public class PlayerPacketCreatorTest {
 
     @Test
     void testRespJoinState(){
-        PlayerPacketCreatorImpl creator = new PlayerPacketCreatorImpl(PlayerPacketCreator.ID_PROTOCOL);
+        PlayerPacketCreatorImpl creator = new PlayerPacketCreatorImpl(PlayerPacketCreator.ID_PROTOCOL, null);
 
 
         creator.setState(creator.getRespJoinState());
@@ -51,7 +51,7 @@ public class PlayerPacketCreatorTest {
 
     @Test
     void testGameState() {
-        PlayerPacketCreatorImpl creator = new PlayerPacketCreatorImpl(PlayerPacketCreator.ID_PROTOCOL);
+        PlayerPacketCreatorImpl creator = new PlayerPacketCreatorImpl(PlayerPacketCreator.ID_PROTOCOL, null);
 
         creator.setState(creator.getGameState());
         final DatagramPacket[] packet = new DatagramPacket[1];
@@ -107,7 +107,7 @@ public class PlayerPacketCreatorTest {
     @Test
     void testGameStartState(){
 
-        PlayerPacketCreatorImpl creator = new PlayerPacketCreatorImpl(PlayerPacketCreator.ID_PROTOCOL);
+        PlayerPacketCreatorImpl creator = new PlayerPacketCreatorImpl(PlayerPacketCreator.ID_PROTOCOL, null);
 
         creator.setState(creator.getGameStartState());
 
@@ -148,7 +148,7 @@ public class PlayerPacketCreatorTest {
 
     @Test
     void testGameEndState(){
-        PlayerPacketCreatorImpl creator = new PlayerPacketCreatorImpl(PlayerPacketCreator.ID_PROTOCOL);
+        PlayerPacketCreatorImpl creator = new PlayerPacketCreatorImpl(PlayerPacketCreator.ID_PROTOCOL, null);
 
         creator.setState(creator.getGameEndState());
 
@@ -202,7 +202,7 @@ public class PlayerPacketCreatorTest {
 
     @Test
     void testWaitingForGameState(){
-        PlayerPacketCreatorImpl creator = new PlayerPacketCreatorImpl(PlayerPacketCreator.ID_PROTOCOL);
+        PlayerPacketCreatorImpl creator = new PlayerPacketCreatorImpl(PlayerPacketCreator.ID_PROTOCOL, null);
 
         creator.setState(creator.getWaitingForGameState());
 

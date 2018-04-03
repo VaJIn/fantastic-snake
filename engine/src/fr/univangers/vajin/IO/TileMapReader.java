@@ -20,6 +20,16 @@ import java.util.List;
 
 public class TileMapReader {
 
+    public static final String TERRAIN_LAYER = "terrain";
+
+    public static final String WIDTH = "width";
+    public static final String HEIGHT = "height";
+
+    public static final String TILE_WIDTH = "tilewidth";
+    public static final String TILE_HEIGHT = "tileheight";
+
+    public static final String TILE_TYPE = "fieldUnit";
+
     private Field field;
     private List<Entity> objects;
 
@@ -49,11 +59,11 @@ public class TileMapReader {
 
         MapProperties properties = map.getProperties();
 
-        this.mapWidth = properties.get(GameConstants.TileMap.WIDTH, Integer.class);
-        this.mapHeight = properties.get(GameConstants.TileMap.HEIGHT, Integer.class);
+        this.mapWidth = properties.get(WIDTH, Integer.class);
+        this.mapHeight = properties.get(HEIGHT, Integer.class);
 
-        this.tileWidth = properties.get(GameConstants.TileMap.TILE_WIDTH, Integer.class);
-        this.tileHeight = properties.get(GameConstants.TileMap.TILE_HEIGHT, Integer.class);
+        this.tileWidth = properties.get(TILE_WIDTH, Integer.class);
+        this.tileHeight = properties.get(TILE_HEIGHT, Integer.class);
 
         System.out.println("mapWidth : " + mapWidth);
         System.out.println("mapHeight : " + mapHeight);
@@ -63,7 +73,7 @@ public class TileMapReader {
         System.out.println("Matrix rows : " + fieldMatrix.getRowDimension());
         System.out.println("Matrix columns :" + fieldMatrix.getColumnDimension());
 
-        TiledMapTileLayer terrainLayer = (TiledMapTileLayer) map.getLayers().get(GameConstants.TileMap.TERRAIN_LAYER);
+        TiledMapTileLayer terrainLayer = (TiledMapTileLayer) map.getLayers().get(TERRAIN_LAYER);
 
         if (terrainLayer == null) {
             System.err.println("ERROR TILEDMAP : NO \"terrain\" layer ! Taking first layer as replacement");
@@ -80,7 +90,7 @@ public class TileMapReader {
 
                 MapProperties tileProperties = tile.getProperties();
 
-                String fieldUnitString = tileProperties.get(GameConstants.TileMap.TILE_TYPE, String.class);
+                String fieldUnitString = tileProperties.get(TILE_TYPE, String.class);
 
                 //  System.out.println("Tile " + i + ", " + j + " -> " + fieldUnitString);
 
