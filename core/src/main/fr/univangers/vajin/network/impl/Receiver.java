@@ -22,7 +22,6 @@ public class Receiver extends Thread {
 
     @Override
     public void run() {
-
         try {
             while (this.isInterrupted()) {
                 byte[] data = new byte[8192];
@@ -33,7 +32,9 @@ public class Receiver extends Thread {
 
                 int idProtocol = buffer.getInt();
                 if (idProtocol == this.idProtocol) {
-                    this.packetHandler.handlePacket(packet);
+                    Runnable runnable = () -> packetHandler.handlePacket(packet);
+                    Thread thread = new Thread(runnable);
+                    thread.start();
                 }
             }
         } catch (SocketException e) {

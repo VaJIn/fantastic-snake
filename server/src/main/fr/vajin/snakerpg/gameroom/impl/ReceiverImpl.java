@@ -1,14 +1,14 @@
 package fr.vajin.snakerpg.gameroom.impl;
 
 import com.google.common.collect.Maps;
-import fr.vajin.snakerpg.gameroom.Controller;
-import fr.vajin.snakerpg.gameroom.NewConnectionHandler;
-import fr.vajin.snakerpg.gameroom.PlayerHandler;
-import fr.vajin.snakerpg.gameroom.Receiver;
+import fr.vajin.snakerpg.gameroom.*;
 
 import java.net.DatagramPacket;
 import java.nio.ByteBuffer;
 import java.util.Map;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 public class ReceiverImpl implements Receiver {
@@ -19,12 +19,14 @@ public class ReceiverImpl implements Receiver {
     private Controller controller;
     private Map<Integer, PlayerHandler> playerHandlerMap;
     private NewConnectionHandler newConnectionHandler;
+    private ExecutorService executorService;
 
     public ReceiverImpl(int idProtocol, Controller controller, NewConnectionHandler newConnectionHandler) {
         this.idProtocol = idProtocol;
         this.playerHandlerMap = Maps.newConcurrentMap();
         this.newConnectionHandler = newConnectionHandler;
         this.controller = controller;
+        this.executorService = Executors.newFixedThreadPool(4);
     }
 
     @Override
@@ -44,9 +46,12 @@ public class ReceiverImpl implements Receiver {
             int playerId = buffer.getInt();
 
             if (playerHandlerMap.containsKey(playerId)) {
-                playerHandlerMap.get(playerId).getPlayerPacketHandler().handleDatagramPacket(packet);
+                PlayerPacketHandler playerPacketHandler = playerHandlerMap.get(playerId).getPlayerPacketHandler();
+
+                this.executorService.submit(() -> playerPacketHandler.handleDatagramPacket(packet));
+
             } else {
-                newConnectionHandler.handleDatagramPacket(packet);
+                this.executorService.submit(() -> newConnectionHandler.handleDatagramPacket(packet));
             }
         }else{
             logger.info("Wrong protocol id");

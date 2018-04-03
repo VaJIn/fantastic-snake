@@ -47,7 +47,7 @@ public class NetworkControllerImpl implements NetworkController {
     @Override
     public void startTransmiter() {
         if (!transmiterThread.isAlive()) {
-            transmiterThread.isAlive();
+            transmiterThread.start();
         }
     }
 

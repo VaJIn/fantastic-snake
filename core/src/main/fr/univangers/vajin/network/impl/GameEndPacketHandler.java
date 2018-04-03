@@ -16,7 +16,6 @@ public class GameEndPacketHandler implements PacketHandler{
     public void handlePacket(DatagramPacket packet) {
 
         ByteBuffer buffer = ByteBuffer.wrap(packet.getData());
-
         buffer.position(BUFFER_START_POS);
 
         int type = buffer.getInt();
@@ -26,17 +25,13 @@ public class GameEndPacketHandler implements PacketHandler{
         }
 
         int jsonSize = buffer.getInt();
-
         byte [] jsonData = new byte[jsonSize];
-
         buffer.get(jsonData);
 
         Gson gson = new Gson();
 
-        GameEndBean gameEndBean = gson.fromJson(String.valueOf(jsonData),GameEndBean.class);
+        GameEndBean gameEndBean = gson.fromJson(String.valueOf(new String(jsonData)), GameEndBean.class);
 
         //TODO
-
-
     }
 }

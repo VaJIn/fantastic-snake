@@ -36,11 +36,11 @@ public class NewConnectionHandlerNoFilterImpl implements NewConnectionHandler {
             UserEntity userEntity = controller.acceptConnection(0,new byte[4], datagramPacket.getAddress() , datagramPacket.getPort() );
 
             if(userEntity == null){
-                logger.log(Level.INFO, "Already waiting for response from " + datagramPacket.getAddress() + ":" + datagramPacket.getPort());
+                logger.log(Level.INFO, "[Thread - " + Thread.currentThread().getName() + "] Already waiting for response from " + datagramPacket.getAddress() + ":" + datagramPacket.getPort());
                 return true; // TODO delegate
             }
 
-            logger.log(Level.INFO, "New connection for " + datagramPacket.getAddress() + ":" + datagramPacket.getPort() + "\n" +
+            logger.log(Level.INFO, "[Thread - " + Thread.currentThread().getName() + "] New connection for " + datagramPacket.getAddress() + ":" + datagramPacket.getPort() + "\n" +
                     "User id : " + userEntity.getId());
 
             int userId = userEntity.getId();

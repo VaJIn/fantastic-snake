@@ -2,7 +2,6 @@ package fr.univangers.vajin.network.impl;
 
 import fr.univangers.vajin.network.PacketCreator;
 import fr.univangers.vajin.network.PacketHandler;
-import fr.vajin.snakerpg.jsondatabeans.GameStartBean;
 
 import java.net.DatagramPacket;
 import java.nio.ByteBuffer;
@@ -33,11 +32,7 @@ public class PacketHandlerDistribuer implements PacketHandler {
 
     @Override
     public void handlePacket(DatagramPacket packet) {
-
-
         ByteBuffer buffer = ByteBuffer.wrap(packet.getData());
-
-
         int idProtocol = buffer.getInt();
         if (idProtocol == PacketCreator.ID_PROTOCOL) {
             int num_sequence = buffer.getInt();

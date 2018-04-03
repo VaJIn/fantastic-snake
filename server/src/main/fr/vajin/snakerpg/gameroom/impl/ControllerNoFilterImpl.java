@@ -62,7 +62,7 @@ public class ControllerNoFilterImpl implements Controller{
     }
 
     @Override
-    public UserEntity acceptConnection(int userId, byte[] token, InetAddress inetAddress, int port) {
+    public synchronized UserEntity acceptConnection(int userId, byte[] token, InetAddress inetAddress, int port) {
 
         userId = ++this.lastId;
         SecureRandom random = new SecureRandom();
