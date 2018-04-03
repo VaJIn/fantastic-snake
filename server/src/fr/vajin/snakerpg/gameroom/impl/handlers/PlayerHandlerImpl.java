@@ -34,6 +34,7 @@ public class PlayerHandlerImpl implements PlayerHandler {
         this.playerPacketCreator = new PlayerPacketCreatorImpl(PlayerPacketCreator.ID_PROTOCOL);
         this.playerTransmiter = new PlayerTransmiter(socket,playerPacketCreator,PlayerPacketCreator.ID_PROTOCOL,2f,address,port);
         this.playerPacketHandler = new PlayerPacketHandlerImpl(playerPacketCreator,playerTransmiter,this.controller);
+        this.playerPacketHandler.setPlayerHandler(this);
         lastAliveSignalReceived = Instant.now().toEpochMilli();
 
         playerTransmiter.start();

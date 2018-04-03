@@ -142,7 +142,7 @@ public class PlayerPacketCreatorTest {
         Assertions.assertNotNull(bean);
 
         Assertions.assertEquals(creator.getPlayerHandler().getController().currentGameMode().getId(),bean.getGameMode().getId());
-        Assertions.assertEquals(creator.getPlayerHandler().getController().getMapRessource(),bean.getMap());
+        Assertions.assertEquals(creator.getPlayerHandler().getController().getMapName(),bean.getMap());
 
     }
 
@@ -235,7 +235,7 @@ public class PlayerPacketCreatorTest {
         LobbyBean bean = gson.fromJson(String.valueOf(jsonData),LobbyBean.class);
 
         Assertions.assertEquals(creator.getPlayerHandler().getController().currentGameMode().getId(),bean.getGameMode().getId());
-        Assertions.assertEquals(creator.getPlayerHandler().getController().getMapRessource(),bean.getMap());
+        Assertions.assertEquals(creator.getPlayerHandler().getController().getMapName(),bean.getMap());
 
         Collection<PlayerBean> players = bean.getPlayers();
         Collection<PlayerHandler> users = creator.getPlayerHandler().getController().getPlayerHandlers();
