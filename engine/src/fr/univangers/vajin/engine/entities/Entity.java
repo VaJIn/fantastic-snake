@@ -19,6 +19,9 @@ public abstract class Entity {
     private List<EntityObserver> observers;
     private GameEngine engine;
 
+    public static final int BECOME_INVISIBLE = 10;
+    public static final int BECOME_VISIBLE = 15;
+
     protected Entity() {
         this.entityId = nextId++;
         this.observers = new ArrayList<>();
@@ -65,6 +68,8 @@ public abstract class Entity {
     }
 
     public abstract boolean isKiller();
+
+    public abstract boolean isVisibleTo(Entity entity);
 
     public void setEngine(GameEngine engine) {
         this.engine = engine;

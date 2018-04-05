@@ -77,6 +77,11 @@ public class BonusSpawner extends DynamicEntity {
     }
 
     @Override
+    public boolean isVisibleTo(Entity entity) {
+        return true;
+    }
+
+    @Override
     public List<Position> getNewPositions() {
         return newPositions;
     }

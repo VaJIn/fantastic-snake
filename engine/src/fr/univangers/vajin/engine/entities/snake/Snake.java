@@ -1,7 +1,9 @@
 package fr.univangers.vajin.engine.entities.snake;
 
+import fr.univangers.vajin.GameConstants;
 import fr.univangers.vajin.engine.GameEngine;
 import fr.univangers.vajin.engine.entities.DynamicEntity;
+import fr.univangers.vajin.engine.entities.Entity;
 import fr.univangers.vajin.engine.utilities.Direction;
 import fr.univangers.vajin.engine.utilities.Position;
 
@@ -67,6 +69,8 @@ public abstract class Snake extends DynamicEntity {
         this.luckFactor = luckFactor;
         this.speed = speed;
         this.acceptsUserActions = true;
+        this.invisible = 0;
+        this.immaterial = 0;
     }
 
 
@@ -131,8 +135,12 @@ public abstract class Snake extends DynamicEntity {
 
     public abstract int changeSize(int howMuch);
 
-    public boolean isInvisible(){
-        return invisible>0;
+    @Override
+    public boolean isVisibleTo(Entity entity) {
+
+        return invisible <= 0 || this == entity;
+
+
     }
 
     public boolean isImmaterial(){
@@ -141,6 +149,7 @@ public abstract class Snake extends DynamicEntity {
 
     public void becomeInvisible(){
         invisible++;
+        notifyOfStateChange(Entity.BECOME_INVISIBLE);
     }
 
     public void becomeImmaterial(){
@@ -148,7 +157,13 @@ public abstract class Snake extends DynamicEntity {
     }
 
     public void stopInvisibility(){
+
         invisible--;
+
+        if (invisible==0){
+            notifyOfStateChange(Entity.BECOME_VISIBLE);
+        }
+
     }
 
     public void stopImmateriality(){
@@ -156,8 +171,6 @@ public abstract class Snake extends DynamicEntity {
     }
 
     public abstract void cancelNextMovements();
-
-    public abstract void stopGrowingOrShrinking();
 
 
     public void changeSpeed(int howMuch){

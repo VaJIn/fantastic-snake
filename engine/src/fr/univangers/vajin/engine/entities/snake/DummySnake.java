@@ -80,11 +80,6 @@ public class DummySnake extends Snake {
     }
 
     @Override
-    public void stopGrowingOrShrinking() {
-
-    }
-
-    @Override
     public void changeSpeed(int howMuch) {
     }
 

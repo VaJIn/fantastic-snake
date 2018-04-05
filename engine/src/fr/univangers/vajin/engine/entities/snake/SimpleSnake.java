@@ -275,12 +275,6 @@ public class SimpleSnake extends Snake {
     }
 
     @Override
-    public void stopGrowingOrShrinking() {
-        leftToGrow = 0;
-    }
-
-
-    @Override
     public void sendAction(int action) {
 
         if (acceptsUserActions()) {
