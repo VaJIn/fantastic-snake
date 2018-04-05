@@ -251,6 +251,10 @@ public class EngineBuilder {
                         break;
                     case TIME_MACHINE:
                         availableBonuses.add(new TimeMachineBonus(resourceKey, probaWeight, name, bonusTarget, gain, duration));
+                        break;
+                    case INVISIBILITY:
+                        availableBonuses.add(new InvisibilityBonus(resourceKey, probaWeight, name, bonusTarget, gain, duration));
+                        break;
                 }
 
             }

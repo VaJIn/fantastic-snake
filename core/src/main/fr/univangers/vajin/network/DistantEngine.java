@@ -30,10 +30,6 @@ public class DistantEngine implements GameEngine {
         this.leftToUpdate = new TreeSet<>(Comparator.comparing(DistantEntity::getDistantId));
     }
 
-    @Override
-    public Collection<Entity> getEntityCollection() {
-        return null;
-    }
 
     @Override
     public Field getField() {
@@ -101,7 +97,7 @@ public class DistantEngine implements GameEngine {
     }
 
     @Override
-    public Collection<Entity> getEntities() {
+    public Collection<Entity> getEntityCollection() {
         return ImmutableList.copyOf(distantEntityMap.values());
     }
 

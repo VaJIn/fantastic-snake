@@ -37,8 +37,8 @@ public class Position {
 
     /**
      * Translates this point, at location (x,y), by dx along the x axis and dy along the y axis so that it now represents the Position (x+dx,y+dy).
-     * @param dx the distance to computeTick this point along the X axis
-     * @param dy the distance to computeTick this point along the Y axis
+     * @param dx the distance to compute this point along the X axis
+     * @param dy the distance to compute this point along the Y axis
      */
     public void translate(int dx, int dy){
         this.x += dx;

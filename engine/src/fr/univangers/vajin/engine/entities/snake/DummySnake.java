@@ -63,6 +63,7 @@ public class DummySnake extends Snake {
 
     }
 
+
     @Override
     public int getSize() {
         return atoms.size();
@@ -74,8 +75,12 @@ public class DummySnake extends Snake {
     }
 
     @Override
-    public int changeSpeed(int howMuch) {
-        return 0;
+    public void cancelNextMovements() {
+
+    }
+
+    @Override
+    public void changeSpeed(int howMuch) {
     }
 
 
@@ -192,6 +197,12 @@ public class DummySnake extends Snake {
     }
 
     @Override
+    public String getGraphicRessourceKeyForPosition(Position pos) {
+        //TODO
+        return null;
+    }
+
+    @Override
     public Iterator<Entity.EntityTileInfo> getEntityTilesInfosIterator() {
         return new Iterator<Entity.EntityTileInfo>() {
 
@@ -207,7 +218,7 @@ public class DummySnake extends Snake {
                 SnakeAtom atom = it.next();
                 return new Entity.EntityTileInfo() {
                     @Override
-                    public String getResourceKey() {
+                    public String getRessourceKey() {
                         return atom.getGraphicKey();
                     }
 

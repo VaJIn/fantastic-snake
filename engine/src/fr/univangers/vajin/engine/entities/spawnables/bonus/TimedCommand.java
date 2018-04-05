@@ -1,26 +1,46 @@
 package fr.univangers.vajin.engine.entities.spawnables.bonus;
 
-import fr.univangers.vajin.engine.entities.snake.Snake;
 
 /**
  * Interface of the class whose role is to apply and cancel bonus effects
  */
-public interface TimedCommand extends Comparable{
+public interface TimedCommand extends Comparable, Cloneable{
+
 
     /**
-     * Interface of the lambda function that must be passed as an argument that affects a snake
+     * Applies the command
      */
-    interface BonusTimedLambda {
-        void op(Snake snake);
-    }
-
     void apply();
 
+    /**
+     * Applies the reverting command
+     */
     void cancel();
 
+    /**
+     * Returns the tick the command must be applied at
+     * @return
+     */
     int getTick();
 
-    void delayTick(int delay);
+    /**
+     * Returns the ID of the timed command
+     * @return
+     */
+    int getId();
 
+    /**
+     * Delays the time the command must be applied at of the specified time
+     * @param delayTime
+     */
+    void delayOf(int delayTime);
+
+    /**
+     * Returns true if the command is cancelling a bonus after a defined time
+     * @return
+     */
+    boolean isRevertingTimedBonus();
+
+    TimedCommand clone();
 
 }

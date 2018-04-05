@@ -44,6 +44,4 @@ public interface GameEngine {
      * @return
      */
     Collection<Snake> getAffectedSnakes(Snake taker, BonusTarget target);
-
-    Collection<Entity> getEntities();
 }
