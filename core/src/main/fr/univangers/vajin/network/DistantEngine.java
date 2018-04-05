@@ -1,6 +1,5 @@
 package fr.univangers.vajin.network;
 
-import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import fr.univangers.vajin.engine.GameEngine;
@@ -16,11 +15,11 @@ import java.util.*;
 
 public class DistantEngine implements GameEngine {
 
-    Map<Integer, DistantEntity> distantEntityMap;
+    private Map<Integer, DistantEntity> distantEntityMap;
 
-    Collection<GameEngineObserver> observers;
+    private Collection<GameEngineObserver> observers;
 
-    Collection<DistantEntity> leftToUpdate;
+    private Collection<DistantEntity> leftToUpdate;
     private boolean updating;
 
     public DistantEngine() {
