@@ -12,10 +12,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import fr.univangers.vajin.SnakeRPG;
+import fr.univangers.vajin.network.NetworkController;
 
 import javax.xml.soap.Text;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /*
  Écran permettant de se connecter directement sur un serveur.
@@ -69,9 +71,9 @@ public class DirectConnectionScreen extends AbstractMenuScreen {
 
         this.getStage().addActor(table);
 
-        TextField ipTextField = new TextField("127.0.0.0", skin);
+        TextField ipTextField = new TextField("HPC", skin);
 
-        TextField portTextField = new TextField("7989", skin);
+        TextField portTextField = new TextField("1534", skin);
 
         TextButton connect = new TextButton("Connect", skin);
         TextButton backToMenu = new TextButton("Back", skin);
@@ -90,7 +92,28 @@ public class DirectConnectionScreen extends AbstractMenuScreen {
             }
         });
 
+        connect.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                SnakeRPG parent = getParent();
 
+
+                try {
+                    InetAddress address = InetAddress.getByName(ipTextField.getText());
+                    int port = Integer.valueOf(portTextField.getText());
+
+                    waitingForResponseState.connectTo(address,port);
+                    setState(waitingForResponseState);
+
+                    parent.getNetworkController().connect(address, port);
+                    parent.getNetworkController().startReceiver();
+
+                } catch (UnknownHostException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
         Gdx.input.setInputProcessor(this.getStage());
     }
 
@@ -151,7 +174,10 @@ public class DirectConnectionScreen extends AbstractMenuScreen {
         @Override
         public synchronized void acceptedConnection(InetAddress address, int port) {
             if (address.equals(waitedAddress) && port == waitedPort) {
+                System.out.println("Connexion acceptée");
                 //TODO go to next screen
+                getParent().getNetworkController().setCurrentServer(waitedAddress,waitedPort);
+                getParent().getNetworkController().startTransmiter();
             }//Else discard
         }
 

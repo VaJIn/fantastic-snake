@@ -71,6 +71,12 @@ public class PacketCreatorImpl implements PacketCreator{
 
     }
 
+    @Override
+    public void setPlayerInfos(int idPlayer, int tokenPlayer) {
+        this.idPlayer = idPlayer;
+        this.tokenPlayer = tokenPlayer;
+    }
+
 
     @Override
     public void sendPlayerAction(int action) {

@@ -1,5 +1,6 @@
 package fr.univangers.vajin.network.impl;
 
+import fr.univangers.vajin.network.NetworkController;
 import fr.univangers.vajin.network.PacketCreator;
 import fr.univangers.vajin.network.PacketHandler;
 
@@ -7,6 +8,8 @@ import java.net.DatagramPacket;
 import java.nio.ByteBuffer;
 
 public class PacketHandlerDistribuer implements PacketHandler {
+
+    private NetworkController controller;
 
     private PacketCreator packetCreator;
 
@@ -16,14 +19,13 @@ public class PacketHandlerDistribuer implements PacketHandler {
     private PacketHandler gamePacketHandler;
     private PacketHandler gameEndPacketHandler;
 
-    public PacketHandlerDistribuer(PacketCreator packetCreator) {
+    public PacketHandlerDistribuer(NetworkController controller,PacketCreator creator) {
 
-        this.packetCreator = packetCreator;
+        this.controller = controller;
+        this.packetCreator = creator;
 
-        this.connectionPacketHandler = new ConnectionPacketHandler();
-
+        this.connectionPacketHandler = new ConnectionPacketHandler(this.controller);
         this.lobbyPacketHandler = new LobbyPacketHandler();
-
         this.gameStartPacketHandler = new GameStartPacketHandler();
         this.gamePacketHandler = new GamePacketHandler();
         this.gameEndPacketHandler = new GameEndPacketHandler();
@@ -62,5 +64,9 @@ public class PacketHandlerDistribuer implements PacketHandler {
                     break;
             }
         }//else discard packet
+    }
+
+    public void setPacketCreator(PacketCreator creator){
+        this.packetCreator = creator;
     }
 }

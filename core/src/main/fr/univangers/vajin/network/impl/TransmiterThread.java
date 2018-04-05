@@ -1,7 +1,9 @@
 package fr.univangers.vajin.network.impl;
 
+import fr.univangers.vajin.network.NetworkController;
 import fr.univangers.vajin.network.PacketCreator;
 import fr.univangers.vajin.network.Transmiter;
+import fr.vajin.snakerpg.gameroom.Controller;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -15,18 +17,16 @@ public class TransmiterThread extends Thread implements Transmiter {
 
     private DatagramSocket socket;
 
+    private NetworkController controller;
     private InetAddress address;
     private int port;
 
     private double frequency;
 
-    public TransmiterThread(PacketCreator packetCreator, DatagramSocket socket, InetAddress address, int port, double frequency) {
-        this.packetCreator = packetCreator;
+    public TransmiterThread(DatagramSocket socket, NetworkController controller, double frequency) {
         this.socket = socket;
 
-        this.address = address;
-        this.port = port;
-
+        this.controller = controller;
         this.frequency = frequency;
     }
 
@@ -38,8 +38,8 @@ public class TransmiterThread extends Thread implements Transmiter {
 
                 DatagramPacket packet = this.packetCreator.getPacket();
 
-                packet.setAddress(address);
-                packet.setPort(port);
+                packet.setAddress(controller.getCurrentServerAddress());
+                packet.setPort(controller.getCurrentServerPort());
 
                 socket.send(packet);
 

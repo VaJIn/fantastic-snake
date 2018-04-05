@@ -5,7 +5,6 @@ import fr.vajin.snakerpg.utilities.CustomByteArrayOutputStream;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
-import java.util.logging.Logger;
 
 public class RespJoinState implements PlayerPacketCreator.PlayerPacketCreatorState {
 
