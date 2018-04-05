@@ -23,9 +23,11 @@ public class PlayerHandlerImpl implements PlayerHandler {
 
     private Controller controller;
 
+    private UserEntity userEntity;
+
     private long lastAliveSignalReceived;
 
-    public PlayerHandlerImpl(DatagramSocket socket, InetAddress address, int port, Controller controller, int userId, byte[] userToken) {
+    public PlayerHandlerImpl(DatagramSocket socket, InetAddress address, int port, Controller controller, int userId, byte[] userToken, UserEntity userEntity) {
         this.controller = controller;
 
         this.userId = userId;
@@ -42,7 +44,7 @@ public class PlayerHandlerImpl implements PlayerHandler {
 
     @Override
     public UserEntity getUserEntity() {
-        return null; //TODO
+        return this.userEntity; //TODO
     }
 
     @Override
@@ -78,6 +80,12 @@ public class PlayerHandlerImpl implements PlayerHandler {
     @Override
     public synchronized long getLastAliveSignalReceived() {
         return this.lastAliveSignalReceived;
+    }
+
+    public void stopTransmiter() {
+        if (playerTransmiter.isAlive()) {
+            this.playerTransmiter.interrupt();
+        }
     }
 
 }

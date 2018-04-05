@@ -1,18 +1,18 @@
 package fr.vajin.snakerpg.gameroom.impl;
 
 import fr.vajin.snakerpg.gameroom.PlayerPacketCreator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.time.Instant;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class PlayerTransmiter extends Thread {
 
-    private final static Logger logger =  Logger.getLogger(PlayerTransmiter.class.toString());
+    private final static Logger logger = LogManager.getLogger(PlayerTransmiter.class);
 
     private DatagramSocket socket;
     private PlayerPacketCreator creator;
@@ -48,7 +48,7 @@ public class PlayerTransmiter extends Thread {
                     debugMessageBuilder.append(String.format("%02X%02X%02X%02X\t", data[i], data[i + 1], data[i + 2], data[i + 3]));
                 }
 
-                logger.log(Level.INFO, debugMessageBuilder.toString());
+                logger.debug(debugMessageBuilder.toString());
 
                 try {
                     socket.send(packet);
@@ -61,7 +61,7 @@ public class PlayerTransmiter extends Thread {
                 sleep((int) (1000.0 / packetsPerSecond) - (end - start));
             }
         } catch (InterruptedException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

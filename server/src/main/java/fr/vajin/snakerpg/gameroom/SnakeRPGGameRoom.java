@@ -5,15 +5,15 @@ import fr.vajin.snakerpg.gameroom.impl.ControllerNoFilterImpl;
 import fr.vajin.snakerpg.gameroom.impl.NewConnectionHandlerNoFilterImpl;
 import fr.vajin.snakerpg.gameroom.impl.ReceiverImpl;
 import fr.vajin.snakerpg.gameroom.impl.ReceiverThread;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.net.DatagramSocket;
 import java.net.SocketException;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
 
 public class SnakeRPGGameRoom {
 
-    public final static Logger logger = Logger.getAnonymousLogger();
+    final static Logger logger = LogManager.getLogger(SnakeRPGGameRoom.class);
 
     public static void main(String[] args) {
 

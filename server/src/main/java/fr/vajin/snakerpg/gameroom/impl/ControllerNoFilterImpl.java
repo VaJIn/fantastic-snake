@@ -10,8 +10,11 @@ import fr.univangers.vajin.engine.entities.snake.SimpleSnake;
 import fr.vajin.snakerpg.database.entities.GameModeEntity;
 import fr.vajin.snakerpg.database.entities.GameParticipationEntity;
 import fr.vajin.snakerpg.database.entities.UserEntity;
+import fr.vajin.snakerpg.gameroom.Cleaner;
 import fr.vajin.snakerpg.gameroom.Controller;
 import fr.vajin.snakerpg.gameroom.PlayerHandler;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.net.InetAddress;
 import java.security.SecureRandom;
@@ -20,12 +23,15 @@ import java.util.Collection;
 
 public class ControllerNoFilterImpl implements Controller{
 
+    private static final Logger logger = LogManager.getLogger(ControllerNoFilterImpl.class);
+
     private GameModeEntity gameMode;
     private GameEngine gameEngine;
     private Collection<PlayerHandler> playerHandlers;
     private int lastId;
     private String map;
     private BiMap<Integer, String> idAddressMap;
+    private Cleaner cleaner;
 
     public ControllerNoFilterImpl(GameModeEntity gameMode, String map){
         this.gameMode = gameMode;
@@ -34,6 +40,8 @@ public class ControllerNoFilterImpl implements Controller{
         this.lastId = 0;
         this.map = map;
         this.idAddressMap = HashBiMap.create();
+        this.cleaner = new Cleaner(this, 15000);
+        cleaner.start();
     }
 
     @Override
@@ -54,6 +62,15 @@ public class ControllerNoFilterImpl implements Controller{
     @Override
     public void addPlayerWaitingForConnection(UserEntity userEntity) {
         //pass
+    }
+
+    @Override
+    public void removePlayer(PlayerHandler playerHandler) {
+        logger.info("Removed player " + playerHandler.getUserId());
+        int id = playerHandler.getUserId();
+        playerHandler.stopTransmiter();
+        playerHandlers.remove(playerHandler);
+        idAddressMap.remove(id);
     }
 
     @Override
