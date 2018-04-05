@@ -6,7 +6,6 @@ import fr.vajin.snakerpg.gameroom.*;
 import java.net.DatagramPacket;
 import java.nio.ByteBuffer;
 import java.util.Map;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
@@ -33,14 +32,11 @@ public class ReceiverImpl implements Receiver {
     public void managePacket(DatagramPacket packet) {
         byte[] data = packet.getData();
 
-
         ByteBuffer buffer = ByteBuffer.wrap(data);
-
-        logger.info("Received packet from " + packet.getAddress());
-
         int idProtocol = buffer.getInt();
 
-        logger.info("Id protocol : " + idProtocol);
+        logger.info("Received packet from " + packet.getAddress() + ":" + packet.getPort() + "\n" +
+                "Id protocol : " + idProtocol);
 
         if (idProtocol == this.idProtocol) {
             int playerId = buffer.getInt();
