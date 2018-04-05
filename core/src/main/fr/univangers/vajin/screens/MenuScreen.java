@@ -1,17 +1,11 @@
 package fr.univangers.vajin.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import fr.univangers.vajin.SnakeRPG;
 
 public class MenuScreen extends AbstractMenuScreen {
@@ -82,7 +76,7 @@ public class MenuScreen extends AbstractMenuScreen {
         hostLocalMultiplayer.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                getParent().changeScreen(SnakeRPG.LOBBY_SCREEN);
+                getParent().changeScreen(SnakeRPG.HOST_LOBBY_SCREEN);
             }
         });
 

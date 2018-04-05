@@ -28,7 +28,8 @@ public class SnakeRPG extends Game implements ApplicationListener {
     private GameScreen gameScreen;
     private GameLoadingScreen gameLoadingScreen;
     private DirectConnectionScreen directConnectionScreen;
-    private LobbyScreen lobbyScreen;
+    private HostLobbyScreen hostLobbyScreen;
+    private DistantLobbyScreen distantLobbyScreen;
     private MenuScreen menuScreen;
 
     private Skin UISkin;
@@ -70,8 +71,8 @@ public class SnakeRPG extends Game implements ApplicationListener {
                 )
         );
 
-        this.lobbyScreen = new LobbyScreen(this);
-        lobbyScreen.setLobbyBean(lobbyBean);
+        this.hostLobbyScreen = new HostLobbyScreen(this);
+        hostLobbyScreen.setLobbyBean(lobbyBean);
 
         this.menuScreen = new MenuScreen(this);
 
@@ -83,8 +84,9 @@ public class SnakeRPG extends Game implements ApplicationListener {
     public static final int DIRECT_CONNECTION_SCREEN = 2;
     public static final int GAME_LOADING_SCREEN = 3;
     public static final int GAME_SCREEN = 4;
-    public static final int LOBBY_SCREEN = 5;
+    public static final int HOST_LOBBY_SCREEN = 5;
     public static final int CREDIT_SCREEN = 6;
+    public static final int DISTANT_LOBBY_SCREEN = 7;
 
     public void changeScreen(int screen) {
         switch (screen) {
@@ -106,17 +108,23 @@ public class SnakeRPG extends Game implements ApplicationListener {
                 }
                 this.setScreen(gameLoadingScreen);
                 break;
-            case LOBBY_SCREEN:
-                if (this.lobbyScreen == null) {
-                    this.lobbyScreen = new LobbyScreen(this);
+            case HOST_LOBBY_SCREEN:
+                if (this.hostLobbyScreen == null) {
+                    this.hostLobbyScreen = new HostLobbyScreen(this);
                 }
-                this.setScreen(lobbyScreen);
+                this.setScreen(hostLobbyScreen);
                 break;
             case CREDIT_SCREEN:
                 if (this.creditScreen == null) {
                     this.creditScreen = new CreditScreen(this);
                 }
                 this.setScreen(creditScreen);
+                break;
+            case DISTANT_LOBBY_SCREEN:
+                if (this.distantLobbyScreen == null) {
+                    this.distantLobbyScreen = new DistantLobbyScreen(this);
+                }
+                this.setScreen(distantLobbyScreen);
                 break;
         }
     }
@@ -131,8 +139,8 @@ public class SnakeRPG extends Game implements ApplicationListener {
         assetManager.dispose();
     }
 
-    public LobbyScreen getLobbyScreen() {
-        return lobbyScreen;
+    public HostLobbyScreen getHostLobbyScreen() {
+        return hostLobbyScreen;
     }
 
     public GameScreen getGameScreen() {
