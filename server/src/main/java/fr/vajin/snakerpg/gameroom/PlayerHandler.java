@@ -21,4 +21,5 @@ public interface PlayerHandler {
 
     long getLastAliveSignalReceived();
 
+    void stopTransmiter();
 }

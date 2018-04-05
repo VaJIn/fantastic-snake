@@ -18,10 +18,7 @@ public class ReceiverThread extends Thread{
 
     @Override
     public void run() {
-
         try{
-
-
             while (!this.isInterrupted()){
 
                 byte[] data = new byte[8192];
@@ -31,8 +28,6 @@ public class ReceiverThread extends Thread{
                 receiver.managePacket(packet);
 
             }
-
-
         }
         catch (IOException e) {
             e.printStackTrace();
