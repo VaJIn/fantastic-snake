@@ -18,7 +18,7 @@ import java.net.SocketException;
 import java.util.Iterator;
 
 
-public class LobbyScreen extends AbstractMenuScreen {
+public class HostLobbyScreen extends AbstractMenuScreen {
 
 
     LobbyBean lobbyBean;
@@ -28,7 +28,7 @@ public class LobbyScreen extends AbstractMenuScreen {
     DatagramSocket datagramSocket;
 
 
-    public LobbyScreen(SnakeRPG parent) {
+    public HostLobbyScreen(SnakeRPG parent) {
         super(parent);
 
         this.lobbyBean = new LobbyBean();

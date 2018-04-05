@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import fr.univangers.vajin.network.NetworkController;
+import fr.univangers.vajin.network.impl.NetworkControllerImpl;
 import fr.univangers.vajin.screens.*;
 import fr.vajin.snakerpg.database.entities.GameModeEntity;
 import fr.vajin.snakerpg.jsondatabeans.LobbyBean;
@@ -28,7 +29,7 @@ public class SnakeRPG extends Game implements ApplicationListener {
     private GameScreen gameScreen;
     private GameLoadingScreen gameLoadingScreen;
     private DirectConnectionScreen directConnectionScreen;
-    private LobbyScreen lobbyScreen;
+    private HostLobbyScreen lobbyScreen;
     private MenuScreen menuScreen;
 
     private Skin UISkin;
@@ -70,7 +71,7 @@ public class SnakeRPG extends Game implements ApplicationListener {
                 )
         );
 
-        this.lobbyScreen = new LobbyScreen(this);
+        this.lobbyScreen = new HostLobbyScreen(this);
         lobbyScreen.setLobbyBean(lobbyBean);
 
         this.menuScreen = new MenuScreen(this);
@@ -108,7 +109,7 @@ public class SnakeRPG extends Game implements ApplicationListener {
                 break;
             case LOBBY_SCREEN:
                 if (this.lobbyScreen == null) {
-                    this.lobbyScreen = new LobbyScreen(this);
+                    this.lobbyScreen = new HostLobbyScreen(this);
                 }
                 this.setScreen(lobbyScreen);
                 break;
@@ -131,7 +132,7 @@ public class SnakeRPG extends Game implements ApplicationListener {
         assetManager.dispose();
     }
 
-    public LobbyScreen getLobbyScreen() {
+    public HostLobbyScreen getLobbyScreen() {
         return lobbyScreen;
     }
 
@@ -155,6 +156,17 @@ public class SnakeRPG extends Game implements ApplicationListener {
     }
 
     public NetworkController getNetworkController() {
+
+        if(networkController==null){
+            try {
+                DatagramSocket socket = new DatagramSocket();
+                networkController = new NetworkControllerImpl(this,socket);
+            } catch (SocketException e) {
+                e.printStackTrace();
+            }
+
+
+        }
         return networkController;
     }
 
@@ -172,4 +184,5 @@ public class SnakeRPG extends Game implements ApplicationListener {
         }
         return this.datagramSocket;
     }
+
 }

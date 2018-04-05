@@ -1,5 +1,6 @@
 package fr.univangers.vajin.network.impl;
 
+import fr.univangers.vajin.network.NetworkController;
 import fr.univangers.vajin.network.PacketCreator;
 import fr.univangers.vajin.network.PacketHandler;
 import fr.univangers.vajin.screens.DirectConnectionScreen;
@@ -9,12 +10,17 @@ import java.nio.ByteBuffer;
 
 public class ConnectionPacketHandler implements PacketHandler {
 
-    DirectConnectionScreen directConnectionScreen;
+    private NetworkController controller;
 
     private static int BUFFER_START_POS = 16;
 
+    public ConnectionPacketHandler(NetworkController controller){
+        this.controller = controller;
+    }
+
     @Override
     public void handlePacket(DatagramPacket packet) {
+
         ByteBuffer buffer = ByteBuffer.wrap(packet.getData());
 
         buffer.position(BUFFER_START_POS);
@@ -28,9 +34,14 @@ public class ConnectionPacketHandler implements PacketHandler {
         int resp = buffer.getInt();
 
         if (resp == 1) {
-            directConnectionScreen.acceptedConnection(packet.getAddress(), packet.getPort());
+
+            int idPlayer = buffer.getInt();
+            int tokenPlayer = buffer.getInt();
+
+            controller.getPacketCreator().setPlayerInfos(idPlayer,tokenPlayer);
+            controller.getSnakeRPG().getDirectConnectionScreen().acceptedConnection(packet.getAddress(), packet.getPort());
         } else {
-            directConnectionScreen.refusedConnection(packet.getAddress(), packet.getPort());
+            controller.getSnakeRPG().getDirectConnectionScreen().refusedConnection(packet.getAddress(), packet.getPort());
         }
     }
 }

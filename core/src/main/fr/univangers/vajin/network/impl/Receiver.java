@@ -22,11 +22,14 @@ public class Receiver extends Thread {
 
     @Override
     public void run() {
+        System.out.println("receiver start");
         try {
-            while (this.isInterrupted()) {
+            while (!this.isInterrupted()) {
+
                 byte[] data = new byte[8192];
                 DatagramPacket packet = new DatagramPacket(data, data.length);
                 this.socket.receive(packet);
+                System.out.println("packet recu");
 
                 ByteBuffer buffer = ByteBuffer.wrap(packet.getData());
 
