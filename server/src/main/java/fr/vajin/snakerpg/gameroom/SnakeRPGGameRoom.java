@@ -22,10 +22,16 @@ public class SnakeRPGGameRoom {
 
             Integer port = null;
 
+            if (args.length!=1){
+                System.out.println("Please provide the port as unique argument of the program. Exiting");
+                System.exit(1);
+            }
+
             try{
                 port = Integer.valueOf(args[0]);
             }
             catch (NumberFormatException e){
+                System.out.println("The given port ("+args[0]+") is not an integer");
                 System.exit(1);
             }
 
