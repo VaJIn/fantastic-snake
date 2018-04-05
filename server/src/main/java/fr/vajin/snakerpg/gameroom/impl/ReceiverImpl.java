@@ -2,17 +2,18 @@ package fr.vajin.snakerpg.gameroom.impl;
 
 import com.google.common.collect.Maps;
 import fr.vajin.snakerpg.gameroom.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.net.DatagramPacket;
 import java.nio.ByteBuffer;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.logging.Logger;
 
 public class ReceiverImpl implements Receiver {
 
-    private final static Logger logger = Logger.getLogger(ReceiverImpl.class.toString());
+    private final static Logger logger = LogManager.getLogger(ReceiverImpl.class);
 
     private final int idProtocol;
     private Controller controller;
@@ -35,7 +36,7 @@ public class ReceiverImpl implements Receiver {
         ByteBuffer buffer = ByteBuffer.wrap(data);
         int idProtocol = buffer.getInt();
 
-        logger.info("Received packet from " + packet.getAddress() + ":" + packet.getPort() + "\n" +
+        logger.debug("Received packet from " + packet.getAddress() + ":" + packet.getPort() + "\n" +
                 "Id protocol : " + idProtocol);
 
         if (idProtocol == this.idProtocol) {

@@ -139,6 +139,10 @@ project(":webserver"){
 
         // https://mvnrepository.com/artifact/commons-validator/commons-validator
         compile group: 'commons-validator', name: 'commons-validator', version: '1.6'
+
+        compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.11.0'
+        compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.11.0'
+
     }
 }
 
