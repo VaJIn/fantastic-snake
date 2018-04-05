@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import fr.univangers.vajin.SnakeRPG;
+import fr.univangers.vajin.engine.entities.snake.Snake;
 import fr.univangers.vajin.network.NetworkController;
 
 import javax.xml.soap.Text;
@@ -23,6 +24,8 @@ import java.net.UnknownHostException;
  Écran permettant de se connecter directement sur un serveur.
  */
 public class DirectConnectionScreen extends AbstractMenuScreen {
+
+private    boolean acceptedConnection = false;
 
     private DatagramSocket socket; //UDP socket
 
@@ -118,6 +121,15 @@ public class DirectConnectionScreen extends AbstractMenuScreen {
     }
 
     @Override
+    public void render(float delta) {
+        super.render(delta);
+
+        if(acceptedConnection){
+            this.getParent().changeScreen(SnakeRPG.DISTANT_LOBBY_SCREEN);
+        }
+    }
+
+    @Override
     public void pause() {
 
     }
@@ -175,11 +187,13 @@ public class DirectConnectionScreen extends AbstractMenuScreen {
         public synchronized void acceptedConnection(InetAddress address, int port) {
             if (address.equals(waitedAddress) && port == waitedPort) {
                 System.out.println("Connexion acceptée");
-                //TODO go to next screen
                 getParent().getNetworkController().setCurrentServer(waitedAddress,waitedPort);
                 getParent().getNetworkController().startTransmiter();
+                acceptedConnection = true;
             }//Else discard
         }
+
+
 
         @Override
         public synchronized void refusedConnection(InetAddress address, int port) {

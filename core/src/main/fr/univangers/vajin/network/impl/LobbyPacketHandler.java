@@ -1,9 +1,11 @@
 package fr.univangers.vajin.network.impl;
 
 import com.google.gson.Gson;
+import fr.univangers.vajin.network.NetworkController;
 import fr.univangers.vajin.network.PacketCreator;
 import fr.univangers.vajin.network.PacketHandler;
 import fr.univangers.vajin.screens.HostLobbyScreen;
+import fr.univangers.vajin.screens.LobbyScreen;
 import fr.vajin.snakerpg.jsondatabeans.LobbyBean;
 
 import java.net.DatagramPacket;
@@ -12,8 +14,11 @@ import java.nio.ByteBuffer;
 public class LobbyPacketHandler implements PacketHandler {
 
     private static int BUFFER_START_POS = 16;
-    private HostLobbyScreen lobbyScreen;
+    private LobbyScreen lobbyScreen;
 
+    public LobbyPacketHandler(NetworkController controller){
+        this.lobbyScreen = controller.getSnakeRPG().getDistantLobbyScreen();
+    }
 
     @Override
     public void handlePacket(DatagramPacket packet) {
@@ -36,7 +41,11 @@ public class LobbyPacketHandler implements PacketHandler {
 
         Gson gson = new Gson();
 
-        LobbyBean lobbyBean = gson.fromJson(String.valueOf(jsonData),LobbyBean.class);
+        String jsonString = new String(jsonData);
+
+        System.out.println(jsonString);
+
+        LobbyBean lobbyBean = gson.fromJson(jsonString,LobbyBean.class);
 
         this.lobbyScreen.setLobbyBean(lobbyBean);
 

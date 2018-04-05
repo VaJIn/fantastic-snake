@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import fr.univangers.vajin.network.NetworkController;
+import fr.univangers.vajin.network.impl.NetworkControllerImpl;
 import fr.univangers.vajin.screens.*;
 import fr.vajin.snakerpg.database.entities.GameModeEntity;
 import fr.vajin.snakerpg.jsondatabeans.LobbyBean;
@@ -163,6 +164,14 @@ public class SnakeRPG extends Game implements ApplicationListener {
     }
 
     public NetworkController getNetworkController() {
+
+        if(networkController==null){
+            try {
+                networkController = new NetworkControllerImpl(this,new DatagramSocket());
+            } catch (SocketException e) {
+                e.printStackTrace();
+            }
+        }
         return networkController;
     }
 
@@ -179,5 +188,12 @@ public class SnakeRPG extends Game implements ApplicationListener {
             this.datagramSocket = new DatagramSocket(port);
         }
         return this.datagramSocket;
+    }
+
+    public DistantLobbyScreen getDistantLobbyScreen() {
+        if(this.distantLobbyScreen == null){
+            distantLobbyScreen = new DistantLobbyScreen(this);
+        }
+        return distantLobbyScreen;
     }
 }
