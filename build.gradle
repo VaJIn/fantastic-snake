@@ -64,6 +64,9 @@ project(":core") {
         compile project(":engine")
         compile project(":server")
 
+        compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.11.0'
+        compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.11.0'
+
         compile 'com.google.code.gson:gson:2.8.2'
 
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"

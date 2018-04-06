@@ -36,7 +36,7 @@ public abstract class LobbyScreen extends AbstractMenuScreen {
         updateTable();
     }
 
-    private void updateTable() {
+    protected void updateTable() {
         if (getParent().getScreen() == this) {
 
             Skin skin = this.getParent().getUISkin();
@@ -47,9 +47,7 @@ public abstract class LobbyScreen extends AbstractMenuScreen {
             while (it.hasNext()) {
                 PlayerBean playerBean = it.next();
                 Label aliasLabel = new Label(playerBean.getAlias(), skin);
-                Label snakeIdLabel = new Label(playerBean.getLocalId() + "", skin);
                 playerTable.add(aliasLabel).fillX().colspan(3);
-                playerTable.add(snakeIdLabel).fillX();
                 if (it.hasNext()) {
                     playerTable.row().pad(10, 0, 0, 0);
                 }
