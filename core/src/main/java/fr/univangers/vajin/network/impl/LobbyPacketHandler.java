@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import fr.univangers.vajin.network.NetworkController;
 import fr.univangers.vajin.network.PacketCreator;
 import fr.univangers.vajin.network.PacketHandler;
-import fr.univangers.vajin.screens.HostLobbyScreen;
 import fr.univangers.vajin.screens.LobbyScreen;
 import fr.vajin.snakerpg.jsondatabeans.LobbyBean;
 import org.apache.logging.log4j.LogManager;

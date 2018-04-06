@@ -21,6 +21,8 @@ import java.net.InetAddress;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public class ControllerNoFilterImpl implements Controller{
 
@@ -149,6 +151,9 @@ public class ControllerNoFilterImpl implements Controller{
         for (PlayerHandler playerHandler : this.playerHandlers){
             playerHandler.getPlayerPacketCreator().setState(PlayerPacketCreator.GAME_START_STATE);
         }
+
+        final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
+        executor.schedule(new GameRun(gameEngine,32), 10, TimeUnit.SECONDS);
     }
 
     @Override
