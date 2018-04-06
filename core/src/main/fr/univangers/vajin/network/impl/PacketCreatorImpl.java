@@ -95,4 +95,24 @@ public class PacketCreatorImpl implements PacketCreator{
         }
 
     }
+
+    @Override
+    public void sendPlayerReady() {
+
+        try {
+            CustomByteArrayOutputStream stream = this.getPacketStream();
+
+            stream.writeInt(PLAYER_READY);
+
+            byte [] data = stream.toByteArray();
+            this.transmiter.send(new DatagramPacket(data, data.length));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+
 }

@@ -15,6 +15,7 @@ public interface PacketCreator {
     int GAME = 6;
     int GAME_END = 7;
     int PLAYER_ACTION = 8;
+    int PLAYER_READY = 9;
 
     DatagramPacket getPacket() throws IOException;
 
@@ -22,8 +23,11 @@ public interface PacketCreator {
 
     void sendPlayerAction(int action);
 
+    void sendPlayerReady();
+
     void acknowledgePacket(int idReceived);
 
     void setPlayerInfos(int idPlayer, int tokenPlayer);
+
 
 }
