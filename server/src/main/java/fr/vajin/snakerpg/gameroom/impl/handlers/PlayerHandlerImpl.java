@@ -7,6 +7,7 @@ import fr.vajin.snakerpg.gameroom.PlayerPacketCreator;
 import fr.vajin.snakerpg.gameroom.PlayerPacketHandler;
 import fr.vajin.snakerpg.gameroom.impl.PlayerTransmiter;
 import fr.vajin.snakerpg.gameroom.impl.creators.PlayerPacketCreatorImpl;
+import fr.vajin.snakerpg.gameroom.impl.creators.WaitingForGameState;
 
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -32,6 +33,7 @@ public class PlayerHandlerImpl implements PlayerHandler {
 
         this.userId = userId;
         this.userToken = userToken;
+        this.userEntity = userEntity;
 
         this.playerPacketCreator = new PlayerPacketCreatorImpl(PlayerPacketCreator.ID_PROTOCOL, this);
         this.playerTransmiter = new PlayerTransmiter(socket,playerPacketCreator,PlayerPacketCreator.ID_PROTOCOL,0.5f,address,port);
@@ -44,7 +46,7 @@ public class PlayerHandlerImpl implements PlayerHandler {
 
     @Override
     public UserEntity getUserEntity() {
-        return this.userEntity; //TODO
+        return this.userEntity;
     }
 
     @Override
@@ -75,6 +77,9 @@ public class PlayerHandlerImpl implements PlayerHandler {
     @Override
     public synchronized void aliveSignalReceive() {
         lastAliveSignalReceived = Instant.now().toEpochMilli();
+        if (playerPacketCreator.getState() == playerPacketCreator.getRespJoinState()) {
+            playerPacketCreator.setState(playerPacketCreator.getWaitingForGameState());
+        }
     }
 
     @Override

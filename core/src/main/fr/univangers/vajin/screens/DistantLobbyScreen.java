@@ -10,9 +10,6 @@ import fr.univangers.vajin.network.NetworkController;
 
 public class DistantLobbyScreen extends LobbyScreen {
 
-    private NetworkController networkController;
-
-
     public DistantLobbyScreen(SnakeRPG parent) {
         super(parent);
     }
@@ -28,19 +25,25 @@ public class DistantLobbyScreen extends LobbyScreen {
         TextButton exitLobby = new TextButton("Exit lobby", skin);
         TextButton ready = new TextButton("Ready", skin);
 
-        this.getStage().setDebugAll(true);
+        Table mainTable = new Table();
 
-        SelectBox<String> mapSelectBox = new SelectBox<String>(skin);
-        mapSelectBox.setItems("simple_map.tmx", "sample_map.tmx");
+        mainTable.add(this.getPlayerTable()).colspan(2);
+
+        mainTable.row();
+        mainTable.add(exitLobby).fillX();
+        mainTable.add(ready).fillX();
+
+        this.getStage().setDebugAll(true);
 
         exitLobby.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                getParent().getNetworkController().stopNetwork();
                 getParent().changeScreen(SnakeRPG.MENU_SCREEN);
             }
         });
 
-        this.getStage().addActor(this.getPlayerTable());
+        this.getStage().addActor(mainTable);
 
         Gdx.input.setInputProcessor(getStage());
     }

@@ -41,8 +41,7 @@ public class WaitingForGameState implements PlayerPacketCreator.PlayerPacketCrea
             bean.setLocalId(playerHandler.getUserId());
             bean.setAlias(playerHandler.getUserEntity().getAlias());
 
-            //TODO set snake entity
-
+            players.add(bean);
 
         }
 

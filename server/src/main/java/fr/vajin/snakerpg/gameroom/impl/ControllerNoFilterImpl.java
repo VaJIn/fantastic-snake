@@ -66,7 +66,7 @@ public class ControllerNoFilterImpl implements Controller{
 
     @Override
     public void removePlayer(PlayerHandler playerHandler) {
-        logger.info("Removed player " + playerHandler.getUserId());
+        logger.info("Removed player " + playerHandler.getUserId() + " (" + idAddressMap.get(playerHandler.getUserId()) + ")");
         int id = playerHandler.getUserId();
         playerHandler.stopTransmiter();
         playerHandlers.remove(playerHandler);

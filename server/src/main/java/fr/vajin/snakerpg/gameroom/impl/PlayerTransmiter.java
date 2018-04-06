@@ -1,5 +1,6 @@
 package fr.vajin.snakerpg.gameroom.impl;
 
+import fr.vajin.snakerpg.LoggingUtilities;
 import fr.vajin.snakerpg.gameroom.PlayerPacketCreator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -41,14 +42,7 @@ public class PlayerTransmiter extends Thread {
                 packet.setAddress(this.inetAdress);
                 packet.setPort(port);
 
-                byte[] data = packet.getData();
-
-                StringBuilder debugMessageBuilder = new StringBuilder("Sending packet to " + packet.getAddress() + ":" + port + "\n");
-                for(int i = 0; i < data.length; i += 4){
-                    debugMessageBuilder.append(String.format("%02X%02X%02X%02X\t", data[i], data[i + 1], data[i + 2], data[i + 3]));
-                }
-
-                logger.debug(debugMessageBuilder.toString());
+                LoggingUtilities.logPacketDebug(logger, packet, "Sending packet");
 
                 try {
                     socket.send(packet);

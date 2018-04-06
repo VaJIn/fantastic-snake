@@ -87,22 +87,27 @@ public class PlayerPacketCreatorImpl implements PlayerPacketCreator {
         this.currentState = playerPacketCreatorState;
     }
 
+    @Override
     public PlayerPacketCreatorState getRespJoinState() {
         return respJoinState;
     }
 
+    @Override
     public PlayerPacketCreatorState getWaitingForGameState() {
         return waitingForGameState;
     }
 
+    @Override
     public PlayerPacketCreatorState getGameStartState() {
         return gameStartState;
     }
 
+    @Override
     public PlayerPacketCreatorState getGameState() {
         return gameState;
     }
 
+    @Override
     public PlayerPacketCreatorState getGameEndState() {
         return gameEndState;
     }
@@ -115,5 +120,10 @@ public class PlayerPacketCreatorImpl implements PlayerPacketCreator {
     @Override
     public PlayerHandler getPlayerHandler(){
         return this.playerHandler;
+    }
+
+    @Override
+    public PlayerPacketCreatorState getState() {
+        return this.currentState;
     }
 }

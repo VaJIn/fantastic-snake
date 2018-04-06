@@ -19,7 +19,7 @@ public abstract class LobbyScreen extends AbstractMenuScreen {
     public void show() {
         this.playerTable = new Table();
 
-        setLobbyBean(this.getLobbyBean());
+        updateTable();
     }
 
     public LobbyScreen(SnakeRPG parent) {

@@ -47,6 +47,18 @@ public interface PlayerPacketCreator{
 
     void setState(PlayerPacketCreatorState playerPacketCreatorState);
 
+    PlayerPacketCreatorState getState();
+
+    PlayerPacketCreatorState getRespJoinState();
+
+    PlayerPacketCreatorState getWaitingForGameState();
+
+    PlayerPacketCreatorState getGameStartState();
+
+    PlayerPacketCreatorState getGameState();
+
+    PlayerPacketCreatorState getGameEndState();
+
     void setPlayerHandler(PlayerHandler playerHandler);
 
     PlayerHandler getPlayerHandler();
