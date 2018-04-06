@@ -3,7 +3,6 @@ package fr.univangers.vajin.network.impl;
 import fr.univangers.vajin.network.NetworkController;
 import fr.univangers.vajin.network.PacketCreator;
 import fr.univangers.vajin.network.PacketHandler;
-import fr.univangers.vajin.screens.DirectConnectionScreen;
 
 import java.net.DatagramPacket;
 import java.nio.ByteBuffer;
@@ -39,9 +38,9 @@ public class ConnectionPacketHandler implements PacketHandler {
             int tokenPlayer = buffer.getInt();
 
             controller.getPacketCreator().setPlayerInfos(idPlayer,tokenPlayer);
-            controller.getSnakeRPG().getDirectConnectionScreen().acceptedConnection(packet.getAddress(), packet.getPort());
+            controller.getApplication().getDirectConnectionScreen().acceptedConnection(packet.getAddress(), packet.getPort());
         } else {
-            controller.getSnakeRPG().getDirectConnectionScreen().refusedConnection(packet.getAddress(), packet.getPort());
+            controller.getApplication().getDirectConnectionScreen().refusedConnection(packet.getAddress(), packet.getPort());
         }
     }
 }

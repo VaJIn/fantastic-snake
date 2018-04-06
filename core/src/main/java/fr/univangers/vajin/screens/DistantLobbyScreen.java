@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import fr.univangers.vajin.SnakeRPG;
+import fr.univangers.vajin.network.NetworkController;
 import fr.vajin.snakerpg.database.entities.GameModeEntity;
 import fr.vajin.snakerpg.jsondatabeans.LobbyBean;
 
@@ -14,8 +15,8 @@ public class DistantLobbyScreen extends LobbyScreen {
     private Label mapLabel;
     private Label gameModeLabel;
 
-    public DistantLobbyScreen(SnakeRPG parent) {
-        super(parent);
+    public DistantLobbyScreen(SnakeRPG parent, NetworkController networkController) {
+        super(parent, networkController);
     }
 
 
@@ -35,8 +36,13 @@ public class DistantLobbyScreen extends LobbyScreen {
         Table infoTable = new Table();
 
 
-        this.gameModeLabel = new Label("undefined", skin);
-        this.mapLabel = new Label("undefined", skin);
+        if (this.gameModeLabel == null) {
+            this.gameModeLabel = new Label("undefined", skin);
+        }
+
+        if (this.mapLabel == null) {
+            this.mapLabel = new Label("undefined", skin);
+        }
 
         infoTable.add(new Label("Map : ", skin)).fillX().uniformX();
         infoTable.add(mapLabel).fillX().uniformX();
@@ -68,10 +74,10 @@ public class DistantLobbyScreen extends LobbyScreen {
     }
 
     @Override
-    protected void updateTable() {
+    public void updateTable() {
         super.updateTable();
 
-        final LobbyBean lobbyBean = this.getLobbyBean();
+        final LobbyBean lobbyBean = networkController.getLobbyBean();
         if (mapLabel != null) {
             String map = lobbyBean.getMap();
             if (map == null || map.trim().length() == 0) {

@@ -63,6 +63,7 @@ private    boolean acceptedConnection = false;
 
     @Override
     public void show() {
+        super.show();
         this.currentState = this.initialState;
 
         Skin skin = this.getParent().getUISkin();

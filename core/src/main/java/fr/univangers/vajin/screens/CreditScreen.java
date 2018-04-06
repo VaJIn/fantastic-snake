@@ -28,7 +28,7 @@ public class CreditScreen extends AbstractMenuScreen {
 
     @Override
     public void show() {
-
+        super.show();
         Skin skin = this.getParent().getUISkin();
 
         Table layout = new Table();

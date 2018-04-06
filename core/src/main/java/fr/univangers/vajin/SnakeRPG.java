@@ -4,22 +4,15 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Maps;
 import fr.univangers.vajin.network.NetworkController;
 import fr.univangers.vajin.network.impl.NetworkControllerImpl;
 import fr.univangers.vajin.screens.*;
-import fr.vajin.snakerpg.database.entities.GameModeEntity;
-import fr.vajin.snakerpg.jsondatabeans.LobbyBean;
-import fr.vajin.snakerpg.jsondatabeans.PlayerBean;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.net.DatagramSocket;
 import java.net.SocketException;
-import java.util.Map;
 
 public class SnakeRPG extends Game implements ApplicationListener {
 
@@ -30,7 +23,7 @@ public class SnakeRPG extends Game implements ApplicationListener {
 
     private SnakeRPGAssetManager assetManager;
 
-    private GameScreen gameScreen;
+    private LocalGameScreen gameScreen;
     private GameLoadingScreen gameLoadingScreen;
     private DirectConnectionScreen directConnectionScreen;
     private HostLobbyScreen hostLobbyScreen;
@@ -92,7 +85,7 @@ public class SnakeRPG extends Game implements ApplicationListener {
                 break;
             case HOST_LOBBY_SCREEN:
                 if (this.hostLobbyScreen == null) {
-                    this.hostLobbyScreen = new HostLobbyScreen(this);
+                    this.hostLobbyScreen = new HostLobbyScreen(this, getNetworkController());
                 }
                 logger.debug("Change screen to HostLobbyScreen");
                 this.setScreen(hostLobbyScreen);
@@ -106,7 +99,7 @@ public class SnakeRPG extends Game implements ApplicationListener {
                 break;
             case DISTANT_LOBBY_SCREEN:
                 if (this.distantLobbyScreen == null) {
-                    this.distantLobbyScreen = new DistantLobbyScreen(this);
+                    this.distantLobbyScreen = new DistantLobbyScreen(this, getNetworkController());
                 }
                 logger.debug("Change screen to DistantLobbyScreen");
                 this.setScreen(distantLobbyScreen);
@@ -128,7 +121,7 @@ public class SnakeRPG extends Game implements ApplicationListener {
         return hostLobbyScreen;
     }
 
-    public GameScreen getGameScreen() {
+    public LocalGameScreen getGameScreen() {
         return gameScreen;
     }
 
@@ -183,7 +176,7 @@ public class SnakeRPG extends Game implements ApplicationListener {
 
     public DistantLobbyScreen getDistantLobbyScreen() {
         if(this.distantLobbyScreen == null){
-            distantLobbyScreen = new DistantLobbyScreen(this);
+            distantLobbyScreen = new DistantLobbyScreen(this, this.getNetworkController());
         }
         return distantLobbyScreen;
     }

@@ -1,6 +1,7 @@
 package fr.univangers.vajin.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Net;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -9,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import fr.univangers.vajin.SnakeRPG;
+import fr.univangers.vajin.network.NetworkController;
 import fr.vajin.snakerpg.jsondatabeans.LobbyBean;
 import fr.vajin.snakerpg.jsondatabeans.PlayerBean;
 
@@ -20,8 +22,8 @@ import java.util.Iterator;
 
 public class HostLobbyScreen extends LobbyScreen {
 
-    public HostLobbyScreen(SnakeRPG parent) {
-        super(parent);
+    public HostLobbyScreen(SnakeRPG parent, NetworkController networkController) {
+        super(parent, networkController);
     }
 
     @Override

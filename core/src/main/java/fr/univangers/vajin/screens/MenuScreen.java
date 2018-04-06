@@ -16,6 +16,8 @@ public class MenuScreen extends AbstractMenuScreen {
 
     @Override
     public void show() {
+
+        super.show();
         // Create a table that fills the screen. Everything else will go inside this table.
         Table table = new Table();
         table.setFillParent(true);

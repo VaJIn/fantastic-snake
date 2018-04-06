@@ -14,7 +14,7 @@ public abstract class AbstractMenuScreen implements Screen {
     private final Texture background;
     private final SpriteBatch batch;
     private final SnakeRPG parent;
-    private final Stage stage;
+    private Stage stage;
 
 
     protected AbstractMenuScreen(SnakeRPG parent) {
@@ -24,7 +24,6 @@ public abstract class AbstractMenuScreen implements Screen {
 
         this.batch = new SpriteBatch();
 
-        this.stage = new Stage(new ScreenViewport());
     }
 
     protected Stage getStage() {
@@ -35,6 +34,10 @@ public abstract class AbstractMenuScreen implements Screen {
         return parent;
     }
 
+    @Override
+    public void show() {
+        this.stage = new Stage(new ScreenViewport());
+    }
 
     @Override
     public void render(float delta) {
@@ -57,6 +60,6 @@ public abstract class AbstractMenuScreen implements Screen {
     @Override
     public void dispose() {
         this.stage.dispose();
+        this.stage = null;
     }
-
 }

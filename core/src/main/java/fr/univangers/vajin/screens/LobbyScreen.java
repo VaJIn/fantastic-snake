@@ -4,6 +4,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import fr.univangers.vajin.SnakeRPG;
+import fr.univangers.vajin.network.NetworkController;
 import fr.vajin.snakerpg.jsondatabeans.LobbyBean;
 import fr.vajin.snakerpg.jsondatabeans.PlayerBean;
 
@@ -11,39 +12,30 @@ import java.util.Iterator;
 
 public abstract class LobbyScreen extends AbstractMenuScreen {
 
-    private LobbyBean lobbyBean;
-
+    protected final NetworkController networkController;
     private Table playerTable;
 
     @Override
     public void show() {
+        super.show();
         this.playerTable = new Table();
 
         updateTable();
     }
 
-    public LobbyScreen(SnakeRPG parent) {
+    public LobbyScreen(SnakeRPG parent, NetworkController networkController) {
         super(parent);
-        this.lobbyBean = new LobbyBean();
+        this.networkController = networkController;
     }
 
-    public LobbyBean getLobbyBean() {
-        return lobbyBean;
-    }
-
-    public void setLobbyBean(LobbyBean lobbyBean) {
-        this.lobbyBean = lobbyBean;
-        updateTable();
-    }
-
-    protected void updateTable() {
+    public void updateTable() {
         if (getParent().getScreen() == this) {
 
             Skin skin = this.getParent().getUISkin();
 
             playerTable.reset();
 
-            Iterator<PlayerBean> it = this.lobbyBean.getPlayers().iterator();
+            Iterator<PlayerBean> it = this.networkController.getLobbyBean().getPlayers().iterator();
             while (it.hasNext()) {
                 PlayerBean playerBean = it.next();
                 Label aliasLabel = new Label(playerBean.getAlias(), skin);
@@ -57,5 +49,11 @@ public abstract class LobbyScreen extends AbstractMenuScreen {
 
     public Table getPlayerTable() {
         return playerTable;
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        this.playerTable = null;
     }
 }

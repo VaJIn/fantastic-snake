@@ -3,8 +3,7 @@ package fr.univangers.vajin.network.impl;
 import fr.univangers.vajin.SnakeRPG;
 import fr.univangers.vajin.network.NetworkController;
 import fr.univangers.vajin.network.PacketCreator;
-import fr.univangers.vajin.network.PacketHandler;
-import fr.univangers.vajin.network.Transmiter;
+import fr.vajin.snakerpg.jsondatabeans.LobbyBean;
 import fr.vajin.snakerpg.utilities.CustomByteArrayOutputStream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,7 +17,7 @@ public class NetworkControllerImpl implements NetworkController {
 
     private static final Logger logger = LogManager.getLogger(NetworkControllerImpl.class);
 
-    private SnakeRPG snakeRPG;
+    private SnakeRPG application;
 
     private DatagramSocket socket;
     private int currentServerPort;
@@ -29,9 +28,13 @@ public class NetworkControllerImpl implements NetworkController {
     private Receiver receiverThread;
     private TransmiterThread transmiterThread;
 
+    private LobbyBean lobbyBean;
+
     public NetworkControllerImpl(SnakeRPG snakeRPG, DatagramSocket socket){
 
-        this.snakeRPG = snakeRPG;
+        this.application = snakeRPG;
+
+        this.lobbyBean = new LobbyBean();
 
         this.socket = socket;
 
@@ -112,7 +115,20 @@ public class NetworkControllerImpl implements NetworkController {
     }
 
 
-    public SnakeRPG getSnakeRPG(){
-        return snakeRPG;
+    @Override
+    public LobbyBean getLobbyBean() {
+        return lobbyBean;
+    }
+
+    @Override
+    public void setLobbyBean(LobbyBean lobbyBean) {
+        if (this.lobbyBean != lobbyBean) {
+            this.lobbyBean = lobbyBean;
+            this.application.getDistantLobbyScreen().updateTable();
+        }
+    }
+
+    public SnakeRPG getApplication() {
+        return application;
     }
 }

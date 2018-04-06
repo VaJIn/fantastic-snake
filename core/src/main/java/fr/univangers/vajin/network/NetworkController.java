@@ -1,6 +1,8 @@
 package fr.univangers.vajin.network;
 
 import fr.univangers.vajin.SnakeRPG;
+import fr.vajin.snakerpg.jsondatabeans.LobbyBean;
+
 import java.net.InetAddress;
 
 public interface NetworkController {
@@ -15,7 +17,7 @@ public interface NetworkController {
 
     void setCurrentServer(InetAddress address, int port);
 
-    SnakeRPG getSnakeRPG();
+    SnakeRPG getApplication();
 
     void startReceiver();
 
@@ -23,5 +25,7 @@ public interface NetworkController {
 
     void stopNetwork();
 
+    LobbyBean getLobbyBean();
 
+    void setLobbyBean(LobbyBean lobbyBean);
 }

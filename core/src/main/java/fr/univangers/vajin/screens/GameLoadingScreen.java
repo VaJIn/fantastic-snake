@@ -188,7 +188,7 @@ public class GameLoadingScreen implements Screen, InputProcessor {
             e.printStackTrace();
         }
 */
-            parent.setScreen(new GameScreen(parent, reader, parent.getAssetManager().getManager(), classicEngine, mapFileName));
+            parent.setScreen(new LocalGameScreen(parent, reader, parent.getAssetManager().getManager(), classicEngine, mapFileName));
         } else {
             System.out.println("Not done loading !");
         }
