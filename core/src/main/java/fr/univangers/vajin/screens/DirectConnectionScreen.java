@@ -75,9 +75,9 @@ private    boolean acceptedConnection = false;
 
         this.getStage().addActor(table);
 
-        TextField ipTextField = new TextField("HPC", skin);
+        TextField ipTextField = new TextField("HP4", skin);
 
-        TextField portTextField = new TextField("1534", skin);
+        TextField portTextField = new TextField("1486", skin);
 
         TextButton connect = new TextButton("Connect", skin);
         TextButton backToMenu = new TextButton("Back", skin);

@@ -30,6 +30,13 @@ public class DistantLobbyScreen extends LobbyScreen {
         TextButton exitLobby = new TextButton("Exit lobby", skin);
         TextButton ready = new TextButton("Ready", skin);
 
+        ready.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                getParent().getNetworkController().getPacketCreator().sendPlayerReady();
+            }
+        });
+
         Table mainTable = new Table();
         mainTable.setFillParent(true);
 

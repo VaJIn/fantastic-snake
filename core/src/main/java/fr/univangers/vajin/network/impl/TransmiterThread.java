@@ -33,6 +33,8 @@ public class TransmiterThread extends Thread implements Transmiter {
 
         this.controller = controller;
         this.frequency = frequency;
+
+
     }
 
     @Override
@@ -66,6 +68,9 @@ public class TransmiterThread extends Thread implements Transmiter {
     }
 
     public synchronized void send(DatagramPacket packet){
+
+        this.address = controller.getCurrentServerAddress();
+        this.port = controller.getCurrentServerPort();
 
         try {
             packet.setAddress(this.address);
