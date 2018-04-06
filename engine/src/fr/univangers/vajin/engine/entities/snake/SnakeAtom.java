@@ -29,7 +29,7 @@ public abstract class SnakeAtom {
 
     private boolean activated;
 
-    protected SnakeAtom atomTowardsHead; //Towards the head of the snake, this snakeAtom is the head if this.atomTowardsHead == null && ! this.atomTowardsHead.isActivated
+    protected SnakeAtom atomTowardsHead; //Towards the head of the snake, atomTowardsHead == null if this snakeAtom is the head
     protected SnakeAtom atomTowardsTail; // Toward the tails of the snake; atomTowardsTail == null if this snakeAtom is the tail
 
     protected SnakeAtom(Position position, int id) {

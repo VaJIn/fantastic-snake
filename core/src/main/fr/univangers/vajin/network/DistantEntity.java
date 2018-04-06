@@ -41,8 +41,19 @@ public class DistantEntity extends Entity {
     }
 
     @Override
+    public String getGraphicRessourceKeyForPosition(Position pos) {
+        return null;
+    }
+
+    @Override
     public boolean isKiller() {
         return false;
+    }
+
+    @Override
+    public boolean isVisibleTo(Entity entity) {
+        //TODO !!
+        return true;
     }
 
     @Override
@@ -72,7 +83,7 @@ public class DistantEntity extends Entity {
         boolean posChange = false;
         Position oldPos = oldTileInfo.getPosition();
 
-        if (!oldTileInfo.getResourceKey().equals(resource)) {
+        if (!oldTileInfo.getRessourceKey().equals(resource)) {
             spriteChange = true;
         }
 
@@ -117,7 +128,7 @@ public class DistantEntity extends Entity {
     public void endUpdate() {
         for (EntityTileInfo entityTileInfo : oldEntityTileInfoMap.values()) {
             notifyChangeAtPosition(entityTileInfo.getPosition(), NOT_COVER_POSITION_ANYMORE);
-            notifySpriteChange(entityTileInfo.getId(), entityTileInfo.getPosition(), entityTileInfo.getResourceKey());
+            notifySpriteChange(entityTileInfo.getId(), entityTileInfo.getPosition(), entityTileInfo.getRessourceKey());
         }
 
         this.oldEntityTileInfoMap = null;
@@ -153,7 +164,7 @@ public class DistantEntity extends Entity {
         }
 
         @Override
-        public String getResourceKey() {
+        public String getRessourceKey() {
             return resourceKey;
         }
 

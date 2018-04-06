@@ -6,14 +6,13 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import fr.univangers.vajin.GameConstants;
 import fr.univangers.vajin.engine.entities.Entity;
 import fr.univangers.vajin.engine.field.Field;
 import fr.univangers.vajin.engine.field.FieldUnit;
 import fr.univangers.vajin.engine.field.FieldUnitEnum;
 import fr.univangers.vajin.engine.field.StaticField;
-import fr.vajin.snakerpg.utilities.Matrix;
-import fr.vajin.snakerpg.utilities.StaticMatrix;
+import fr.univangers.vajin.engine.utilities.Matrix;
+import fr.univangers.vajin.engine.utilities.StaticMatrix;
 
 import java.util.ArrayList;
 import java.util.List;
