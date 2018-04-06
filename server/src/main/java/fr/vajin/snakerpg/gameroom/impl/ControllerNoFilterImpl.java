@@ -13,6 +13,7 @@ import fr.vajin.snakerpg.database.entities.UserEntity;
 import fr.vajin.snakerpg.gameroom.Cleaner;
 import fr.vajin.snakerpg.gameroom.Controller;
 import fr.vajin.snakerpg.gameroom.PlayerHandler;
+import fr.vajin.snakerpg.gameroom.PlayerPacketCreator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -32,6 +33,9 @@ public class ControllerNoFilterImpl implements Controller{
     private String map;
     private BiMap<Integer, String> idAddressMap;
     private Cleaner cleaner;
+    private Collection<Integer> idPlayersReady;
+
+
 
     public ControllerNoFilterImpl(GameModeEntity gameMode, String map){
         this.gameMode = gameMode;
@@ -41,6 +45,7 @@ public class ControllerNoFilterImpl implements Controller{
         this.map = map;
         this.idAddressMap = HashBiMap.create();
         this.cleaner = new Cleaner(this, 15000);
+        this.idPlayersReady = new ArrayList<>();
         cleaner.start();
     }
 
@@ -140,5 +145,24 @@ public class ControllerNoFilterImpl implements Controller{
         } catch (WrongPlayersNumberException e) {
             e.printStackTrace();
         }
+
+        for (PlayerHandler playerHandler : this.playerHandlers){
+            playerHandler.getPlayerPacketCreator().setState(PlayerPacketCreator.GAME_START_STATE);
+        }
+    }
+
+    @Override
+    public void setPlayerReady(int idPlayer) {
+
+        if (!idPlayersReady.contains(idPlayer)){
+            idPlayersReady.add(idPlayer);
+        }
+
+        if (idPlayersReady.size()==playerHandlers.size()){
+            this.startGame();
+        }
+
+
+
     }
 }

@@ -18,12 +18,14 @@ public class PlayerPacketHandlerImpl implements PlayerPacketHandler {
     private PlayerHandler playerHandler;
 
     private ActionPacketHandler actionPacketHandler;
+    private PlayerReadyPacketHandlerImpl playerReadyPacketHandler;
 
     public PlayerPacketHandlerImpl(PlayerPacketCreator packetCreator, PlayerTransmiter playerTransmiter, Controller controller) {
         this.controller = controller;
         this.packetCreator = packetCreator;
         this.playerTransmiter = playerTransmiter;
         this.actionPacketHandler = new ActionPacketHandler();
+        this.playerReadyPacketHandler = new PlayerReadyPacketHandlerImpl();
     }
 
     @Override
@@ -57,6 +59,8 @@ public class PlayerPacketHandlerImpl implements PlayerPacketHandler {
                         return true;
                     case PlayerPacketCreator.PLAYER_ACTION:
                         return this.actionPacketHandler.handleDatagramPacket(datagramPacket);
+                    case PlayerPacketCreator.PLAYER_READY:
+                        return this.playerReadyPacketHandler.handleDatagramPacket(datagramPacket);
                 }
             }
 
@@ -69,5 +73,8 @@ public class PlayerPacketHandlerImpl implements PlayerPacketHandler {
     @Override
     public void setPlayerHandler(PlayerHandler playerHandler) {
         this.playerHandler = playerHandler;
+
+        this.actionPacketHandler.setPlayerHandler(playerHandler);
+        this.playerReadyPacketHandler.setPlayerHandler(playerHandler);
     }
 }

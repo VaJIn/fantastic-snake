@@ -23,7 +23,7 @@ public class PlayerPacketCreatorTest {
         PlayerPacketCreatorImpl creator = new PlayerPacketCreatorImpl(PlayerPacketCreator.ID_PROTOCOL, null);
 
 
-        creator.setState(creator.getRespJoinState());
+        creator.setState(PlayerPacketCreator.RESP_JOIN_STATE);
 
         final DatagramPacket[] packet = new DatagramPacket[1];
         Assertions.assertAll(() -> packet[0] = creator.getNextPacket());
@@ -53,7 +53,7 @@ public class PlayerPacketCreatorTest {
     void testGameState() {
         PlayerPacketCreatorImpl creator = new PlayerPacketCreatorImpl(PlayerPacketCreator.ID_PROTOCOL, null);
 
-        creator.setState(creator.getGameState());
+        creator.setState(PlayerPacketCreator.GAME_STATE);
         final DatagramPacket[] packet = new DatagramPacket[1];
         Assertions.assertAll(() -> packet[0] = creator.getNextPacket());
 
@@ -109,7 +109,7 @@ public class PlayerPacketCreatorTest {
 
         PlayerPacketCreatorImpl creator = new PlayerPacketCreatorImpl(PlayerPacketCreator.ID_PROTOCOL, null);
 
-        creator.setState(creator.getGameStartState());
+        creator.setState(PlayerPacketCreator.GAME_START_STATE);
 
         final DatagramPacket[] packet = new DatagramPacket[1];
         Assertions.assertAll(() -> packet[0] = creator.getNextPacket());
@@ -150,7 +150,7 @@ public class PlayerPacketCreatorTest {
     void testGameEndState(){
         PlayerPacketCreatorImpl creator = new PlayerPacketCreatorImpl(PlayerPacketCreator.ID_PROTOCOL, null);
 
-        creator.setState(creator.getGameEndState());
+        creator.setState(PlayerPacketCreator.GAME_END_STATE);
 
         final DatagramPacket[] packet = new DatagramPacket[1];
         Assertions.assertAll(() -> packet[0] = creator.getNextPacket());
@@ -204,7 +204,7 @@ public class PlayerPacketCreatorTest {
     void testWaitingForGameState(){
         PlayerPacketCreatorImpl creator = new PlayerPacketCreatorImpl(PlayerPacketCreator.ID_PROTOCOL, null);
 
-        creator.setState(creator.getWaitingForGameState());
+        creator.setState(PlayerPacketCreator.WAITING_FOR_GAME_STATE);
 
         final DatagramPacket[] packet = new DatagramPacket[1];
         Assertions.assertAll(() -> packet[0] = creator.getNextPacket());
