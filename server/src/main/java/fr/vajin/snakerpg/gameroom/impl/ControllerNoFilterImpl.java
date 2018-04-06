@@ -147,7 +147,8 @@ public class ControllerNoFilterImpl implements Controller{
         }
 
         for (PlayerHandler playerHandler : this.playerHandlers){
-            playerHandler.getPlayerPacketCreator().setState(PlayerPacketCreator.GAME_START_STATE);
+            playerHandler.getPlayerPacketCreator().startGame();
+            playerHandler.getPlayerPacketCreator().setState(PlayerPacketCreator.GAME_START);
         }
     }
 

@@ -58,4 +58,6 @@ public interface PlayerPacketCreator{
     void setPlayerHandler(PlayerHandler playerHandler);
 
     PlayerHandler getPlayerHandler();
+
+    void startGame();
 }

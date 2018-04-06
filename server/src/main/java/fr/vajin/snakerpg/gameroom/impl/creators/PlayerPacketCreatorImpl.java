@@ -4,6 +4,8 @@ import fr.vajin.snakerpg.gameroom.PlayerHandler;
 import fr.vajin.snakerpg.gameroom.PlayerPacketCreator;
 import fr.vajin.snakerpg.utilities.CustomByteArrayOutputStream;
 
+import javax.sound.midi.Transmitter;
+import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.net.DatagramPacket;
 
@@ -111,6 +113,23 @@ public class PlayerPacketCreatorImpl implements PlayerPacketCreator {
     @Override
     public PlayerHandler getPlayerHandler(){
         return this.playerHandler;
+    }
+
+    @Override
+    public void startGame() {
+
+        try {
+            CustomByteArrayOutputStream stream = this.getPacketStream();
+
+            DatagramPacket packet = gameStartState.getNextPacket(stream);
+
+            this.playerHandler.getPlayerTransmitter().send(packet);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     @Override
