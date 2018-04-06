@@ -5,10 +5,14 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import fr.univangers.vajin.SnakeRPG;
-import fr.univangers.vajin.network.NetworkController;
+import fr.vajin.snakerpg.database.entities.GameModeEntity;
+import fr.vajin.snakerpg.jsondatabeans.LobbyBean;
 
 
 public class DistantLobbyScreen extends LobbyScreen {
+
+    private Label mapLabel;
+    private Label gameModeLabel;
 
     public DistantLobbyScreen(SnakeRPG parent) {
         super(parent);
@@ -26,12 +30,27 @@ public class DistantLobbyScreen extends LobbyScreen {
         TextButton ready = new TextButton("Ready", skin);
 
         Table mainTable = new Table();
+        mainTable.setFillParent(true);
 
-        mainTable.add(this.getPlayerTable()).colspan(2);
+        Table infoTable = new Table();
 
-        mainTable.row();
+
+        this.gameModeLabel = new Label("undefined", skin);
+        this.mapLabel = new Label("undefined", skin);
+
+        infoTable.add(new Label("Map : ", skin)).fillX().uniformX();
+        infoTable.add(mapLabel).fillX().uniformX();
+
+        infoTable.row().pad(10, 0, 0, 0);
+        infoTable.add(new Label("Gamemode : ", skin)).fillX().uniformX();
+        infoTable.add(this.gameModeLabel).fillX().uniformX();
+
+        mainTable.add(infoTable).uniformX().fillX().colspan(2);
+        mainTable.add(this.getPlayerTable()).uniformX().fillX().top().right().colspan(2);
+
+        mainTable.row().pad(10, 0, 0, 0);
         mainTable.add(exitLobby).fillX();
-        mainTable.add(ready).fillX();
+        mainTable.add(ready).fillX().colspan(3);
 
         this.getStage().setDebugAll(true);
 
@@ -48,6 +67,29 @@ public class DistantLobbyScreen extends LobbyScreen {
         Gdx.input.setInputProcessor(getStage());
     }
 
+    @Override
+    protected void updateTable() {
+        super.updateTable();
+
+        final LobbyBean lobbyBean = this.getLobbyBean();
+        if (mapLabel != null) {
+            String map = lobbyBean.getMap();
+            if (map == null || map.trim().length() == 0) {
+                mapLabel.setText("undefined");
+            } else {
+                mapLabel.setText(lobbyBean.getMap());
+            }
+        }
+
+        if (gameModeLabel != null) {
+            GameModeEntity gameModeEntity = lobbyBean.getGameMode();
+            if (gameModeEntity != null) {
+                gameModeLabel.setText(gameModeEntity.getName());
+            } else {
+                gameModeLabel.setText("undefined");
+            }
+        }
+    }
 
     @Override
     public void pause() {
