@@ -29,6 +29,17 @@ public class PlayerTransmiter extends Thread {
         this.port = port;
     }
 
+    public void send(DatagramPacket datagramPacket){
+        try {
+            datagramPacket.setAddress(inetAdress);
+            datagramPacket.setPort(port);
+
+            socket.send(datagramPacket);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void run() {
 

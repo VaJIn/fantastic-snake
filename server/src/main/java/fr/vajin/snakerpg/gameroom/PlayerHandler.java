@@ -2,6 +2,7 @@ package fr.vajin.snakerpg.gameroom;
 
 
 import fr.vajin.snakerpg.database.entities.UserEntity;
+import fr.vajin.snakerpg.gameroom.impl.PlayerTransmiter;
 
 public interface PlayerHandler {
 
@@ -15,7 +16,9 @@ public interface PlayerHandler {
 
     PlayerPacketHandler getPlayerPacketHandler();
 
-    PlayerPacketCreator getPlayerTransmitter();
+    PlayerTransmiter getPlayerTransmitter();
+
+    PlayerPacketCreator getPlayerPacketCreator();
 
     void aliveSignalReceive();
 

@@ -21,9 +21,8 @@ public interface Controller {
 
     void addPlayerWaitingForConnection(UserEntity userEntity);
 //
-void addPlayerHandler(PlayerHandler playerHandler);
+    void addPlayerHandler(PlayerHandler playerHandler);
 //
-
     void removePlayer(PlayerHandler playerHandler);
 
     UserEntity acceptConnection(int userId, byte[] token, InetAddress inetAddress, int port);
@@ -37,6 +36,8 @@ void addPlayerHandler(PlayerHandler playerHandler);
     String getMapName();
 
     void startGame();
+
+    void setPlayerReady(int idPlayer);
 
 
 }

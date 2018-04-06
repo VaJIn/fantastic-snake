@@ -1,9 +1,6 @@
 package fr.vajin.snakerpg.gameroom;
 
 
-import fr.univangers.vajin.engine.GameEngine;
-import fr.univangers.vajin.engine.GameEngineObserver;
-import fr.univangers.vajin.engine.entities.EntityObserver;
 import fr.vajin.snakerpg.utilities.CustomByteArrayOutputStream;
 
 import java.io.IOException;
@@ -15,11 +12,19 @@ import java.net.DatagramPacket;
  */
 public interface PlayerPacketCreator{
 
-    public interface PlayerPacketCreatorState{
+    int RESP_JOIN_STATE = 10;
+    int WAITING_FOR_GAME_STATE = 20;
+    int GAME_START_STATE = 30;
+    int GAME_END_STATE = 40;
+    int GAME_STATE = 50;
+
+
+    interface PlayerPacketCreatorState {
 
         DatagramPacket getNextPacket(CustomByteArrayOutputStream stream) throws IOException;
 
     }
+
 
     int ID_PROTOCOL = 0x685fa053;
 
@@ -31,6 +36,7 @@ public interface PlayerPacketCreator{
     int GAME = 6;
     int GAME_END = 7;
     int PLAYER_ACTION = 8;
+    int PLAYER_READY = 9;
 
 
     /**
@@ -45,21 +51,13 @@ public interface PlayerPacketCreator{
      */
     void acknowledgePacket(int idLastReceived);
 
-    void setState(PlayerPacketCreatorState playerPacketCreatorState);
+    void setState(int state);
 
-    PlayerPacketCreatorState getState();
-
-    PlayerPacketCreatorState getRespJoinState();
-
-    PlayerPacketCreatorState getWaitingForGameState();
-
-    PlayerPacketCreatorState getGameStartState();
-
-    PlayerPacketCreatorState getGameState();
-
-    PlayerPacketCreatorState getGameEndState();
+    Integer getState();
 
     void setPlayerHandler(PlayerHandler playerHandler);
 
     PlayerHandler getPlayerHandler();
+
+    void startGame();
 }

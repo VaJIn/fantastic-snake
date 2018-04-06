@@ -70,15 +70,20 @@ public class PlayerHandlerImpl implements PlayerHandler {
     }
 
     @Override
-    public PlayerPacketCreator getPlayerTransmitter() {
-        return playerPacketCreator;
+    public PlayerTransmiter getPlayerTransmitter() {
+        return this.playerTransmiter;
+    }
+
+    @Override
+    public PlayerPacketCreator getPlayerPacketCreator() {
+        return this.playerPacketCreator;
     }
 
     @Override
     public synchronized void aliveSignalReceive() {
         lastAliveSignalReceived = Instant.now().toEpochMilli();
-        if (playerPacketCreator.getState() == playerPacketCreator.getRespJoinState()) {
-            playerPacketCreator.setState(playerPacketCreator.getWaitingForGameState());
+        if (playerPacketCreator.getState() == playerPacketCreator.RESP_JOIN_STATE) {
+            playerPacketCreator.setState(playerPacketCreator.WAITING_FOR_GAME_STATE);
         }
     }
 

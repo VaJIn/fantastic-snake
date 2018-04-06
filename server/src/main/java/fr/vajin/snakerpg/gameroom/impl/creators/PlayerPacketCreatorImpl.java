@@ -1,10 +1,11 @@
 package fr.vajin.snakerpg.gameroom.impl.creators;
 
-import fr.vajin.snakerpg.gameroom.Controller;
 import fr.vajin.snakerpg.gameroom.PlayerHandler;
 import fr.vajin.snakerpg.gameroom.PlayerPacketCreator;
 import fr.vajin.snakerpg.utilities.CustomByteArrayOutputStream;
 
+import javax.sound.midi.Transmitter;
+import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.net.DatagramPacket;
 
@@ -83,33 +84,25 @@ public class PlayerPacketCreatorImpl implements PlayerPacketCreator {
     }
 
     @Override
-    public void setState(PlayerPacketCreatorState playerPacketCreatorState) {
-        this.currentState = playerPacketCreatorState;
-    }
+    public void setState(int state) {
 
-    @Override
-    public PlayerPacketCreatorState getRespJoinState() {
-        return respJoinState;
-    }
-
-    @Override
-    public PlayerPacketCreatorState getWaitingForGameState() {
-        return waitingForGameState;
-    }
-
-    @Override
-    public PlayerPacketCreatorState getGameStartState() {
-        return gameStartState;
-    }
-
-    @Override
-    public PlayerPacketCreatorState getGameState() {
-        return gameState;
-    }
-
-    @Override
-    public PlayerPacketCreatorState getGameEndState() {
-        return gameEndState;
+        switch(state){
+            case PlayerPacketCreator.RESP_JOIN_STATE:
+                this.currentState = respJoinState;
+                break;
+            case PlayerPacketCreator.WAITING_FOR_GAME_STATE:
+                this.currentState = waitingForGameState;
+                break;
+            case PlayerPacketCreator.GAME_START_STATE:
+                this.currentState = gameStartState;
+                break;
+            case PlayerPacketCreator.GAME_END_STATE:
+                this.currentState = gameEndState;
+                break;
+            case PlayerPacketCreator.GAME_STATE:
+                this.currentState = gameState;
+                break;
+        }
     }
 
     @Override
@@ -123,7 +116,43 @@ public class PlayerPacketCreatorImpl implements PlayerPacketCreator {
     }
 
     @Override
-    public PlayerPacketCreatorState getState() {
-        return this.currentState;
+    public void startGame() {
+
+        try {
+            CustomByteArrayOutputStream stream = this.getPacketStream();
+
+            DatagramPacket packet = gameStartState.getNextPacket(stream);
+
+            this.playerHandler.getPlayerTransmitter().send(packet);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    @Override
+    public Integer getState() {
+
+        if (currentState==respJoinState){
+            return PlayerPacketCreator.RESP_JOIN_STATE;
+        }
+        else if (currentState==waitingForGameState){
+            return PlayerPacketCreator.WAITING_FOR_GAME_STATE;
+        }
+        else if (currentState==gameState){
+            return PlayerPacketCreator.GAME_STATE;
+        }
+        else if (currentState==gameStartState){
+            return PlayerPacketCreator.GAME_START_STATE;
+        }
+        else if (currentState==gameEndState){
+            return PlayerPacketCreator.GAME_END_STATE;
+        }
+        else{
+            return null;
+        }
+
     }
 }
