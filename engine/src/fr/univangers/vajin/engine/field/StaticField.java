@@ -1,8 +1,10 @@
 package fr.univangers.vajin.engine.field;
 
-import fr.vajin.snakerpg.utilities.Matrix;
+import fr.univangers.vajin.engine.field.Field;
+import fr.univangers.vajin.engine.field.FieldUnit;
+import fr.univangers.vajin.engine.utilities.Matrix;
 import fr.univangers.vajin.engine.utilities.Position;
-import fr.vajin.snakerpg.utilities.StaticMatrix;
+import fr.univangers.vajin.engine.utilities.StaticMatrix;
 
 public class StaticField implements Field {
 
@@ -10,12 +12,11 @@ public class StaticField implements Field {
 
     public StaticField(Matrix<FieldUnit> content) {
         this.content = new StaticMatrix<FieldUnit>(content);
-        System.out.println("Matrix size " + content.getRowDimension() + ", " + content.getColumnDimension());
     }
 
     @Override
     public FieldUnit getFieldUnits(Position position) {
-        return this.content.get(position.getY(), position.getX());
+        return this.content.get(position);
     }
 
     @Override

@@ -51,15 +51,8 @@ public class EntityView implements EntityObserver {
             TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
             Entity.EntityTileInfo info = it.next();
 
-            this.tileChange(info.getPosition(), info.getResourceKey());
+            this.tileChange(info.getPosition(), info.getRessourceKey());
 
-        }
-
-
-        if(entity instanceof Snake){
-            if(entity.getEntityId() % 2 == 0){
-                layer.setOpacity(0.75f);
-            }
         }
 
         tileMap.getLayers().add(this.layer);
@@ -72,7 +65,20 @@ public class EntityView implements EntityObserver {
 
     @Override
     public void notifyStateChange(Entity entity, int what) {
-        //Do nothing
+
+
+        if (what == Entity.BECOME_INVISIBLE){
+            if (entity.getEntityId() == this.entity.getEntityId()){
+                layer.setOpacity((float)0.75);
+            }
+        }
+
+        if (what == Entity.BECOME_VISIBLE){
+            if (entity.getEntityId() == this.entity.getEntityId()){
+                layer.setOpacity(1);
+            }
+        }
+
     }
 
     @Override

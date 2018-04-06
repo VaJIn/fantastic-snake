@@ -1,7 +1,9 @@
 package fr.univangers.vajin.engine.entities.snake;
 
+import fr.univangers.vajin.GameConstants;
 import fr.univangers.vajin.engine.GameEngine;
 import fr.univangers.vajin.engine.entities.DynamicEntity;
+import fr.univangers.vajin.engine.entities.Entity;
 import fr.univangers.vajin.engine.utilities.Direction;
 import fr.univangers.vajin.engine.utilities.Position;
 
@@ -49,6 +51,12 @@ public abstract class Snake extends DynamicEntity {
      */
     private int immaterial;
 
+    /**
+     * True if the user is allowed to choose the direction of its snake
+     * False while the time machine is on
+     */
+    private boolean acceptsUserActions;
+
 
 
 
@@ -60,6 +68,9 @@ public abstract class Snake extends DynamicEntity {
         this.resistance = resistance;
         this.luckFactor = luckFactor;
         this.speed = speed;
+        this.acceptsUserActions = true;
+        this.invisible = 0;
+        this.immaterial = 0;
     }
 
 
@@ -85,12 +96,14 @@ public abstract class Snake extends DynamicEntity {
     }
 
     public int getSpeed() {
-        return speed;
+        if (speed>1){
+            return speed;
+        }
+        else{
+            return 1;
+        }
     }
 
-    protected void setSpeed(int speed){
-        this.speed = speed;
-    }
 
     protected void setLifePoint(int lifePoint) {
         this.lifePoint = lifePoint;
@@ -104,6 +117,14 @@ public abstract class Snake extends DynamicEntity {
         this.luckFactor = luckFactor;
     }
 
+    public void setAcceptUserActions(boolean val){
+        this.acceptsUserActions = val;
+    }
+
+    public boolean acceptsUserActions(){
+        return this.acceptsUserActions;
+    }
+
     public abstract void move(WalkDirection walkDirection);
 
     public abstract void moveGrowing(WalkDirection walkDirection);
@@ -114,8 +135,12 @@ public abstract class Snake extends DynamicEntity {
 
     public abstract int changeSize(int howMuch);
 
-    public boolean isInvisible(){
-        return invisible>0;
+    @Override
+    public boolean isVisibleTo(Entity entity) {
+
+        return invisible <= 0 || this == entity;
+
+
     }
 
     public boolean isImmaterial(){
@@ -124,6 +149,7 @@ public abstract class Snake extends DynamicEntity {
 
     public void becomeInvisible(){
         invisible++;
+        notifyOfStateChange(Entity.BECOME_INVISIBLE);
     }
 
     public void becomeImmaterial(){
@@ -131,16 +157,25 @@ public abstract class Snake extends DynamicEntity {
     }
 
     public void stopInvisibility(){
+
         invisible--;
+
+        if (invisible==0){
+            notifyOfStateChange(Entity.BECOME_VISIBLE);
+        }
+
     }
 
     public void stopImmateriality(){
         invisible--;
     }
 
+    public abstract void cancelNextMovements();
 
 
-    public abstract int changeSpeed(int howMuch);
+    public void changeSpeed(int howMuch){
+        speed+=howMuch;
+    }
 
 
     public static final int GO_NORTH = 0x0000;

@@ -15,7 +15,7 @@ public class DistantEngineTest {
         NotificationCounter counter = new NotificationCounter();
         engine.addGameEngineObserver(counter);
 
-        Assertions.assertTrue(engine.getEntities().isEmpty());
+        Assertions.assertTrue(engine.getEntityCollection().isEmpty());
 
         engine.beginChange();
 
@@ -53,7 +53,7 @@ public class DistantEngineTest {
 
         Assertions.assertEquals(1, counter.getRemovedEntityNotificationCount());
         Assertions.assertEquals(1, counter.getDestroyedNotificationCount());
-        Assertions.assertTrue(distantEngine.getEntities().isEmpty());
+        Assertions.assertTrue(distantEngine.getEntityCollection().isEmpty());
     }
 
 }

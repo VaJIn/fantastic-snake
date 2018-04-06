@@ -30,7 +30,7 @@ public class GameState implements PlayerPacketCreator.PlayerPacketCreatorState {
 
         stream.writeInt(PlayerPacketCreator.GAME);
 
-        for (Entity entity : this.gameEngine.getEntities()) {
+        for (Entity entity : this.gameEngine.getEntityCollection()) {
             Iterator<? extends Entity.EntityTileInfo> it = entity.getEntityTilesInfosIterator();
 
             stream.writeInt(entity.getEntityId());
@@ -39,7 +39,7 @@ public class GameState implements PlayerPacketCreator.PlayerPacketCreatorState {
                 stream.writeInt(tileInfo.getId());
                 stream.writeInt(tileInfo.getPosition().getX());
                 stream.writeInt(tileInfo.getPosition().getY());
-                byte[] resourceKeyBytes = tileInfo.getResourceKey().getBytes();
+                byte[] resourceKeyBytes = tileInfo.getRessourceKey().getBytes();
                 stream.writeInt(resourceKeyBytes.length);
                 stream.write(resourceKeyBytes);
             }

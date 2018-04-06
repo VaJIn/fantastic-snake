@@ -1,5 +1,7 @@
 package fr.univangers.vajin.engine.utilities;
 
+import static java.lang.Math.abs;
+
 public enum Direction {
 
     NORTH,
@@ -29,6 +31,11 @@ public enum Direction {
         return null; //This should never happen.
     }
 
+    /**
+     * Returns the direction between two adjacent positions
+     * Undefined behaviour if the positions are not adjacent
+     * If the positions are the same, returns null
+     */
     public static Direction fromPosition(Position src, Position dest) {
         // System.out.println("src :" + src + " dest :" + dest);
         Direction result = null;
@@ -46,8 +53,11 @@ public enum Direction {
         return result;
     }
 
+
+
     @Override
     public String toString() {
         return super.toString();
     }
+
 }

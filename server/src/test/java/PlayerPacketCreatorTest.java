@@ -72,7 +72,7 @@ public class PlayerPacketCreatorTest {
         int idState = buffer.getInt();
         Assertions.assertEquals(PlayerPacketCreator.GAME,idState);
 
-        for(Entity entity : creator.getPlayerHandler().getController().getCurrentEngine().getEntities()){
+        for(Entity entity : creator.getPlayerHandler().getController().getCurrentEngine().getEntityCollection()){
 
             Iterator<? extends Entity.EntityTileInfo> it = entity.getEntityTilesInfosIterator();
             int entityId = buffer.getInt();
@@ -93,7 +93,7 @@ public class PlayerPacketCreatorTest {
 
                 buffer.get(resourceKeyBytes);
 
-                Assertions.assertEquals(tileInfo.getResourceKey(),String.valueOf(resourceKeyBytes));
+                Assertions.assertEquals(tileInfo.getRessourceKey(),String.valueOf(resourceKeyBytes));
             }
 
             Assertions.assertEquals(-1,buffer.getInt());
