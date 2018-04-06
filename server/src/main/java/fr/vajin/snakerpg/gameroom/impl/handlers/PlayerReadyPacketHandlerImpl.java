@@ -3,11 +3,14 @@ package fr.vajin.snakerpg.gameroom.impl.handlers;
 import fr.vajin.snakerpg.gameroom.PlayerHandler;
 import fr.vajin.snakerpg.gameroom.PlayerPacketCreator;
 import fr.vajin.snakerpg.gameroom.PlayerPacketHandler;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.net.DatagramPacket;
 import java.nio.ByteBuffer;
 
 public class PlayerReadyPacketHandlerImpl implements PlayerPacketHandler{
+
 
     private static int BUFFER_START_POS = 24;
 

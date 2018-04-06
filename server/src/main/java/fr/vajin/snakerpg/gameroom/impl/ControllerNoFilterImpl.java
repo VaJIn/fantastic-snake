@@ -133,8 +133,15 @@ public class ControllerNoFilterImpl implements Controller{
     @Override
     public void startGame() {
 
+        logger.debug("Starting game on map [" + map + "]");
+
         TileMapReader reader = TileMapReader.newTileMapReader(map);
+
+        logger.debug("0");
+
         EngineBuilder gameEngineBuilder = new EngineBuilder(reader.getField(), gameMode.getId());
+
+        logger.debug("1");
 
         for (PlayerHandler playerHandler : playerHandlers){
 
@@ -142,13 +149,18 @@ public class ControllerNoFilterImpl implements Controller{
             gameEngineBuilder.addSnake(id, new SimpleSnake());
 
         }
+
+        logger.debug("2");
+
         try {
             this.gameEngine = gameEngineBuilder.build();
         } catch (WrongPlayersNumberException e) {
             e.printStackTrace();
         }
 
+        logger.debug(this.playerHandlers.size() + " playerHandler in memory");
         for (PlayerHandler playerHandler : this.playerHandlers){
+            logger.debug("Setting Game state for player" + playerHandler.getUserId());
             playerHandler.getPlayerPacketCreator().startGame();
             playerHandler.getPlayerPacketCreator().setState(PlayerPacketCreator.GAME_START);
         }
@@ -162,6 +174,7 @@ public class ControllerNoFilterImpl implements Controller{
 
         if (!idPlayersReady.contains(idPlayer)){
             idPlayersReady.add(idPlayer);
+            logger.debug("Player " + idPlayer + " ready");
         }
 
         if (idPlayersReady.size()==playerHandlers.size()){

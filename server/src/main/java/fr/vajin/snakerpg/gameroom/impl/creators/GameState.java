@@ -6,12 +6,16 @@ import fr.vajin.snakerpg.gameroom.Controller;
 import fr.vajin.snakerpg.gameroom.PlayerHandler;
 import fr.vajin.snakerpg.gameroom.PlayerPacketCreator;
 import fr.vajin.snakerpg.utilities.CustomByteArrayOutputStream;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.util.Iterator;
 
 public class GameState implements PlayerPacketCreator.PlayerPacketCreatorState {
+
+    private final Logger logger = LogManager.getLogger(GameState.class);
 
     private GameEngine gameEngine;
 
@@ -27,6 +31,7 @@ public class GameState implements PlayerPacketCreator.PlayerPacketCreatorState {
     public DatagramPacket getNextPacket(CustomByteArrayOutputStream stream) throws IOException {
         byte[] data;
 
+        logger.debug("Building game packet");
 
         stream.writeInt(PlayerPacketCreator.GAME);
 

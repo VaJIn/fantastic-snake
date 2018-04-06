@@ -2,7 +2,10 @@ package fr.vajin.snakerpg.gameroom.impl.creators;
 
 import fr.vajin.snakerpg.gameroom.PlayerHandler;
 import fr.vajin.snakerpg.gameroom.PlayerPacketCreator;
+import fr.vajin.snakerpg.gameroom.impl.handlers.PlayerReadyPacketHandlerImpl;
 import fr.vajin.snakerpg.utilities.CustomByteArrayOutputStream;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.sound.midi.Transmitter;
 import javax.xml.crypto.Data;
@@ -10,6 +13,9 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 
 public class PlayerPacketCreatorImpl implements PlayerPacketCreator {
+
+    private final Logger logger = LogManager.getLogger(PlayerReadyPacketHandlerImpl.class);
+
 
     private final PlayerPacketCreatorState respJoinState;
     private final PlayerPacketCreatorState waitingForGameState;
@@ -88,18 +94,23 @@ public class PlayerPacketCreatorImpl implements PlayerPacketCreator {
 
         switch(state){
             case PlayerPacketCreator.RESP_JOIN_STATE:
+                logger.debug("Setting state to RESP_JOIN_STATE");
                 this.currentState = respJoinState;
                 break;
             case PlayerPacketCreator.WAITING_FOR_GAME_STATE:
+                logger.debug("Setting state to WAITING_FOR_GAME_STATE");
                 this.currentState = waitingForGameState;
                 break;
             case PlayerPacketCreator.GAME_START_STATE:
+                logger.debug("Setting state to GAME_START_STATE");
                 this.currentState = gameStartState;
                 break;
             case PlayerPacketCreator.GAME_END_STATE:
+                logger.debug("Setting state to GAME_END_STATE");
                 this.currentState = gameEndState;
                 break;
             case PlayerPacketCreator.GAME_STATE:
+                logger.debug("Setting state to GAME_STATE");
                 this.currentState = gameState;
                 break;
         }

@@ -1,6 +1,7 @@
 package fr.vajin.snakerpg.gameroom.impl;
 
 import com.google.common.collect.Maps;
+import fr.vajin.snakerpg.LoggingUtilities;
 import fr.vajin.snakerpg.gameroom.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -36,8 +37,7 @@ public class ReceiverImpl implements Receiver {
         ByteBuffer buffer = ByteBuffer.wrap(data);
         int idProtocol = buffer.getInt();
 
-        logger.debug("Received packet from " + packet.getAddress() + ":" + packet.getPort() + "\n" +
-                "Id protocol : " + idProtocol);
+        LoggingUtilities.logPacketDebug(logger, packet, "Received packet");
 
         if (idProtocol == this.idProtocol) {
             int playerId = buffer.getInt();

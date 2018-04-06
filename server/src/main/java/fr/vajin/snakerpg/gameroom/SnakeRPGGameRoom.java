@@ -43,7 +43,7 @@ public class SnakeRPGGameRoom {
             gameMode.setMaxPlayer(4);
             gameMode.setName("classic");
 
-            Controller controller = new ControllerNoFilterImpl(gameMode, "");
+            Controller controller = new ControllerNoFilterImpl(gameMode, "simple_map.tmx");
 
             DatagramSocket socket = new DatagramSocket(port);
 
