@@ -1,6 +1,8 @@
 package fr.univangers.vajin.IO;
 
+import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.ExternalFileHandleResolver;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
@@ -13,11 +15,15 @@ import fr.univangers.vajin.engine.field.FieldUnitEnum;
 import fr.univangers.vajin.engine.field.StaticField;
 import fr.univangers.vajin.engine.utilities.Matrix;
 import fr.univangers.vajin.engine.utilities.StaticMatrix;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TileMapReader {
+
+    private static final Logger logger = LogManager.getLogger(TileMapReader.class);
 
     public static final String TERRAIN_LAYER = "terrain";
 
@@ -45,7 +51,22 @@ public class TileMapReader {
     }
 
     public static TileMapReader newTileMapReader(String mapFilePath) {
-        TiledMap tiledMap = new TmxMapLoader(new ExternalFileHandleResolver()).load(mapFilePath);
+
+
+        FileHandleResolver resolver = new ExternalFileHandleResolver();
+
+        logger.debug("fdp");
+        if(resolver.resolve(mapFilePath).exists()){
+            logger.debug("File found");
+        }else{
+            logger.info("Can't find file");
+        }
+
+        logger.debug("Loading file");
+
+        TiledMap tiledMap = new TmxMapLoader(resolver).load(mapFilePath);
+
+        logger.debug("Map " + mapFilePath + "loaded");
 
         return new TileMapReader(tiledMap);
     }
@@ -55,7 +76,6 @@ public class TileMapReader {
         this.tiledMap = map;
         this.objects = new ArrayList<>();
 
-
         MapProperties properties = map.getProperties();
 
         this.mapWidth = properties.get(WIDTH, Integer.class);
@@ -64,8 +84,7 @@ public class TileMapReader {
         this.tileWidth = properties.get(TILE_WIDTH, Integer.class);
         this.tileHeight = properties.get(TILE_HEIGHT, Integer.class);
 
-        System.out.println("mapWidth : " + mapWidth);
-        System.out.println("mapHeight : " + mapHeight);
+        logger.debug("mapWidth : " + mapWidth + ", mapHeight : " + mapHeight);
 
         Matrix<FieldUnit> fieldMatrix = new StaticMatrix<FieldUnit>(mapHeight, mapWidth);
 
