@@ -3,7 +3,10 @@ package fr.univangers.vajin.network.impl;
 import fr.univangers.vajin.network.NetworkController;
 import fr.univangers.vajin.network.PacketCreator;
 import fr.univangers.vajin.network.Transmiter;
+import fr.vajin.snakerpg.LoggingUtilities;
 import fr.vajin.snakerpg.gameroom.Controller;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -12,6 +15,8 @@ import java.net.InetAddress;
 import java.time.Instant;
 
 public class TransmiterThread extends Thread implements Transmiter {
+
+    private final static Logger logger = LogManager.getLogger(TransmiterThread.class);
 
     private PacketCreator packetCreator;
 
@@ -42,13 +47,14 @@ public class TransmiterThread extends Thread implements Transmiter {
                 packet.setPort(controller.getCurrentServerPort());
 
                 socket.send(packet);
+                LoggingUtilities.logPacketDebug(logger, packet, "Sending packet");
 
                 long end = Instant.now().toEpochMilli();
 
                 sleep((int) (1000.0 / frequency) - (end - start));
             }
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            logger.error("Thread interrupted", e);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -65,6 +71,7 @@ public class TransmiterThread extends Thread implements Transmiter {
             packet.setAddress(this.address);
             packet.setPort(this.port);
 
+            LoggingUtilities.logPacketDebug(logger, packet, "Sending packet");
             this.socket.send(packet);
         } catch (IOException e) {
             e.printStackTrace();

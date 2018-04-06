@@ -7,6 +7,8 @@ import fr.univangers.vajin.network.PacketHandler;
 import fr.univangers.vajin.screens.HostLobbyScreen;
 import fr.univangers.vajin.screens.LobbyScreen;
 import fr.vajin.snakerpg.jsondatabeans.LobbyBean;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.net.DatagramPacket;
 import java.nio.ByteBuffer;
@@ -15,6 +17,8 @@ public class LobbyPacketHandler implements PacketHandler {
 
     private static int BUFFER_START_POS = 16;
     private LobbyScreen lobbyScreen;
+
+    private static final Logger logger = LogManager.getLogger(PacketHandler.class);
 
     public LobbyPacketHandler(NetworkController controller){
         this.lobbyScreen = controller.getSnakeRPG().getDistantLobbyScreen();
@@ -43,7 +47,7 @@ public class LobbyPacketHandler implements PacketHandler {
 
         String jsonString = new String(jsonData);
 
-        System.out.println(jsonString);
+        logger.debug("LobbyBean JSON received\n" + jsonString);
 
         LobbyBean lobbyBean = gson.fromJson(jsonString,LobbyBean.class);
 
