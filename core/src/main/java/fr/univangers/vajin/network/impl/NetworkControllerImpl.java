@@ -6,6 +6,8 @@ import fr.univangers.vajin.network.PacketCreator;
 import fr.univangers.vajin.network.PacketHandler;
 import fr.univangers.vajin.network.Transmiter;
 import fr.vajin.snakerpg.utilities.CustomByteArrayOutputStream;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -13,6 +15,8 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 
 public class NetworkControllerImpl implements NetworkController {
+
+    private static final Logger logger = LogManager.getLogger(NetworkControllerImpl.class);
 
     private SnakeRPG snakeRPG;
 
@@ -52,6 +56,7 @@ public class NetworkControllerImpl implements NetworkController {
     @Override
     public void connect(InetAddress address, int port) {
 
+        logger.debug("Connecting to server " + address + ":" + port);
 
         CustomByteArrayOutputStream stream = new CustomByteArrayOutputStream();
         try {

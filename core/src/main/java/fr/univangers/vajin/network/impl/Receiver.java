@@ -1,6 +1,9 @@
 package fr.univangers.vajin.network.impl;
 
 import fr.univangers.vajin.network.PacketHandler;
+import fr.vajin.snakerpg.LoggingUtilities;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -13,6 +16,8 @@ public class Receiver extends Thread {
     private DatagramSocket socket;
     private int idProtocol;
     private PacketHandler packetHandler;
+
+    private static Logger logger = LogManager.getLogger(Receiver.class);
 
     public Receiver(DatagramSocket socket, int idProtocol, PacketHandler packetHandler) {
         this.socket = socket;
@@ -29,7 +34,8 @@ public class Receiver extends Thread {
                 byte[] data = new byte[8192];
                 DatagramPacket packet = new DatagramPacket(data, data.length);
                 this.socket.receive(packet);
-                System.out.println("packet recu");
+
+                LoggingUtilities.logPacketDebug(logger, packet, "Received packet");
 
                 ByteBuffer buffer = ByteBuffer.wrap(packet.getData());
 

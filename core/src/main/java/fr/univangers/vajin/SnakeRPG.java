@@ -14,6 +14,8 @@ import fr.univangers.vajin.screens.*;
 import fr.vajin.snakerpg.database.entities.GameModeEntity;
 import fr.vajin.snakerpg.jsondatabeans.LobbyBean;
 import fr.vajin.snakerpg.jsondatabeans.PlayerBean;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.net.DatagramSocket;
 import java.net.SocketException;
@@ -21,10 +23,12 @@ import java.util.Map;
 
 public class SnakeRPG extends Game implements ApplicationListener {
 
+    private final static Logger logger = LogManager.getLogger(SnakeRPG.class);
+
     private final static String UISkinAtlas = "skin/clean-crispy-ui.atlas";
     private final static String UISkinJSON = "skin/clean-crispy-ui.json";
 
-    SnakeRPGAssetManager assetManager;
+    private SnakeRPGAssetManager assetManager;
 
     private GameScreen gameScreen;
     private GameLoadingScreen gameLoadingScreen;
@@ -35,14 +39,12 @@ public class SnakeRPG extends Game implements ApplicationListener {
 
     private Skin UISkin;
 
-    NetworkController networkController;
+    private NetworkController networkController;
     private DatagramSocket datagramSocket;
     private CreditScreen creditScreen;
 
     @Override
     public void create() {
-
-
         String mapFileName = "simple_map.tmx";
 
         this.assetManager = new SnakeRPGAssetManager();
@@ -50,36 +52,12 @@ public class SnakeRPG extends Game implements ApplicationListener {
         assetManager.queueUIAssets();
         assetManager.getManager().finishLoading();
 
-        Map<String, Class> filesToLoad = Maps.newHashMap();
-
-        filesToLoad.put(mapFileName, TiledMap.class);
-        filesToLoad.put(GameConstants.ATLAS_FILENAME, TextureAtlas.class);
-
-
         this.UISkin = new Skin(Gdx.files.internal(UISkinJSON), assetManager.getManager().get(UISkinAtlas, TextureAtlas.class));
-
-        LobbyBean lobbyBean = new LobbyBean();
-        GameModeEntity gameModeEntity = new GameModeEntity(1, "Classic Deathmatch", 2, 8);
-        lobbyBean.setGameMode(gameModeEntity);
-        lobbyBean.setMap("sample_map");
-
-
-        lobbyBean.setPlayers(
-                ImmutableList.of(
-                        new PlayerBean(1, "Jean Paul", 1),
-                        new PlayerBean(2, "Kirikoo", 2),
-                        new PlayerBean(3, "Superman", 3)
-                )
-        );
-
-        this.hostLobbyScreen = new HostLobbyScreen(this);
-        hostLobbyScreen.setLobbyBean(lobbyBean);
 
         this.menuScreen = new MenuScreen(this);
 
         this.setScreen(menuScreen);
     }
-
 
     public static final int MENU_SCREEN = 1;
     public static final int DIRECT_CONNECTION_SCREEN = 2;
@@ -95,36 +73,42 @@ public class SnakeRPG extends Game implements ApplicationListener {
                 if (this.menuScreen == null) {
                     this.menuScreen = new MenuScreen(this);
                 }
+                logger.debug("Change screen to MenuScreen");
                 this.setScreen(this.menuScreen);
                 break;
             case DIRECT_CONNECTION_SCREEN:
                 if (this.directConnectionScreen == null) {
                     this.directConnectionScreen = new DirectConnectionScreen(this);
                 }
+                logger.debug("Change screen to DirectConnectionScreen");
                 this.setScreen(directConnectionScreen);
                 break;
             case GAME_LOADING_SCREEN:
                 if (this.gameLoadingScreen == null) {
 //                    this.gameLoadingScreen = new GameLoadingScreen(this, assetManager, ) //TODO
                 }
+                logger.debug("Change screen to GameLoadingScreen");
                 this.setScreen(gameLoadingScreen);
                 break;
             case HOST_LOBBY_SCREEN:
                 if (this.hostLobbyScreen == null) {
                     this.hostLobbyScreen = new HostLobbyScreen(this);
                 }
+                logger.debug("Change screen to HostLobbyScreen");
                 this.setScreen(hostLobbyScreen);
                 break;
             case CREDIT_SCREEN:
                 if (this.creditScreen == null) {
                     this.creditScreen = new CreditScreen(this);
                 }
+                logger.debug("Change screen to CreditScreen");
                 this.setScreen(creditScreen);
                 break;
             case DISTANT_LOBBY_SCREEN:
                 if (this.distantLobbyScreen == null) {
                     this.distantLobbyScreen = new DistantLobbyScreen(this);
                 }
+                logger.debug("Change screen to DistantLobbyScreen");
                 this.setScreen(distantLobbyScreen);
                 break;
         }
@@ -164,10 +148,9 @@ public class SnakeRPG extends Game implements ApplicationListener {
     }
 
     public NetworkController getNetworkController() {
-
         if(networkController==null){
             try {
-                networkController = new NetworkControllerImpl(this,new DatagramSocket());
+                networkController = new NetworkControllerImpl(this, this.openSocket());
             } catch (SocketException e) {
                 e.printStackTrace();
             }
@@ -186,6 +169,14 @@ public class SnakeRPG extends Game implements ApplicationListener {
     public DatagramSocket openSocket(int port) throws SocketException {
         if (this.datagramSocket == null || this.datagramSocket.isClosed()) {
             this.datagramSocket = new DatagramSocket(port);
+        }
+        return this.datagramSocket;
+    }
+
+    public DatagramSocket openSocket() throws SocketException {
+        if (this.datagramSocket == null || this.datagramSocket.isClosed()) {
+            this.datagramSocket = new DatagramSocket();
+            logger.info("Socket opened on port " + this.datagramSocket.getLocalPort());
         }
         return this.datagramSocket;
     }
