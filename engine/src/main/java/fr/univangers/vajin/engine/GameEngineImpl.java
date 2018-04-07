@@ -70,11 +70,13 @@ public class GameEngineImpl extends AbstractGameEngine implements EntityObserver
     public GameEngineImpl(Map<Integer, Snake> players, Collection<Entity> entityCollection, Field field) {
         this.players = new HashMap<>(players);
         this.field = field;
+        logger.debug(players.size() + " players");
 
         initSnakePositions();
 
         //Setting a reference to the engine in each Snake
         players.forEach( (id, player) -> player.setEngine(this));
+
 
         this.entityCollection = new ArrayList<>(entityCollection);
         this.toDispose = new LinkedList<>();
@@ -108,7 +110,9 @@ public class GameEngineImpl extends AbstractGameEngine implements EntityObserver
 
         for (int i=0; i<players.size(); i++){
             boolean currentSnakeAssigned = false;
+            int k = 0;
             while (!currentSnakeAssigned){
+                logger.debug("Player" + i + " - Iteration " + k++);
                 currentSnakeAssigned = true;
                 //Drawing the direction
                 int dir = randGen.inRange(0, 3);
@@ -156,9 +160,14 @@ public class GameEngineImpl extends AbstractGameEngine implements EntityObserver
                     positions.clear();
                 }
                 else{
-                    players.get(i).setInitialPosition(positions, d);
+                    logger.debug("Setting initial pos for player " + i);
+                    Snake snake = players.get(i);
+                    logger.debug("lol");
+                    snake.setInitialPosition(positions, d);
+                    logger.debug("Done");
                 }
                 alreadyAssignedPositions.addAll(positions);
+                logger.debug("Done");
             }
             logger.debug("Player " + i + " assigned");
         }

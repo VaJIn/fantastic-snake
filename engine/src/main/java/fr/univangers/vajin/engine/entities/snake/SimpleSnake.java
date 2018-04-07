@@ -9,6 +9,8 @@ import fr.univangers.vajin.engine.entities.spawnables.bonus.TimedCommandImpl;
 import fr.univangers.vajin.engine.field.FieldUnit;
 import fr.univangers.vajin.engine.utilities.Direction;
 import fr.univangers.vajin.engine.utilities.Position;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -17,6 +19,8 @@ import java.util.function.Consumer;
  * A simple snake that move, grow and die.
  */
 public class SimpleSnake extends Snake {
+
+    private final static Logger logger = LogManager.getLogger(SimpleSnake.class);
 
     private int size;
 
@@ -51,9 +55,20 @@ public class SimpleSnake extends Snake {
     }
 
     public void setInitialPosition(List<Position> startingPositions, Direction startingDirection) {
+
+        logger.debug("lol2");
+        StringBuilder debugMessageBuilder = new StringBuilder("setInitialPositon :\n\t startingDirection ")
+                .append(startingDirection.toString())
+                .append("\nStarting Positions : ");
+
+        for (Position position : startingPositions) {
+            debugMessageBuilder.append(position.toString());
+        }
+        logger.debug(debugMessageBuilder);
+
         this.currentDirection = startingDirection;
         this.nextDirections = new LinkedList<>();
-
+        System.out.println(1);
         this.leftToGrow = 0;
 
         this.lastMoveTick = -1;
@@ -62,14 +77,18 @@ public class SimpleSnake extends Snake {
 
         this.tail = new SimpleSnakeAtom(it.next(), 0);
         SnakeAtom last = tail;
+
+        System.out.println(2);
         atoms.put(last.getPosition(), last);
+
+        System.out.println(3);
         while (it.hasNext()) {
             last = new SimpleSnakeAtom(it.next(), last);
             atoms.put(last.getPosition(), last);
         }
         this.head = last;
         this.size = atoms.size();
-
+        System.out.println(4);
     }
 
     @Override

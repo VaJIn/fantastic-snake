@@ -145,8 +145,6 @@ public class ControllerNoFilterImpl implements Controller{
         logger.debug("Starting game");
 
         try {
-
-
             logger.debug("Loading field from files");
             Field fied = new JSONFieldIO().openStaticFieldJSON("map" + File.separator + map + ".json");
 
@@ -164,6 +162,7 @@ public class ControllerNoFilterImpl implements Controller{
             logger.debug("Creating engine");
             this.gameEngine = gameEngineBuilder.build();
 
+            logger.debug("Engine created");
 
             for (PlayerHandler playerHandler : this.playerHandlers) {
                 logger.debug("Setting Game state for player" + playerHandler.getUserId());
@@ -177,6 +176,7 @@ public class ControllerNoFilterImpl implements Controller{
         } catch (IOException e) {
             logger.error("Error opening map", e);
         } catch (WrongPlayersNumberException e) {
+            e.printStackTrace();
             logger.error("Error creating engine", e);
         }
     }
