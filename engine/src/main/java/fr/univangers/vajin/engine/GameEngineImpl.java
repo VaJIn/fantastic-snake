@@ -14,11 +14,15 @@ import fr.univangers.vajin.engine.utilities.Direction;
 import fr.univangers.vajin.engine.utilities.PerformedCommandsMapImpl;
 import fr.univangers.vajin.engine.utilities.Position;
 import fr.univangers.vajin.engine.utilities.RandomNumberGenerator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 
 public class GameEngineImpl extends AbstractGameEngine implements EntityObserver {
 
+
+    private final static Logger logger = LogManager.getLogger(GameEngineImpl.class);
     /**
      * Number of ticks the time machine goes in the past
      */
@@ -97,24 +101,19 @@ public class GameEngineImpl extends AbstractGameEngine implements EntityObserver
 
     private void initSnakePositions(){
 
+        logger.debug("Init snake position");
+
         List<Position> alreadyAssignedPositions = new ArrayList<>();
         RandomNumberGenerator randGen = new RandomNumberGenerator();
 
         for (int i=0; i<players.size(); i++){
-
             boolean currentSnakeAssigned = false;
-
             while (!currentSnakeAssigned){
-
                 currentSnakeAssigned = true;
-
-
                 //Drawing the direction
                 int dir = randGen.inRange(0, 3);
                 Direction d;
-
-                System.out.println("dir :"+dir);
-
+//                System.out.println("dir :"+dir);
                 switch (dir){
                     case 0:
                         d = Direction.NORTH;
@@ -132,8 +131,6 @@ public class GameEngineImpl extends AbstractGameEngine implements EntityObserver
                         d = null; //Should never happen
                         break;
                 }
-
-
                 //Drawing the first position
                 List<Position> positions = new ArrayList<>();
 
@@ -148,33 +145,27 @@ public class GameEngineImpl extends AbstractGameEngine implements EntityObserver
                 for (int j = 0; j < 5; j++) {
 
                     Position pos = positions.get(0).nextPosition(d, j);
-
                     if ( !field.containsPos(pos) || !field.getFieldUnits(pos).isWalkable() || alreadyAssignedPositions.contains(pos)){
+                        logger.debug("Position " + pos + " not playable");
                         currentSnakeAssigned = false;
                         break;
-
                     }
                 }
-
                 if (!currentSnakeAssigned){
+                    logger.debug("Position cleared");
                     positions.clear();
                 }
                 else{
                     players.get(i).setInitialPosition(positions, d);
                 }
-
                 alreadyAssignedPositions.addAll(positions);
             }
-
-
+            logger.debug("Player " + i + " assigned");
         }
-
-
     }
 
     @Override
     public boolean isGameOver() {
-
 
         int nbSnakeAlive = 0;
 
@@ -190,8 +181,6 @@ public class GameEngineImpl extends AbstractGameEngine implements EntityObserver
 
     @Override
     public void computeTick() {
-
-
 
         if (!toDispose.isEmpty()) {
             entityCollection.removeAll(toDispose);

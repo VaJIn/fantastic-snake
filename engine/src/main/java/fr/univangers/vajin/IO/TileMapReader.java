@@ -2,6 +2,7 @@ package fr.univangers.vajin.IO;
 
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.ExternalFileHandleResolver;
+import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -53,7 +54,7 @@ public class TileMapReader {
     public static TileMapReader newTileMapReader(String mapFilePath) {
 
 
-        FileHandleResolver resolver = new ExternalFileHandleResolver();
+        FileHandleResolver resolver = new InternalFileHandleResolver();
 
         logger.debug("fdp");
         if(resolver.resolve(mapFilePath).exists()){

@@ -3,6 +3,8 @@ package fr.univangers.vajin.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.loaders.resolvers.ExternalFileHandleResolver;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -14,12 +16,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.google.gson.Gson;
 import fr.univangers.vajin.IO.TileMapReader;
 import fr.univangers.vajin.SnakeRPG;
 import fr.univangers.vajin.engine.EngineBuilder;
 import fr.univangers.vajin.engine.GameEngine;
 import fr.univangers.vajin.engine.WrongPlayersNumberException;
 import fr.univangers.vajin.engine.entities.snake.SimpleSnake;
+
+import java.io.*;
 
 public class GameLoadingScreen implements Screen, InputProcessor {
 
@@ -157,9 +162,27 @@ public class GameLoadingScreen implements Screen, InputProcessor {
         System.out.println("StartGame");
         if (currentLoadingStage >= FINAL) {
 
-            TileMapReader reader = new TileMapReader(parent.getAssetManager().getManager().get(mapFileName));
+            TileMapReader reader = TileMapReader.newTileMapReader(mapFileName);
 
             EngineBuilder classicEngineBuilder = new EngineBuilder(reader.getField(), 1);
+
+            Gson gson = new Gson();
+
+            FileHandle fileHandle = new ExternalFileHandleResolver().resolve(mapFileName + ".json");
+
+            File file = fileHandle.file();
+
+            try {
+                FileWriter writer = new FileWriter(file);
+                writer.write(gson.toJson(reader.getField()));
+
+                writer.close();
+                System.out.println("File written at " + file.getAbsolutePath());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
             classicEngineBuilder.addSnake(0, new SimpleSnake());
             classicEngineBuilder.addSnake(1, new SimpleSnake());
             //   classicEngineBuilder.addSnake(2, new SimpleSnake());

@@ -4,6 +4,8 @@ import fr.univangers.vajin.engine.entities.Entity;
 import fr.univangers.vajin.engine.entities.spawnables.bonus.*;
 import fr.univangers.vajin.engine.entities.snake.Snake;
 import fr.univangers.vajin.engine.field.Field;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -21,6 +23,8 @@ import java.util.List;
 import java.util.Map;
 
 public class EngineBuilder {
+
+    private final static Logger logger = LogManager.getLogger(EngineBuilder.class);
 
     private final static String MIN_PLAYERS = "min_players";
     private final static String MAX_PLAYERS = "max_players";
@@ -99,6 +103,7 @@ public class EngineBuilder {
         entities.add(new BonusSpawner(this.minFood, this.maxFood, new BonusRegistryImpl(availableFood)));
         entities.add(new BonusSpawner(this.minBonuses, this.maxBonuses, new BonusRegistryImpl(availableBonuses)));
 
+        logger.debug("Building engine");
         return new GameEngineImpl(players, entities, field);
 
     }
@@ -158,7 +163,7 @@ public class EngineBuilder {
 
     private void readFoodSet(Node foodSetNode){
 
-        System.out.println("reading food set");
+//        System.out.println("reading food set");
 
         this.minFood = Integer.valueOf(((Element) foodSetNode).getAttribute(MIN_FOOD));
         this.maxFood = Integer.valueOf(((Element) foodSetNode).getAttribute(MAX_FOOD));

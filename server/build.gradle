@@ -6,4 +6,10 @@ sourceCompatibility = 1.8
 
 sourceSets.main.java.srcDirs = [ "src/main/java/" ]
 
-project.ext.mainClassName = "fr.univangers.vajin.server.ServerLauncher"
+project.ext.mainClassName = "fr.vajin.snakerpg.gameroom.SnakeRPGGameRoom"
+
+task run(dependsOn: classes, type: JavaExec) {
+    main = project.mainClassName
+    classpath = sourceSets.main.runtimeClasspath
+    standardInput = System.in
+}

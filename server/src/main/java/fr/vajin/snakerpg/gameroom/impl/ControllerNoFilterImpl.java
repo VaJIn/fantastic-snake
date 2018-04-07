@@ -2,11 +2,13 @@ package fr.vajin.snakerpg.gameroom.impl;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import fr.univangers.vajin.IO.JSONFieldIO;
 import fr.univangers.vajin.IO.TileMapReader;
 import fr.univangers.vajin.engine.EngineBuilder;
 import fr.univangers.vajin.engine.GameEngine;
 import fr.univangers.vajin.engine.WrongPlayersNumberException;
 import fr.univangers.vajin.engine.entities.snake.SimpleSnake;
+import fr.univangers.vajin.engine.field.Field;
 import fr.vajin.snakerpg.database.entities.GameModeEntity;
 import fr.vajin.snakerpg.database.entities.GameParticipationEntity;
 import fr.vajin.snakerpg.database.entities.UserEntity;
@@ -17,6 +19,8 @@ import fr.vajin.snakerpg.gameroom.PlayerPacketCreator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -37,7 +41,7 @@ public class ControllerNoFilterImpl implements Controller{
     private Cleaner cleaner;
     private Collection<Integer> idPlayersReady;
 
-
+    ScheduledThreadPoolExecutor scheduledThreadPoolExecutor;
 
     public ControllerNoFilterImpl(GameModeEntity gameMode, String map){
         this.gameMode = gameMode;
@@ -49,6 +53,8 @@ public class ControllerNoFilterImpl implements Controller{
         this.cleaner = new Cleaner(this, 15000);
         this.idPlayersReady = new ArrayList<>();
         cleaner.start();
+
+        this.scheduledThreadPoolExecutor = new ScheduledThreadPoolExecutor(1);
     }
 
     @Override
@@ -133,40 +139,46 @@ public class ControllerNoFilterImpl implements Controller{
     @Override
     public void startGame() {
 
-        logger.debug("Starting game on map [" + map + "]");
 
-        TileMapReader reader = TileMapReader.newTileMapReader(map);
+//        TileMapReader reader = TileMapReader.newTileMapReader(map);
 
-        logger.debug("0");
-
-        EngineBuilder gameEngineBuilder = new EngineBuilder(reader.getField(), gameMode.getId());
-
-        logger.debug("1");
-
-        for (PlayerHandler playerHandler : playerHandlers){
-
-            int id = playerHandler.getUserId();
-            gameEngineBuilder.addSnake(id, new SimpleSnake());
-
-        }
-
-        logger.debug("2");
+        logger.debug("Starting game");
 
         try {
+
+
+            logger.debug("Loading field from files");
+            Field fied = new JSONFieldIO().openStaticFieldJSON("map" + File.separator + map + ".json");
+
+            logger.debug("Creating EngineBuilder");
+            EngineBuilder gameEngineBuilder = new EngineBuilder(fied, gameMode.getId());
+
+
+            logger.debug("Adding snakes");
+            for (PlayerHandler playerHandler : playerHandlers) {
+                int id = playerHandler.getUserId();
+                gameEngineBuilder.addSnake(id, new SimpleSnake());
+
+            }
+
+            logger.debug("Creating engine");
             this.gameEngine = gameEngineBuilder.build();
+
+
+            for (PlayerHandler playerHandler : this.playerHandlers) {
+                logger.debug("Setting Game state for player" + playerHandler.getUserId());
+                playerHandler.getPlayerPacketCreator().startGame();
+                playerHandler.getPlayerPacketCreator().setState(PlayerPacketCreator.GAME_START);
+            }
+
+            logger.debug("Scheduling start of the game in 10 seconds");
+
+            this.scheduledThreadPoolExecutor.schedule(new GameRun(gameEngine, 32), 10, TimeUnit.SECONDS);
+        } catch (IOException e) {
+            logger.error("Error opening map", e);
         } catch (WrongPlayersNumberException e) {
-            e.printStackTrace();
+            logger.error("Error creating engine", e);
         }
-
-        logger.debug(this.playerHandlers.size() + " playerHandler in memory");
-        for (PlayerHandler playerHandler : this.playerHandlers){
-            logger.debug("Setting Game state for player" + playerHandler.getUserId());
-            playerHandler.getPlayerPacketCreator().startGame();
-            playerHandler.getPlayerPacketCreator().setState(PlayerPacketCreator.GAME_START);
-        }
-
-        final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
-        executor.schedule(new GameRun(gameEngine,32), 10, TimeUnit.SECONDS);
     }
 
     @Override
