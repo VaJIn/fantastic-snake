@@ -24,7 +24,7 @@ public class MenuScreen extends AbstractMenuScreen {
         //  table.setDebug(true);
         this.getStage().addActor(table);
 
-        Skin skin = this.getParent().getUISkin();
+        Skin skin = this.getApplication().getUISkin();
 
         TextButton startSPGame = new TextButton("Single Player", skin);
         TextButton hostLocalMultiplayer = new TextButton("Host Local Multiplayer", skin);
@@ -63,29 +63,29 @@ public class MenuScreen extends AbstractMenuScreen {
         startSPGame.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                getParent().getGameLoadingScreen().setMapFileName("simple_map.tmx");
-                getParent().changeScreen(SnakeRPG.GAME_LOADING_SCREEN);
+                getApplication().getGameLoadingScreen().setMapFileName("simple_map.tmx");
+                getApplication().changeScreen(SnakeRPG.GAME_LOADING_SCREEN);
             }
         });
 
         joinLocalMultiplayer.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                getParent().changeScreen(SnakeRPG.DIRECT_CONNECTION_SCREEN);
+                getApplication().changeScreen(SnakeRPG.DIRECT_CONNECTION_SCREEN);
             }
         });
 
         hostLocalMultiplayer.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                getParent().changeScreen(SnakeRPG.HOST_LOBBY_SCREEN);
+                getApplication().changeScreen(SnakeRPG.HOST_LOBBY_SCREEN);
             }
         });
 
         creditButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                getParent().changeScreen(SnakeRPG.CREDIT_SCREEN);
+                getApplication().changeScreen(SnakeRPG.CREDIT_SCREEN);
             }
         });
 

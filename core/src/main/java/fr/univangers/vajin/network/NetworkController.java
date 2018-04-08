@@ -25,6 +25,8 @@ public interface NetworkController {
 
     void stopNetwork();
 
+    void disconnect();
+
     LobbyBean getLobbyBean();
 
     void setLobbyBean(LobbyBean lobbyBean);

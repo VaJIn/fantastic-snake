@@ -29,7 +29,7 @@ public class CreditScreen extends AbstractMenuScreen {
     @Override
     public void show() {
         super.show();
-        Skin skin = this.getParent().getUISkin();
+        Skin skin = this.getApplication().getUISkin();
 
         Table layout = new Table();
         layout.setFillParent(true);
@@ -54,7 +54,7 @@ public class CreditScreen extends AbstractMenuScreen {
         backToMenu.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                getParent().changeScreen(SnakeRPG.MENU_SCREEN);
+                getApplication().changeScreen(SnakeRPG.MENU_SCREEN);
             }
         });
 

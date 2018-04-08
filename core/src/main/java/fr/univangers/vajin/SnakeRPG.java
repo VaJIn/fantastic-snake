@@ -38,6 +38,8 @@ public class SnakeRPG extends Game implements ApplicationListener {
     private CreditScreen creditScreen;
     private DistantGameScreen distantGameScreen;
 
+    private AppPreferences appPreferences;
+
     public static final int MENU_SCREEN = 1;
     public static final int DIRECT_CONNECTION_SCREEN = 2;
     public static final int GAME_LOADING_SCREEN = 3;
@@ -49,6 +51,8 @@ public class SnakeRPG extends Game implements ApplicationListener {
     @Override
     public void create() {
         String mapFileName = "simple_map.tmx";
+
+        this.appPreferences = new AppPreferences();
 
         this.assetManager = new SnakeRPGAssetManager();
 
@@ -199,4 +203,7 @@ public class SnakeRPG extends Game implements ApplicationListener {
         return distantGameScreen;
     }
 
+    public AppPreferences getAppPreferences() {
+        return appPreferences;
+    }
 }

@@ -16,6 +16,7 @@ import java.net.InetAddress;
 
 public class NetworkControllerImpl implements NetworkController {
 
+    private static final double TRANSMITER_FREQUENCY = 0.5;
     private static final Logger logger = LogManager.getLogger(NetworkControllerImpl.class);
 
     private SnakeRPG application;
@@ -41,10 +42,9 @@ public class NetworkControllerImpl implements NetworkController {
 
         this.socket = socket;
 
-        this.transmiterThread = new TransmiterThread(this.socket,this,0.5);
+        this.transmiterThread = new TransmiterThread(this.socket, this, TRANSMITER_FREQUENCY);
         this.packetCreator = new PacketCreatorImpl(PacketCreator.ID_PROTOCOL,0,0,transmiterThread);
         this.packetHandler = new PacketHandlerDistribuer(this,this.packetCreator);
-        this.transmiterThread.setPacketCreator(this.packetCreator);
 
         this.receiverThread = new Receiver(this.socket,PacketCreator.ID_PROTOCOL,this.packetHandler);
     }
@@ -113,10 +113,19 @@ public class NetworkControllerImpl implements NetworkController {
 
     @Override
     public void stopNetwork() {
+        logger.debug("Stopped network");
         transmiterThread.interrupt();
         receiverThread.interrupt();
+
+        this.receiverThread = new Receiver(this.socket, PacketCreator.ID_PROTOCOL, this.packetHandler);
+        this.transmiterThread = new TransmiterThread(socket, this, TRANSMITER_FREQUENCY);
     }
 
+    @Override
+    public void disconnect() {
+        this.stopNetwork();
+        this.lobbyBean = new LobbyBean();
+    }
 
     @Override
     public LobbyBean getLobbyBean() {

@@ -1,11 +1,11 @@
 package fr.vajin.snakerpg.network.test;
 
+import fr.univangers.vajin.network.DistantEngine;
 import fr.univangers.vajin.network.impl.GamePacketHandler;
 import fr.vajin.snakerpg.utilities.CustomByteArrayOutputStream;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import javax.management.Notification;
 import java.nio.ByteBuffer;
 
 public class GamePacketHandlerTest {
@@ -42,7 +42,7 @@ public class GamePacketHandlerTest {
 
     @Test
     void testUpdateEntity() {
-        GamePacketHandler gamePacketHandler = new GamePacketHandler();
+        GamePacketHandler gamePacketHandler = new GamePacketHandler(null);
 
         byte[] bytes = getTestByteArrayUpdateEntity();
 
@@ -50,15 +50,17 @@ public class GamePacketHandlerTest {
 
         NotificationCounter notificationCounter = new NotificationCounter();
 
-        gamePacketHandler.getDistantEngine().addGameEngineObserver(notificationCounter);
+        DistantEngine engine = new DistantEngine();
 
-        gamePacketHandler.getDistantEngine().beginChange();
+        engine.addGameEngineObserver(notificationCounter);
 
-        Assertions.assertTrue(gamePacketHandler.updateEntity(byteBuffer));
+        engine.beginChange();
 
-        Assertions.assertFalse(gamePacketHandler.updateEntity(byteBuffer));
+        Assertions.assertTrue(gamePacketHandler.updateEntity(byteBuffer, engine));
 
-        gamePacketHandler.getDistantEngine().endChange();
+        Assertions.assertFalse(gamePacketHandler.updateEntity(byteBuffer, engine));
+
+        engine.endChange();
 
         Assertions.assertEquals(1, notificationCounter.getNewEntityNotificationCount());
     }

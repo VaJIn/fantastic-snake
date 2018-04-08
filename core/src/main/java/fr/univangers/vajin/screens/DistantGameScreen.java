@@ -13,11 +13,11 @@ import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.google.common.collect.Maps;
 import fr.univangers.vajin.GameConstants;
-import fr.univangers.vajin.IO.TileMapReader;
 import fr.univangers.vajin.SnakeRPG;
 import fr.univangers.vajin.engine.GameEngine;
 import fr.univangers.vajin.engine.GameEngineObserver;
 import fr.univangers.vajin.engine.entities.Entity;
+import fr.univangers.vajin.io.TileMapReader;
 import fr.univangers.vajin.screens.objectView.EntityView;
 
 import java.util.Map;

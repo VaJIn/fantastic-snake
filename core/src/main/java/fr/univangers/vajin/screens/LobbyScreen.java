@@ -5,7 +5,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import fr.univangers.vajin.SnakeRPG;
 import fr.univangers.vajin.network.NetworkController;
-import fr.vajin.snakerpg.jsondatabeans.LobbyBean;
 import fr.vajin.snakerpg.jsondatabeans.PlayerBean;
 
 import java.util.Iterator;
@@ -18,8 +17,9 @@ public abstract class LobbyScreen extends AbstractMenuScreen {
     @Override
     public void show() {
         super.show();
-        this.playerTable = new Table();
-
+        if (playerTable == null) {
+            this.playerTable = new Table();
+        }
         updateTable();
     }
 
@@ -29,9 +29,9 @@ public abstract class LobbyScreen extends AbstractMenuScreen {
     }
 
     public void updateTable() {
-        if (getParent().getScreen() == this) {
+        if (this.getApplication().getScreen() == this) {
 
-            Skin skin = this.getParent().getUISkin();
+            Skin skin = this.getApplication().getUISkin();
 
             playerTable.reset();
 
@@ -51,9 +51,4 @@ public abstract class LobbyScreen extends AbstractMenuScreen {
         return playerTable;
     }
 
-    @Override
-    public void dispose() {
-        super.dispose();
-        this.playerTable = null;
-    }
 }

@@ -30,7 +30,7 @@ public class DistantLobbyScreen extends LobbyScreen {
 
         super.show();
 
-        Skin skin = this.getParent().getUISkin();
+        Skin skin = this.getApplication().getUISkin();
 
         TextButton exitLobby = new TextButton("Exit lobby", skin);
         TextButton ready = new TextButton("Ready", skin);
@@ -38,7 +38,7 @@ public class DistantLobbyScreen extends LobbyScreen {
         ready.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                getParent().getNetworkController().getPacketCreator().sendPlayerReady();
+                getApplication().getNetworkController().getPacketCreator().sendPlayerReady();
             }
         });
 
@@ -75,8 +75,8 @@ public class DistantLobbyScreen extends LobbyScreen {
         exitLobby.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                getParent().getNetworkController().stopNetwork();
-                getParent().changeScreen(SnakeRPG.MENU_SCREEN);
+                getApplication().getNetworkController().stopNetwork();
+                getApplication().changeScreen(SnakeRPG.MENU_SCREEN);
             }
         });
 
@@ -125,7 +125,7 @@ public class DistantLobbyScreen extends LobbyScreen {
     public void render(float delta) {
 
         if (gameStarting) {
-            this.getParent().changeScreen(SnakeRPG.GAME_LOADING_SCREEN);
+            this.getApplication().changeScreen(SnakeRPG.GAME_LOADING_SCREEN);
         }
 
         super.render(delta);

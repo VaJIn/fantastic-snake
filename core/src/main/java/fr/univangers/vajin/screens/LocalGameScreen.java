@@ -1,6 +1,9 @@
 package fr.univangers.vajin.screens;
 
-import com.badlogic.gdx.*;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -11,15 +14,17 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import fr.univangers.vajin.GameConstants;
-import fr.univangers.vajin.IO.TileMapReader;
 import fr.univangers.vajin.SnakeRPG;
-import fr.univangers.vajin.engine.*;
+import fr.univangers.vajin.engine.GameEngine;
+import fr.univangers.vajin.engine.GameEngineObserver;
 import fr.univangers.vajin.engine.entities.Entity;
 import fr.univangers.vajin.engine.entities.snake.Snake;
 import fr.univangers.vajin.engine.field.Field;
+import fr.univangers.vajin.io.TileMapReader;
 import fr.univangers.vajin.screens.objectView.EntityView;
 
-import java.util.*;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class LocalGameScreen implements Screen, GameEngineObserver, InputProcessor {
 

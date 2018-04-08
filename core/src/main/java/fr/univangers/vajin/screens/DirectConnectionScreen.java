@@ -1,21 +1,14 @@
 package fr.univangers.vajin.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import fr.univangers.vajin.SnakeRPG;
-import fr.univangers.vajin.engine.entities.snake.Snake;
-import fr.univangers.vajin.network.NetworkController;
 
-import javax.xml.soap.Text;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -63,11 +56,10 @@ private    boolean acceptedConnection = false;
 
     @Override
     public void show() {
-        super.show();
+        this.acceptedConnection = false;
         this.currentState = this.initialState;
 
-        Skin skin = this.getParent().getUISkin();
-
+        Skin skin = this.getApplication().getUISkin();
 
         Table table = new Table(skin);
         table.setFillParent(true);
@@ -75,9 +67,16 @@ private    boolean acceptedConnection = false;
 
         this.getStage().addActor(table);
 
-        TextField ipTextField = new TextField("HP4", skin);
+        String lastServerName = this.getApplication().getAppPreferences().getLastServerName();
+        if (lastServerName == null) {
+            lastServerName = "";
+        }
 
-        TextField portTextField = new TextField("1486", skin);
+        int lastPort = this.getApplication().getAppPreferences().getLastServerPort();
+        String lastPortStr = lastPort != 0 ? String.valueOf(lastPort) : "";
+
+        TextField ipTextField = new TextField(lastServerName, skin);
+        TextField portTextField = new TextField(lastPortStr, skin);
 
         TextButton connect = new TextButton("Connect", skin);
         TextButton backToMenu = new TextButton("Back", skin);
@@ -92,19 +91,21 @@ private    boolean acceptedConnection = false;
         backToMenu.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                getParent().changeScreen(SnakeRPG.MENU_SCREEN);
+                getApplication().changeScreen(SnakeRPG.MENU_SCREEN);
             }
         });
 
         connect.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                SnakeRPG parent = getParent();
+                SnakeRPG parent = getApplication();
 
 
                 try {
                     InetAddress address = InetAddress.getByName(ipTextField.getText());
                     int port = Integer.valueOf(portTextField.getText());
+
+                    getApplication().getAppPreferences().setLastServer(ipTextField.getText(), port);
 
                     waitingForResponseState.connectTo(address,port);
                     setState(waitingForResponseState);
@@ -126,7 +127,7 @@ private    boolean acceptedConnection = false;
         super.render(delta);
 
         if(acceptedConnection){
-            this.getParent().changeScreen(SnakeRPG.DISTANT_LOBBY_SCREEN);
+            this.getApplication().changeScreen(SnakeRPG.DISTANT_LOBBY_SCREEN);
         }
     }
 
@@ -188,8 +189,8 @@ private    boolean acceptedConnection = false;
         public synchronized void acceptedConnection(InetAddress address, int port) {
             if (address.equals(waitedAddress) && port == waitedPort) {
                 System.out.println("Connexion acceptée");
-                getParent().getNetworkController().setCurrentServer(waitedAddress,waitedPort);
-                getParent().getNetworkController().startTransmiter();
+                getApplication().getNetworkController().setCurrentServer(waitedAddress, waitedPort);
+                getApplication().getNetworkController().startTransmiter();
                 acceptedConnection = true;
             }//Else discard
         }

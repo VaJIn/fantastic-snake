@@ -1,10 +1,8 @@
 package fr.univangers.vajin.network.impl;
 
 import fr.univangers.vajin.network.NetworkController;
-import fr.univangers.vajin.network.PacketCreator;
 import fr.univangers.vajin.network.Transmiter;
 import fr.vajin.snakerpg.LoggingUtilities;
-import fr.vajin.snakerpg.gameroom.Controller;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -17,8 +15,6 @@ import java.time.Instant;
 public class TransmiterThread extends Thread implements Transmiter {
 
     private final static Logger logger = LogManager.getLogger(TransmiterThread.class);
-
-    private PacketCreator packetCreator;
 
     private DatagramSocket socket;
 
@@ -34,7 +30,6 @@ public class TransmiterThread extends Thread implements Transmiter {
         this.controller = controller;
         this.frequency = frequency;
 
-
     }
 
     @Override
@@ -43,7 +38,7 @@ public class TransmiterThread extends Thread implements Transmiter {
             while (!interrupted()){
                 long start = Instant.now().toEpochMilli();
 
-                DatagramPacket packet = this.packetCreator.getPacket();
+                DatagramPacket packet = this.controller.getPacketCreator().getPacket();
 
                 packet.setAddress(controller.getCurrentServerAddress());
                 packet.setPort(controller.getCurrentServerPort());
@@ -60,11 +55,6 @@ public class TransmiterThread extends Thread implements Transmiter {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void setPacketCreator(PacketCreator packetCreator) {
-        this.packetCreator = packetCreator;
     }
 
     public synchronized void send(DatagramPacket packet){

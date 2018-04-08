@@ -1,6 +1,5 @@
 package fr.univangers.vajin.IO;
 
-import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.google.gson.*;
 import fr.univangers.vajin.engine.field.Field;
 import fr.univangers.vajin.engine.field.FieldUnit;
@@ -20,14 +19,6 @@ import java.util.List;
 public class JSONFieldIO {
 
     private static final Logger logger = LogManager.getLogger(JSONFieldIO.class);
-
-    public String convert(TiledMap map) {
-        TileMapReader reader = new TileMapReader(map);
-
-        Gson gson = new Gson();
-
-        return gson.toJson(reader.getField());
-    }
 
     public Field openStaticFieldJSON(String filePath) throws IOException {
 
@@ -57,12 +48,7 @@ public class JSONFieldIO {
 
         Gson gson = gsonBuilder.create();
 
-        logger.debug("Deserializing");
-
-        Field field = gson.fromJson(builder.toString(), StaticField.class);
-
-        logger.debug("End");
-        return field;
+        return gson.fromJson(builder.toString(), StaticField.class);
     }
 
 }
