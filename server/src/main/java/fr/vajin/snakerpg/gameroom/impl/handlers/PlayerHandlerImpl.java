@@ -7,7 +7,6 @@ import fr.vajin.snakerpg.gameroom.PlayerPacketCreator;
 import fr.vajin.snakerpg.gameroom.PlayerPacketHandler;
 import fr.vajin.snakerpg.gameroom.impl.PlayerTransmiter;
 import fr.vajin.snakerpg.gameroom.impl.creators.PlayerPacketCreatorImpl;
-import fr.vajin.snakerpg.gameroom.impl.creators.WaitingForGameState;
 
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -36,7 +35,7 @@ public class PlayerHandlerImpl implements PlayerHandler {
         this.userEntity = userEntity;
 
         this.playerPacketCreator = new PlayerPacketCreatorImpl(PlayerPacketCreator.ID_PROTOCOL, this);
-        this.playerTransmiter = new PlayerTransmiter(socket,playerPacketCreator,PlayerPacketCreator.ID_PROTOCOL,0.5f,address,port);
+        this.playerTransmiter = new PlayerTransmiter(socket, playerPacketCreator, PlayerPacketCreator.ID_PROTOCOL, 2f, address, port);
         this.playerPacketHandler = new PlayerPacketHandlerImpl(playerPacketCreator,playerTransmiter,this.controller);
         this.playerPacketHandler.setPlayerHandler(this);
         lastAliveSignalReceived = Instant.now().toEpochMilli();

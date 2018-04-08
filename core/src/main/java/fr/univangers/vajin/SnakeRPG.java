@@ -23,18 +23,28 @@ public class SnakeRPG extends Game implements ApplicationListener {
 
     private SnakeRPGAssetManager assetManager;
 
-    private LocalGameScreen gameScreen;
+    public static final int DISTANT_GAME_SCREEN = 8;
     private GameLoadingScreen gameLoadingScreen;
     private DirectConnectionScreen directConnectionScreen;
     private HostLobbyScreen hostLobbyScreen;
     private DistantLobbyScreen distantLobbyScreen;
     private MenuScreen menuScreen;
+    private LocalGameScreen localGameScreen;
 
     private Skin UISkin;
 
     private NetworkController networkController;
     private DatagramSocket datagramSocket;
     private CreditScreen creditScreen;
+    private DistantGameScreen distantGameScreen;
+
+    public static final int MENU_SCREEN = 1;
+    public static final int DIRECT_CONNECTION_SCREEN = 2;
+    public static final int GAME_LOADING_SCREEN = 3;
+    public static final int GAME_SCREEN = 4;
+    public static final int HOST_LOBBY_SCREEN = 5;
+    public static final int CREDIT_SCREEN = 6;
+    public static final int DISTANT_LOBBY_SCREEN = 7;
 
     @Override
     public void create() {
@@ -49,16 +59,10 @@ public class SnakeRPG extends Game implements ApplicationListener {
 
         this.menuScreen = new MenuScreen(this);
 
+        this.gameLoadingScreen = new GameLoadingScreen(this);
+
         this.setScreen(menuScreen);
     }
-
-    public static final int MENU_SCREEN = 1;
-    public static final int DIRECT_CONNECTION_SCREEN = 2;
-    public static final int GAME_LOADING_SCREEN = 3;
-    public static final int GAME_SCREEN = 4;
-    public static final int HOST_LOBBY_SCREEN = 5;
-    public static final int CREDIT_SCREEN = 6;
-    public static final int DISTANT_LOBBY_SCREEN = 7;
 
     public void changeScreen(int screen) {
         switch (screen) {
@@ -78,7 +82,7 @@ public class SnakeRPG extends Game implements ApplicationListener {
                 break;
             case GAME_LOADING_SCREEN:
                 if (this.gameLoadingScreen == null) {
-//                    this.gameLoadingScreen = new GameLoadingScreen(this, assetManager, ) //TODO
+                    this.gameLoadingScreen = new GameLoadingScreen(this);
                 }
                 logger.debug("Change screen to GameLoadingScreen");
                 this.setScreen(gameLoadingScreen);
@@ -104,6 +108,13 @@ public class SnakeRPG extends Game implements ApplicationListener {
                 logger.debug("Change screen to DistantLobbyScreen");
                 this.setScreen(distantLobbyScreen);
                 break;
+            case DISTANT_GAME_SCREEN:
+                if (this.distantGameScreen == null) {
+                    this.distantGameScreen = new DistantGameScreen(this);
+                }
+                logger.debug("Change screen to DistantGameScreen");
+                this.setScreen(this.distantGameScreen);
+                break;
         }
     }
 
@@ -121,8 +132,8 @@ public class SnakeRPG extends Game implements ApplicationListener {
         return hostLobbyScreen;
     }
 
-    public LocalGameScreen getGameScreen() {
-        return gameScreen;
+    public LocalGameScreen getLocalGameScreen() {
+        return localGameScreen;
     }
 
     public GameLoadingScreen getGameLoadingScreen() {
@@ -176,8 +187,16 @@ public class SnakeRPG extends Game implements ApplicationListener {
 
     public DistantLobbyScreen getDistantLobbyScreen() {
         if(this.distantLobbyScreen == null){
-            distantLobbyScreen = new DistantLobbyScreen(this, this.getNetworkController());
+            this.distantLobbyScreen = new DistantLobbyScreen(this, this.getNetworkController());
         }
         return distantLobbyScreen;
     }
+
+    public DistantGameScreen getDistantGameScreen() {
+        if (distantGameScreen == null) {
+            this.distantGameScreen = new DistantGameScreen(this);
+        }
+        return distantGameScreen;
+    }
+
 }

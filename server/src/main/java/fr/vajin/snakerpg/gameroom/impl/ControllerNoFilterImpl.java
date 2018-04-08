@@ -3,7 +3,6 @@ package fr.vajin.snakerpg.gameroom.impl;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import fr.univangers.vajin.IO.JSONFieldIO;
-import fr.univangers.vajin.IO.TileMapReader;
 import fr.univangers.vajin.engine.EngineBuilder;
 import fr.univangers.vajin.engine.GameEngine;
 import fr.univangers.vajin.engine.WrongPlayersNumberException;
@@ -166,13 +165,18 @@ public class ControllerNoFilterImpl implements Controller{
 
             for (PlayerHandler playerHandler : this.playerHandlers) {
                 logger.debug("Setting Game state for player" + playerHandler.getUserId());
-                playerHandler.getPlayerPacketCreator().startGame();
-                playerHandler.getPlayerPacketCreator().setState(PlayerPacketCreator.GAME_START);
+                PlayerPacketCreator playerPacketCreator = playerHandler.getPlayerPacketCreator();
+                if (playerPacketCreator == null) {
+                    logger.debug("error");
+                }
+                playerPacketCreator.startGame();
+//                playerPacketCreator.setState(PlayerPacketCreator.GAME_START); //QUI EST LE PUTIN DE BOULET QUI A ECRIT ÇA
+                playerPacketCreator.setState(PlayerPacketCreator.GAME_STATE);
             }
 
             logger.debug("Scheduling start of the game in 10 seconds");
 
-            this.scheduledThreadPoolExecutor.schedule(new GameRun(gameEngine, 32), 10, TimeUnit.SECONDS);
+            this.scheduledThreadPoolExecutor.schedule(new GameRun(gameEngine, 32), 5, TimeUnit.SECONDS);
         } catch (IOException e) {
             logger.error("Error opening map", e);
         } catch (WrongPlayersNumberException e) {

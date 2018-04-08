@@ -2,7 +2,10 @@ package fr.univangers.vajin.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import fr.univangers.vajin.SnakeRPG;
 import fr.univangers.vajin.network.NetworkController;
@@ -14,6 +17,8 @@ public class DistantLobbyScreen extends LobbyScreen {
 
     private Label mapLabel;
     private Label gameModeLabel;
+
+    private boolean gameStarting = false;
 
     public DistantLobbyScreen(SnakeRPG parent, NetworkController networkController) {
         super(parent, networkController);
@@ -116,5 +121,17 @@ public class DistantLobbyScreen extends LobbyScreen {
     public void hide() {
     }
 
+    @Override
+    public void render(float delta) {
 
+        if (gameStarting) {
+            this.getParent().changeScreen(SnakeRPG.GAME_LOADING_SCREEN);
+        }
+
+        super.render(delta);
+    }
+
+    public void setGameStarting(boolean gameStarting) {
+        this.gameStarting = gameStarting;
+    }
 }

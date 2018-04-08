@@ -56,7 +56,6 @@ public class SimpleSnake extends Snake {
 
     public void setInitialPosition(List<Position> startingPositions, Direction startingDirection) {
 
-        logger.debug("lol2");
         StringBuilder debugMessageBuilder = new StringBuilder("setInitialPositon :\n\t startingDirection ")
                 .append(startingDirection.toString())
                 .append("\nStarting Positions : ");
@@ -68,7 +67,6 @@ public class SimpleSnake extends Snake {
 
         this.currentDirection = startingDirection;
         this.nextDirections = new LinkedList<>();
-        System.out.println(1);
         this.leftToGrow = 0;
 
         this.lastMoveTick = -1;
@@ -78,17 +76,14 @@ public class SimpleSnake extends Snake {
         this.tail = new SimpleSnakeAtom(it.next(), 0);
         SnakeAtom last = tail;
 
-        System.out.println(2);
         atoms.put(last.getPosition(), last);
 
-        System.out.println(3);
         while (it.hasNext()) {
             last = new SimpleSnakeAtom(it.next(), last);
             atoms.put(last.getPosition(), last);
         }
         this.head = last;
         this.size = atoms.size();
-        System.out.println(4);
     }
 
     @Override

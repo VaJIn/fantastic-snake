@@ -17,14 +17,15 @@ public class GameState implements PlayerPacketCreator.PlayerPacketCreatorState {
 
     private final Logger logger = LogManager.getLogger(GameState.class);
 
-    private GameEngine gameEngine;
+    private Controller controller;
+    private PlayerPacketCreator parent;
 
     public GameState(PlayerPacketCreator creator) {
 
-        PlayerHandler playerHandler = creator.getPlayerHandler();
-        Controller controller = playerHandler.getController();
+        this.parent = creator;
 
-        this.gameEngine = controller.getCurrentEngine();
+        PlayerHandler playerHandler = creator.getPlayerHandler();
+        this.controller = playerHandler.getController();
     }
 
     @Override
@@ -33,9 +34,12 @@ public class GameState implements PlayerPacketCreator.PlayerPacketCreatorState {
 
         logger.debug("Building game packet");
 
+
         stream.writeInt(PlayerPacketCreator.GAME);
 
-        for (Entity entity : this.gameEngine.getEntityCollection()) {
+        GameEngine gameEngine = controller.getCurrentEngine();
+
+        for (Entity entity : gameEngine.getEntityCollection()) {
             Iterator<? extends Entity.EntityTileInfo> it = entity.getEntityTilesInfosIterator();
 
             stream.writeInt(entity.getEntityId());
@@ -55,25 +59,7 @@ public class GameState implements PlayerPacketCreator.PlayerPacketCreatorState {
 
         data = stream.toByteArray();
 
-
         return new DatagramPacket(data, data.length);
-    }
-
-    public void setEngine(GameEngine gameEngine) {
-        /*if (this.gameEngine != null) {
-            for (Entity entity : entities.values()) {
-                entity.removeObserver(this);
-                this.gameEngine.removeGameEngineObserver(this);
-            }
-        }*/
-
-        this.gameEngine = gameEngine;
-        /*this.gameEngine.addGameEngineObserver(this);
-        for (Entity entity : gameEngine.getEntities()) {
-            System.out.println("[Set engine] registering entity " + entity.getEntityId());
-            entity.registerObserver(this);
-            this.entities.put(entity.getEntityId(), entity);
-        }*/
     }
 
 }

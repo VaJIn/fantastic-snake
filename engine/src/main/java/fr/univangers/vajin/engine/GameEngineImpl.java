@@ -6,9 +6,9 @@ import fr.univangers.vajin.engine.entities.DynamicEntity;
 import fr.univangers.vajin.engine.entities.Entity;
 import fr.univangers.vajin.engine.entities.EntityObserver;
 import fr.univangers.vajin.engine.entities.snake.Snake;
+import fr.univangers.vajin.engine.entities.spawnables.bonus.BonusTarget;
 import fr.univangers.vajin.engine.entities.spawnables.bonus.EmptyTimedCommandImpl;
 import fr.univangers.vajin.engine.entities.spawnables.bonus.TimedCommand;
-import fr.univangers.vajin.engine.entities.spawnables.bonus.BonusTarget;
 import fr.univangers.vajin.engine.field.Field;
 import fr.univangers.vajin.engine.utilities.Direction;
 import fr.univangers.vajin.engine.utilities.PerformedCommandsMapImpl;
@@ -108,11 +108,11 @@ public class GameEngineImpl extends AbstractGameEngine implements EntityObserver
         List<Position> alreadyAssignedPositions = new ArrayList<>();
         RandomNumberGenerator randGen = new RandomNumberGenerator();
 
-        for (int i=0; i<players.size(); i++){
+        for (Snake player : players.values()) {
             boolean currentSnakeAssigned = false;
             int k = 0;
             while (!currentSnakeAssigned){
-                logger.debug("Player" + i + " - Iteration " + k++);
+                logger.debug("Player" + player.getEntityId() + " - Iteration " + k++);
                 currentSnakeAssigned = true;
                 //Drawing the direction
                 int dir = randGen.inRange(0, 3);
@@ -160,16 +160,11 @@ public class GameEngineImpl extends AbstractGameEngine implements EntityObserver
                     positions.clear();
                 }
                 else{
-                    logger.debug("Setting initial pos for player " + i);
-                    Snake snake = players.get(i);
-                    logger.debug("lol");
-                    snake.setInitialPosition(positions, d);
-                    logger.debug("Done");
+                    logger.debug("Setting initial pos for player " + player.getEntityId());
+                    player.setInitialPosition(positions, d);
                 }
                 alreadyAssignedPositions.addAll(positions);
-                logger.debug("Done");
             }
-            logger.debug("Player " + i + " assigned");
         }
     }
 

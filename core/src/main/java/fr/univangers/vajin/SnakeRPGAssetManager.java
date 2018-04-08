@@ -12,11 +12,13 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 
 public class SnakeRPGAssetManager {
 
-    AssetManager assetManager;
+    private AssetManager assetManager;
 
-    String uiSkinAtlas = "skin/clean-crispy-ui.atlas";
+    private String uiSkinAtlas = "skin/clean-crispy-ui.atlas";
 
-    String gameImageAtlas = "snake.atlas";
+    private String gameImageAtlas = "snake.atlas";
+
+    private String tileMapToLoad;
 
     public SnakeRPGAssetManager() {
 
@@ -28,6 +30,10 @@ public class SnakeRPGAssetManager {
         this.assetManager.setLoader(TextureAtlas.class, new TextureAtlasLoader(resolver));
         this.assetManager.setLoader(TiledMap.class, new TmxMapLoader(resolver));
 
+    }
+
+    public void setMapToLoad(String map) {
+        this.tileMapToLoad = map;
     }
 
     public void queueAddFonts() {
@@ -65,5 +71,9 @@ public class SnakeRPGAssetManager {
     }
 
     public void queueLoadingScreenAssets() {
+    }
+
+    public void queueLoadingTileMap() {
+        this.assetManager.load(tileMapToLoad, TiledMap.class);
     }
 }

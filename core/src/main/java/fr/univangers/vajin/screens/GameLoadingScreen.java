@@ -3,12 +3,9 @@ package fr.univangers.vajin.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.assets.loaders.resolvers.ExternalFileHandleResolver;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -16,17 +13,19 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.google.gson.Gson;
 import fr.univangers.vajin.IO.TileMapReader;
 import fr.univangers.vajin.SnakeRPG;
 import fr.univangers.vajin.engine.EngineBuilder;
 import fr.univangers.vajin.engine.GameEngine;
 import fr.univangers.vajin.engine.WrongPlayersNumberException;
 import fr.univangers.vajin.engine.entities.snake.SimpleSnake;
-
-import java.io.*;
+import fr.univangers.vajin.network.DistantEngine;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class GameLoadingScreen implements Screen, InputProcessor {
+
+    private final static Logger logger = LogManager.getLogger(GameLoadingScreen.class);
 
     private final Texture background;
     private String gameAtlas = "snake.atlas";
@@ -38,7 +37,12 @@ public class GameLoadingScreen implements Screen, InputProcessor {
     private Stage stage;
     private Label loadingInfoLabel;
     private TextButton startButton;
+    private boolean localGame = true;
+    private boolean started = false;
 
+    public void setLocalGame(boolean localGame) {
+        this.localGame = localGame;
+    }
 
     int currentLoadingStage;
 
@@ -63,6 +67,7 @@ public class GameLoadingScreen implements Screen, InputProcessor {
 
     @Override
     public void show() {
+        this.started = false;
         this.currentLoadingStage = 0;
 
         this.loadingInfoLabel = new Label("Starting loading....", parent.getUISkin());
@@ -120,33 +125,44 @@ public class GameLoadingScreen implements Screen, InputProcessor {
             currentLoadingStage++;
             switch (currentLoadingStage) {
                 case FONT:
+                    logger.debug("Loading fonts");
                     loadingInfoLabel.setText("Loading fonts");
                     parent.getAssetManager().queueAddFonts(); // first load done, now start fonts
                     break;
                 case PARTY:
-                    loadingInfoLabel.setText("Loading fonts");
+                    logger.debug("Loading particules");
+                    loadingInfoLabel.setText("Loading particules");
                     parent.getAssetManager().queueAddParticleEffects(); // fonts are done now do party effects
                     break;
                 case SOUND:
+                    logger.debug("Loading sounds");
                     loadingInfoLabel.setText("Loading sounds...");
                     parent.getAssetManager().queueAddSounds();
                     break;
                 case MUSIC:
+                    logger.debug("Loading music");
                     loadingInfoLabel.setText("Loading music...");
                     parent.getAssetManager().queueAddMusic();
                     break;
                 case IMAGE:
-                    loadingInfoLabel.setText("Loading textures...");
+                    logger.debug("Loading images");
+                    loadingInfoLabel.setText("Loading images");
                     parent.getAssetManager().queueAddGameImages();
                     break;
                 case MAP:
+                    logger.debug("Loading map");
                     loadingInfoLabel.setText("Loading map...");
-                    parent.getAssetManager().getManager().load(mapFileName, TiledMap.class);
+                    parent.getAssetManager().setMapToLoad(mapFileName);
+                    parent.getAssetManager().queueLoadingTileMap();
                     break;
                 case FINAL:
+                    logger.debug("Loading finished");
                     loadingInfoLabel.setText("Finished");
                     if (startButton.isDisabled()) {
                         startButton.setDisabled(false);
+                    }
+                    if (!localGame && !started) {
+                        startGame();
                     }
                     break;
             }
@@ -161,38 +177,31 @@ public class GameLoadingScreen implements Screen, InputProcessor {
     private void startGame() {
         System.out.println("StartGame");
         if (currentLoadingStage >= FINAL) {
+            this.started = true;
 
-            TileMapReader reader = TileMapReader.newTileMapReader(mapFileName);
+            if (localGame) {
+                TileMapReader reader = TileMapReader.newTileMapReader(mapFileName);
 
-            EngineBuilder classicEngineBuilder = new EngineBuilder(reader.getField(), 1);
+                EngineBuilder classicEngineBuilder = new EngineBuilder(reader.getField(), 1);
 
-            Gson gson = new Gson();
 
-            FileHandle fileHandle = new ExternalFileHandleResolver().resolve(mapFileName + ".json");
+                classicEngineBuilder.addSnake(0, new SimpleSnake());
+                classicEngineBuilder.addSnake(1, new SimpleSnake());
+                //   classicEngineBuilder.addSnake(2, new SimpleSnake());
 
-            File file = fileHandle.file();
-
-            try {
-                FileWriter writer = new FileWriter(file);
-                writer.write(gson.toJson(reader.getField()));
-
-                writer.close();
-                System.out.println("File written at " + file.getAbsolutePath());
-            } catch (IOException e) {
-                e.printStackTrace();
+                GameEngine classicEngine = null;
+                try {
+                    classicEngine = classicEngineBuilder.build();
+                } catch (WrongPlayersNumberException e) {
+                    e.printStackTrace();
+                }
+                parent.setScreen(new LocalGameScreen(parent, reader, parent.getAssetManager().getManager(), classicEngine, mapFileName));
+            } else {
+                DistantEngine engine = new DistantEngine();
+                parent.getDistantGameScreen().setMap(mapFileName);
+                parent.changeScreen(SnakeRPG.DISTANT_GAME_SCREEN);
             }
 
-
-            classicEngineBuilder.addSnake(0, new SimpleSnake());
-            classicEngineBuilder.addSnake(1, new SimpleSnake());
-            //   classicEngineBuilder.addSnake(2, new SimpleSnake());
-
-            GameEngine classicEngine = null;
-            try {
-                classicEngine = classicEngineBuilder.build();
-            } catch (WrongPlayersNumberException e) {
-                e.printStackTrace();
-            }
 /*
         try {
             int idProtocol = 0x685fa053;
@@ -211,7 +220,6 @@ public class GameLoadingScreen implements Screen, InputProcessor {
             e.printStackTrace();
         }
 */
-            parent.setScreen(new LocalGameScreen(parent, reader, parent.getAssetManager().getManager(), classicEngine, mapFileName));
         } else {
             System.out.println("Not done loading !");
         }

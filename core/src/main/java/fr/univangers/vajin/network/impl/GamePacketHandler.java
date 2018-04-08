@@ -1,10 +1,9 @@
 package fr.univangers.vajin.network.impl;
 
 import fr.univangers.vajin.engine.utilities.Position;
-import fr.univangers.vajin.network.DistantEngine;
-import fr.univangers.vajin.network.DistantEntity;
-import fr.univangers.vajin.network.PacketCreator;
-import fr.univangers.vajin.network.PacketHandler;
+import fr.univangers.vajin.network.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.net.DatagramPacket;
 import java.nio.ByteBuffer;
@@ -14,17 +13,22 @@ import java.nio.ByteBuffer;
  */
 public class GamePacketHandler implements PacketHandler {
 
-    private DistantEngine distantEngine;
+    private static final Logger logger = LogManager.getLogger(GamePacketHandler.class);
 
-    public GamePacketHandler() {
-        this.distantEngine = new DistantEngine();
+    private NetworkController networkController;
+
+    public GamePacketHandler(NetworkController networkController) {
+        this.networkController = networkController;
     }
 
     private static final int BUFFER_START_POS = 16;
 
     @Override
     public void handlePacket(DatagramPacket packet) {
+
         ByteBuffer buffer = ByteBuffer.wrap(packet.getData());
+
+        final DistantEngine distantEngine = networkController.getDistantEngine();
 
         buffer.position(BUFFER_START_POS);
 
@@ -34,13 +38,12 @@ public class GamePacketHandler implements PacketHandler {
             throw new IllegalArgumentException("Not a game packet !");
         }
 
-        this.distantEngine.beginChange();
+        distantEngine.beginChange();
 
         boolean hasEntityLeft = true;
-        while (buffer.hasRemaining()) {
-            hasEntityLeft = updateEntity(buffer);
+        while (buffer.hasRemaining() && hasEntityLeft) {
+            hasEntityLeft = updateEntity(buffer, distantEngine);
         }
-        ;
 
         distantEngine.endChange();
     }
@@ -51,14 +54,19 @@ public class GamePacketHandler implements PacketHandler {
      * @param buffer
      * @return
      */
-    public boolean updateEntity(ByteBuffer buffer) {
+    public boolean updateEntity(ByteBuffer buffer, DistantEngine distantEngine) {
         int idEntity = buffer.getInt();
 
+        StringBuilder debugMessage;
+
         if (idEntity == -1) {
+            logger.debug("Returning false");
             return false;
+        } else {
+            debugMessage = new StringBuilder("Updating Entity ").append(idEntity).append(System.lineSeparator());
         }
 
-        DistantEntity entity = this.distantEngine.getEntity(idEntity);
+        DistantEntity entity = distantEngine.getEntity(idEntity);
 
         entity.beginUpdate();
 
@@ -67,18 +75,28 @@ public class GamePacketHandler implements PacketHandler {
             int posX = buffer.getInt();
             int posY = buffer.getInt();
             int sizeResourceKeyBytes = buffer.getInt();
-            byte[] resourceKey = new byte[sizeResourceKeyBytes];
+            byte[] resourceKeyBytes = new byte[sizeResourceKeyBytes];
 
-            buffer.get(resourceKey);
+            buffer.get(resourceKeyBytes);
 
-            entity.setTile(idTile, new Position(posX, posY), String.valueOf(resourceKey));
+            String resourceKey = new String(resourceKeyBytes);
+
+            debugMessage.append("\tTile ")
+                    .append(idTile)
+                    .append(" -> (")
+                    .append(posX)
+                    .append(", ")
+                    .append(posY)
+                    .append(") - ")
+                    .append(resourceKey)
+                    .append(System.lineSeparator());
+
+            entity.setTile(idTile, new Position(posX, posY), resourceKey);
         }
         entity.endUpdate();
 
-        return true;
-    }
+        logger.debug(debugMessage.toString());
 
-    public DistantEngine getDistantEngine() {
-        return distantEngine;
+        return true;
     }
 }

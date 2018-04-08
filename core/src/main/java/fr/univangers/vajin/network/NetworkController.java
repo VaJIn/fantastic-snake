@@ -28,4 +28,6 @@ public interface NetworkController {
     LobbyBean getLobbyBean();
 
     void setLobbyBean(LobbyBean lobbyBean);
+
+    DistantEngine getDistantEngine();
 }

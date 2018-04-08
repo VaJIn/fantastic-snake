@@ -1,6 +1,7 @@
 package fr.univangers.vajin.network.impl;
 
 import fr.univangers.vajin.SnakeRPG;
+import fr.univangers.vajin.network.DistantEngine;
 import fr.univangers.vajin.network.NetworkController;
 import fr.univangers.vajin.network.PacketCreator;
 import fr.vajin.snakerpg.jsondatabeans.LobbyBean;
@@ -27,6 +28,8 @@ public class NetworkControllerImpl implements NetworkController {
     private PacketCreator packetCreator;
     private Receiver receiverThread;
     private TransmiterThread transmiterThread;
+
+    private DistantEngine distantEngine;
 
     private LobbyBean lobbyBean;
 
@@ -130,5 +133,13 @@ public class NetworkControllerImpl implements NetworkController {
 
     public SnakeRPG getApplication() {
         return application;
+    }
+
+    @Override
+    public DistantEngine getDistantEngine() {
+        if (this.distantEngine == null) {
+            this.distantEngine = new DistantEngine();
+        }
+        return distantEngine;
     }
 }
