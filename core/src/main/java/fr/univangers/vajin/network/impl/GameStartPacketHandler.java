@@ -50,12 +50,7 @@ public class GameStartPacketHandler implements PacketHandler{
         logger.debug("Received game start packet \n" +
                 jsonString);
 
-        controller.getApplication().getGameLoadingScreen().setMapFileName(gameStartBean.getMap());
-
-        controller.getApplication().getDistantLobbyScreen().setGameStarting(true);
-
-        controller.getApplication().getGameLoadingScreen().setLocalGame(false);
-
+        controller.startGame(gameStartBean);
 //        controller.getApplication().changeScreen(SnakeRPG.GAME_LOADING_SCREEN);
     }
 }

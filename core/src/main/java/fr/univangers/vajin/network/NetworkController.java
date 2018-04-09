@@ -2,6 +2,7 @@ package fr.univangers.vajin.network;
 
 import fr.univangers.vajin.SnakeRPG;
 import fr.vajin.snakerpg.jsondatabeans.GameEndBean;
+import fr.vajin.snakerpg.jsondatabeans.GameStartBean;
 import fr.vajin.snakerpg.jsondatabeans.LobbyBean;
 
 import java.net.InetAddress;
@@ -44,5 +45,7 @@ public interface NetworkController {
 
     GameEndBean getGameEndBean();
 
-    void setGameEndBean(GameEndBean gameEndBean);
+    void endGame(GameEndBean gameEndBean);
+
+    void startGame(GameStartBean gameStartBean);
 }

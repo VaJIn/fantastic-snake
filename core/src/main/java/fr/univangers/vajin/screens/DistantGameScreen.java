@@ -158,6 +158,8 @@ public class DistantGameScreen implements GameEngineObserver, InputProcessor, Sc
     @Override
     public void show() {
 
+        cleanEntityView();
+
         this.font = new BitmapFont();
         this.batch = new SpriteBatch();
         this.tiledMapRenderer = new OrthogonalTiledMapRenderer(reader.getTiledMap());
@@ -182,6 +184,7 @@ public class DistantGameScreen implements GameEngineObserver, InputProcessor, Sc
         long time = System.currentTimeMillis();
 
         if(gameEngine.isGameOver()){
+            cleanEntityView();
             this.application.changeScreen(SnakeRPG.GAME_END_SCREEN);
         }
 

@@ -5,6 +5,7 @@ import fr.univangers.vajin.network.DistantEngine;
 import fr.univangers.vajin.network.NetworkController;
 import fr.univangers.vajin.network.PacketCreator;
 import fr.vajin.snakerpg.jsondatabeans.GameEndBean;
+import fr.vajin.snakerpg.jsondatabeans.GameStartBean;
 import fr.vajin.snakerpg.jsondatabeans.LobbyBean;
 import fr.vajin.snakerpg.utilities.CustomByteArrayOutputStream;
 import org.apache.logging.log4j.LogManager;
@@ -193,8 +194,22 @@ public class NetworkControllerImpl implements NetworkController {
         return gameEndBean;
     }
 
+
     @Override
-    public void setGameEndBean(GameEndBean gameEndBean) {
+    public void startGame(GameStartBean gameStartBean) {
+
+        this.distantEngine = new DistantEngine();
+
+        this.getApplication().getGameLoadingScreen().setMapFileName(gameStartBean.getMap());
+
+        this.getApplication().getDistantLobbyScreen().setGameStarting(true);
+
+        this.getApplication().getGameLoadingScreen().setLocalGame(false);
+
+    }
+
+    @Override
+    public void endGame(GameEndBean gameEndBean) {
         logger.info("Game ended");
         this.gameEndBean = gameEndBean;
         this.distantEngine.setGameOver();

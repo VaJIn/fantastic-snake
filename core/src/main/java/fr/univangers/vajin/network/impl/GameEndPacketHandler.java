@@ -1,7 +1,6 @@
 package fr.univangers.vajin.network.impl;
 
 import com.google.gson.Gson;
-import fr.univangers.vajin.SnakeRPG;
 import fr.univangers.vajin.network.NetworkController;
 import fr.univangers.vajin.network.PacketCreator;
 import fr.univangers.vajin.network.PacketHandler;
@@ -48,6 +47,6 @@ public class GameEndPacketHandler implements PacketHandler{
 
         logger.debug("Received game end packet \n" + jsonString);
 
-        this.controller.setGameEndBean(gameEndBean);
+        this.controller.endGame(gameEndBean);
     }
 }

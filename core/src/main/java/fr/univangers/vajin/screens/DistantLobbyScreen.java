@@ -121,6 +121,7 @@ public class DistantLobbyScreen extends LobbyScreen {
     public void render(float delta) {
 
         if (gameStarting) {
+            this.gameStarting = false;
             this.getApplication().changeScreen(SnakeRPG.GAME_LOADING_SCREEN);
         }
 

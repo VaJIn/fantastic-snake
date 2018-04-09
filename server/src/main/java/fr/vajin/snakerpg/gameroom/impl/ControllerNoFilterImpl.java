@@ -10,12 +10,14 @@ import fr.univangers.vajin.engine.entities.snake.SimpleSnake;
 import fr.univangers.vajin.engine.entities.snake.Snake;
 import fr.univangers.vajin.engine.field.Field;
 import fr.vajin.snakerpg.database.entities.GameModeEntity;
-import fr.vajin.snakerpg.database.entities.GameParticipationEntity;
 import fr.vajin.snakerpg.database.entities.UserEntity;
 import fr.vajin.snakerpg.gameroom.Cleaner;
 import fr.vajin.snakerpg.gameroom.Controller;
 import fr.vajin.snakerpg.gameroom.PlayerHandler;
 import fr.vajin.snakerpg.gameroom.PlayerPacketCreator;
+import fr.vajin.snakerpg.jsondatabeans.GameEndBean;
+import fr.vajin.snakerpg.jsondatabeans.GameParticipationBean;
+import fr.vajin.snakerpg.jsondatabeans.PlayerBean;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -25,6 +27,7 @@ import java.net.InetAddress;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.NoSuchElementException;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -134,8 +137,34 @@ public class ControllerNoFilterImpl implements Controller{
     }
 
     @Override
-    public Collection<GameParticipationEntity> getLastGameResults() {
-        return new ArrayList<GameParticipationEntity>();
+    public GameEndBean getLastGameResults() {
+
+        if (gameEngine == null) {
+            throw new NoSuchElementException("No last game to retrieve data from !");
+        }
+
+        GameEndBean gameEndBean = new GameEndBean();
+
+        Collection<GameParticipationBean> gameParticipationBeanCollection = new ArrayList<>();
+
+        for (PlayerHandler playerHandler : this.playerHandlers) {
+            GameParticipationBean gameParticipationBean = new GameParticipationBean();
+
+            PlayerBean playerBean = new PlayerBean();
+            playerBean.setLocalId(playerHandler.getUserId());
+            playerBean.setSnakeEntityId(playerHandler.getSnake().getEntityId());
+            playerBean.setAlias(playerHandler.getUserEntity().getAlias());
+
+            gameParticipationBean.setPlayer(playerBean);
+            gameParticipationBean.setDeathCount(1);
+            gameParticipationBean.setKillCount(0);
+
+            gameParticipationBeanCollection.add(gameParticipationBean);
+        }
+
+        gameEndBean.setGameParticipations(gameParticipationBeanCollection);
+
+        return gameEndBean;
     }
 
     @Override

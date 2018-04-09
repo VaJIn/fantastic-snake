@@ -2,8 +2,8 @@ package fr.vajin.snakerpg.gameroom;
 
 import fr.univangers.vajin.engine.GameEngine;
 import fr.vajin.snakerpg.database.entities.GameModeEntity;
-import fr.vajin.snakerpg.database.entities.GameParticipationEntity;
 import fr.vajin.snakerpg.database.entities.UserEntity;
+import fr.vajin.snakerpg.jsondatabeans.GameEndBean;
 
 import java.net.InetAddress;
 import java.util.Collection;
@@ -31,7 +31,7 @@ public interface Controller {
 
     Collection<PlayerHandler> getPlayerHandlers();
 
-    Collection<GameParticipationEntity> getLastGameResults();
+    GameEndBean getLastGameResults();
 
     String getMapName();
 
