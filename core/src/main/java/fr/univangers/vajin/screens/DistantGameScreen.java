@@ -157,9 +157,11 @@ public class DistantGameScreen implements GameEngineObserver, InputProcessor, Sc
 
     @Override
     public void show() {
+
         this.font = new BitmapFont();
         this.batch = new SpriteBatch();
         this.tiledMapRenderer = new OrthogonalTiledMapRenderer(reader.getTiledMap());
+
 
         this.camera = new OrthographicCamera();
         camera.setToOrtho(
@@ -179,6 +181,9 @@ public class DistantGameScreen implements GameEngineObserver, InputProcessor, Sc
     public void render(float delta) {
         long time = System.currentTimeMillis();
 
+        if(gameEngine.isGameOver()){
+            this.application.changeScreen(SnakeRPG.GAME_END_SCREEN);
+        }
 
         Gdx.gl.glClearColor(141f / 255f, 196f / 255f, 53f / 255f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

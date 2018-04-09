@@ -21,12 +21,14 @@ public class DistantEngine implements GameEngine {
 
     private Collection<DistantEntity> leftToUpdate;
     private boolean updating;
+    private boolean gameOver;
 
     public DistantEngine() {
         this.distantEntityMap = Maps.newHashMap();
         this.observers = new ArrayList<>();
         this.updating = false;
         this.leftToUpdate = new TreeSet<>(Comparator.comparing(DistantEntity::getDistantId));
+        this.gameOver = false;
     }
 
 
@@ -82,7 +84,11 @@ public class DistantEngine implements GameEngine {
 
     @Override
     public boolean isGameOver() {
-        return false;
+        return this.gameOver;
+    }
+
+    public void setGameOver(){
+        this.gameOver  = true;
     }
 
     @Override

@@ -49,6 +49,5 @@ public class GameEndPacketHandler implements PacketHandler{
         logger.debug("Received game end packet \n" + jsonString);
 
         this.controller.setGameEndBean(gameEndBean);
-        this.controller.getApplication().changeScreen(SnakeRPG.GAME_END_SCREEN);
     }
 }

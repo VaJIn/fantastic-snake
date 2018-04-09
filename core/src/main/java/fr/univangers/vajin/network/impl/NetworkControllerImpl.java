@@ -195,8 +195,9 @@ public class NetworkControllerImpl implements NetworkController {
 
     @Override
     public void setGameEndBean(GameEndBean gameEndBean) {
+        logger.info("Game ended");
         this.gameEndBean = gameEndBean;
-        this.getApplication().getEndGameScreen().updateTable();
+        this.distantEngine.setGameOver();
     }
 
     @Override
