@@ -28,7 +28,7 @@ public class PacketHandlerDistribuer implements PacketHandler {
         this.lobbyPacketHandler = new LobbyPacketHandler(this.controller);
         this.gameStartPacketHandler = new GameStartPacketHandler(this.controller);
         this.gamePacketHandler = new GamePacketHandler(this.controller);
-        this.gameEndPacketHandler = new GameEndPacketHandler();
+        this.gameEndPacketHandler = new GameEndPacketHandler(this.controller);
     }
 
 

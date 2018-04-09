@@ -1,10 +1,10 @@
 package fr.univangers.vajin.network.impl;
 
 import com.google.gson.Gson;
+import fr.univangers.vajin.SnakeRPG;
 import fr.univangers.vajin.network.NetworkController;
 import fr.univangers.vajin.network.PacketCreator;
 import fr.univangers.vajin.network.PacketHandler;
-import fr.vajin.snakerpg.gameroom.Controller;
 import fr.vajin.snakerpg.jsondatabeans.GameEndBean;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -42,15 +42,13 @@ public class GameEndPacketHandler implements PacketHandler{
 
         Gson gson = new Gson();
 
-        GameEndBean gameEndBean = gson.fromJson(String.valueOf(new String(jsonData)), GameEndBean.class);
+        String jsonString = new String(jsonData);
 
-        logger.debug("Received game end packet \n");
+        GameEndBean gameEndBean = gson.fromJson(jsonString, GameEndBean.class);
 
-        controller.getApplication().getEndLoadingScreen();
+        logger.debug("Received game end packet \n" + jsonString);
 
-//        controller.getApplication().getDistantLobbyScreen().setGameStarting(true);
-
-//        controller.getApplication().getGameLoadingScreen().setLocalGame(false);
-
+        this.controller.setGameEndBean(gameEndBean);
+        this.controller.getApplication().changeScreen(SnakeRPG.GAME_END_SCREEN);
     }
 }

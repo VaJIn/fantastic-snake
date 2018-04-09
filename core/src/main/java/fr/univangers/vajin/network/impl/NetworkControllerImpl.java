@@ -4,6 +4,7 @@ import fr.univangers.vajin.SnakeRPG;
 import fr.univangers.vajin.network.DistantEngine;
 import fr.univangers.vajin.network.NetworkController;
 import fr.univangers.vajin.network.PacketCreator;
+import fr.vajin.snakerpg.jsondatabeans.GameEndBean;
 import fr.vajin.snakerpg.jsondatabeans.LobbyBean;
 import fr.vajin.snakerpg.utilities.CustomByteArrayOutputStream;
 import org.apache.logging.log4j.LogManager;
@@ -33,6 +34,7 @@ public class NetworkControllerImpl implements NetworkController {
     private DistantEngine distantEngine;
 
     private LobbyBean lobbyBean;
+    private GameEndBean gameEndBean;
 
     private int idPlayer;
     private int tokenPlayer;
@@ -102,6 +104,7 @@ public class NetworkControllerImpl implements NetworkController {
 
 
     }
+
 
     @Override
     public void setCurrentServer(InetAddress address, int port) {
@@ -181,9 +184,19 @@ public class NetworkControllerImpl implements NetworkController {
     }
 
     @Override
-
     public int getTokenPlayer() {
         return tokenPlayer;
+    }
+
+    @Override
+    public GameEndBean getGameEndBean() {
+        return gameEndBean;
+    }
+
+    @Override
+    public void setGameEndBean(GameEndBean gameEndBean) {
+        this.gameEndBean = gameEndBean;
+        this.getApplication().getEndGameScreen().updateTable();
     }
 
     @Override

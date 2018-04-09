@@ -49,6 +49,7 @@ public class SnakeRPG extends Game implements ApplicationListener {
     public static final int CREDIT_SCREEN = 6;
     public static final int DISTANT_LOBBY_SCREEN = 7;
     public static final int OPTION_SCREEN = 9;
+    public static final int GAME_END_SCREEN = 10;
     private OptionScreen optionScreen;
 
     @Override
@@ -127,6 +128,9 @@ public class SnakeRPG extends Game implements ApplicationListener {
                     this.optionScreen = new OptionScreen(this);
                 }
                 this.setScreen(this.optionScreen);
+                break;
+            case GAME_END_SCREEN:
+                this.setScreen(this.getEndGameScreen());
                 break;
         }
     }
@@ -213,7 +217,7 @@ public class SnakeRPG extends Game implements ApplicationListener {
     }
 
 
-    public EndGameScreen getEndLoadingScreen() {
+    public EndGameScreen getEndGameScreen() {
         if (endGameScreen == null){
             this.endGameScreen = new EndGameScreen(this);
         }
@@ -223,5 +227,6 @@ public class SnakeRPG extends Game implements ApplicationListener {
     public AppPreferences getAppPreferences() {
         return appPreferences;
     }
+
 
 }
