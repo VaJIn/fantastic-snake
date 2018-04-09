@@ -1,6 +1,5 @@
 package fr.univangers.vajin.engine.entities.snake;
 
-import fr.univangers.vajin.GameConstants;
 import fr.univangers.vajin.engine.GameEngine;
 import fr.univangers.vajin.engine.entities.DynamicEntity;
 import fr.univangers.vajin.engine.entities.Entity;
@@ -139,7 +138,6 @@ public abstract class Snake extends DynamicEntity {
     public boolean isVisibleTo(Entity entity) {
 
         return invisible <= 0 || this == entity;
-
 
     }
 

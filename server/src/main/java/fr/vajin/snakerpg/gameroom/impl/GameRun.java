@@ -43,7 +43,7 @@ public class GameRun implements Runnable {
 
                 Thread.sleep(sleepTime);
 
-
+                controller.endGame();
 
             }
             logger.debug("Game is over");
