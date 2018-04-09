@@ -192,7 +192,7 @@ public class ControllerNoFilterImpl implements Controller{
             for (PlayerHandler playerHandler : playerHandlers) {
                 int id = playerHandler.getUserId();
                 Snake snake = new SimpleSnake();
-                gameEngineBuilder.addSnake(id, new SimpleSnake());
+                gameEngineBuilder.addSnake(id, snake);
                 playerHandler.setSnake(snake);
             }
 

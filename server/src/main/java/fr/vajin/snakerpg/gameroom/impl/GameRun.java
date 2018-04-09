@@ -40,8 +40,6 @@ public class GameRun implements Runnable {
 
                 long sleepTime = 1000 / ticksPerSecond - (end - start);
 
-              //  logger.debug("Sleeping for " + sleepTime);
-
                 Thread.sleep(sleepTime);
             }
             logger.debug("Game is over");

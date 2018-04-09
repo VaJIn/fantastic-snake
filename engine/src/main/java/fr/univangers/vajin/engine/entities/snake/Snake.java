@@ -5,6 +5,8 @@ import fr.univangers.vajin.engine.entities.DynamicEntity;
 import fr.univangers.vajin.engine.entities.Entity;
 import fr.univangers.vajin.engine.utilities.Direction;
 import fr.univangers.vajin.engine.utilities.Position;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Iterator;
 import java.util.List;
@@ -14,6 +16,8 @@ import java.util.List;
  * This class should be instanciated with an instance of SnakeFactory.
  */
 public abstract class Snake extends DynamicEntity {
+
+    private static final Logger logger = LogManager.getLogger();
 
     /**
      * The maximum amount of life point a Snake can have.
@@ -136,8 +140,17 @@ public abstract class Snake extends DynamicEntity {
 
     @Override
     public boolean isVisibleTo(Entity entity) {
-
-        return invisible <= 0 || this == entity;
+        if (entity == null) {
+            logger.debug("isVisibleTo : null entity");
+            return false;
+        }
+        boolean result = invisible <= 0 || this == entity;
+        if (result) {
+            logger.debug(this.getEntityId() + " is visible to " + entity.getEntityId());
+        } else {
+            logger.debug(this.getEntityId() + " is not visible to " + entity.getEntityId());
+        }
+        return result;
 
     }
 
