@@ -135,7 +135,7 @@ public class ControllerNoFilterImpl implements Controller{
 
     @Override
     public Collection<GameParticipationEntity> getLastGameResults() {
-        return null;
+        return new ArrayList<GameParticipationEntity>();
     }
 
     @Override

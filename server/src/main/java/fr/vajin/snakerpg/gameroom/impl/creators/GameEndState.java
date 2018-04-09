@@ -7,6 +7,8 @@ import fr.vajin.snakerpg.jsondatabeans.GameEndBean;
 import fr.vajin.snakerpg.jsondatabeans.GameParticipationBean;
 import fr.vajin.snakerpg.jsondatabeans.PlayerBean;
 import fr.vajin.snakerpg.utilities.CustomByteArrayOutputStream;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -14,6 +16,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class GameEndState implements PlayerPacketCreator.PlayerPacketCreatorState{
+
+
+    private final Logger logger = LogManager.getLogger(GameState.class);
+
 
     private PlayerPacketCreator creator;
 
@@ -24,6 +30,7 @@ public class GameEndState implements PlayerPacketCreator.PlayerPacketCreatorStat
     @Override
     public DatagramPacket getNextPacket(CustomByteArrayOutputStream stream) throws IOException {
 
+        logger.debug("GameEndPacket");
 
         stream.writeInt(PlayerPacketCreator.GAME_END);
 
