@@ -26,6 +26,7 @@ public class GameRun implements Runnable {
     @Override
     public void run() {
         try {
+            logger.info("Starting game");
 
             while (!engine.isGameOver()){
 
@@ -42,9 +43,6 @@ public class GameRun implements Runnable {
               //  logger.debug("Sleeping for " + sleepTime);
 
                 Thread.sleep(sleepTime);
-
-                controller.endGame();
-
             }
             logger.debug("Game is over");
             controller.endGame();

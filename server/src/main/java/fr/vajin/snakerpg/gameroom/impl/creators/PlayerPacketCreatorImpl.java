@@ -140,7 +140,7 @@ public class PlayerPacketCreatorImpl implements PlayerPacketCreator {
 
             CustomByteArrayOutputStream stream = this.getPacketStream();
             DatagramPacket packet = state.getNextPacket(stream);
-
+            logger.debug("Packet");
             this.playerHandler.getPlayerTransmitter().send(packet);
 
 
