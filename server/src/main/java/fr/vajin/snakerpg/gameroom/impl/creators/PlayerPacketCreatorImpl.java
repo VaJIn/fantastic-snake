@@ -125,18 +125,28 @@ public class PlayerPacketCreatorImpl implements PlayerPacketCreator {
     @Override
     public void startGame() {
 
-        try {
-            CustomByteArrayOutputStream stream = this.getPacketStream();
+        sendPacket(gameStartState);
+    }
 
-            DatagramPacket packet = gameStartState.getNextPacket(stream);
+    @Override
+    public void endGame() {
+
+        sendPacket(gameEndState);
+
+    }
+
+    private void sendPacket(PlayerPacketCreatorState state){
+        try{
+
+            CustomByteArrayOutputStream stream = this.getPacketStream();
+            DatagramPacket packet = state.getNextPacket(stream);
 
             this.playerHandler.getPlayerTransmitter().send(packet);
 
-        } catch (IOException e) {
+
+        }catch (IOException e){
             e.printStackTrace();
         }
-
-
     }
 
     @Override

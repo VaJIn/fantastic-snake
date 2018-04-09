@@ -60,4 +60,6 @@ public interface PlayerPacketCreator{
     PlayerHandler getPlayerHandler();
 
     void startGame();
+
+    void endGame();
 }

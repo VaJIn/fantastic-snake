@@ -176,13 +176,12 @@ public class ControllerNoFilterImpl implements Controller{
                 logger.debug("Setting Game state for player" + playerHandler.getUserId());
                 PlayerPacketCreator playerPacketCreator = playerHandler.getPlayerPacketCreator();
                 playerPacketCreator.startGame();
-//                playerPacketCreator.setState(PlayerPacketCreator.GAME_START); //QUI EST LE PUTIN DE BOULET QUI A ECRIT ÇA
                 playerPacketCreator.setState(PlayerPacketCreator.GAME_STATE);
             }
 
             logger.debug("Scheduling start of the game in " + startGameDelay + " seconds");
 
-            this.scheduledThreadPoolExecutor.schedule(new GameRun(gameEngine, 32), startGameDelay, TimeUnit.SECONDS);
+            this.scheduledThreadPoolExecutor.schedule(new GameRun(gameEngine, this, 32), startGameDelay, TimeUnit.SECONDS);
         } catch (IOException e) {
             logger.error("Error opening map", e);
         } catch (WrongPlayersNumberException e) {
@@ -193,6 +192,13 @@ public class ControllerNoFilterImpl implements Controller{
 
     @Override
     public void endGame() {
+
+        for(PlayerHandler playerHandler : this.playerHandlers){
+
+            playerHandler.getPlayerPacketCreator().endGame();
+            playerHandler.getPlayerPacketCreator().setState(PlayerPacketCreator.WAITING_FOR_GAME_STATE);
+
+        }
 
     }
 
