@@ -29,6 +29,7 @@ public class SnakeRPG extends Game implements ApplicationListener {
     private DistantLobbyScreen distantLobbyScreen;
     private MenuScreen menuScreen;
     private LocalGameScreen localGameScreen;
+    private EndGameScreen endGameScreen;
 
     private Skin UISkin;
 
@@ -211,7 +212,16 @@ public class SnakeRPG extends Game implements ApplicationListener {
         return distantGameScreen;
     }
 
+
+    public EndGameScreen getEndLoadingScreen() {
+        if (endGameScreen == null){
+            this.endGameScreen = new EndGameScreen(this);
+        }
+        return endGameScreen;
+    }
+
     public AppPreferences getAppPreferences() {
         return appPreferences;
     }
+
 }
