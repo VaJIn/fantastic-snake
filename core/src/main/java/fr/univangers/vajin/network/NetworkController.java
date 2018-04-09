@@ -31,5 +31,11 @@ public interface NetworkController {
 
     void setLobbyBean(LobbyBean lobbyBean);
 
+    void setPlayerInfos(int idPlayer, int tokenPlayer);
+
     DistantEngine getDistantEngine();
+
+    int getIdPlayer();
+
+    int getTokenPlayer();
 }

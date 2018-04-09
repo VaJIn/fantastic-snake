@@ -34,6 +34,10 @@ public class NetworkControllerImpl implements NetworkController {
 
     private LobbyBean lobbyBean;
 
+    private int idPlayer;
+    private int tokenPlayer;
+
+
     public NetworkControllerImpl(SnakeRPG snakeRPG, DatagramSocket socket){
 
         this.application = snakeRPG;
@@ -43,7 +47,7 @@ public class NetworkControllerImpl implements NetworkController {
         this.socket = socket;
 
         this.transmiterThread = new TransmiterThread(this.socket, this, TRANSMITER_FREQUENCY);
-        this.packetCreator = new PacketCreatorImpl(PacketCreator.ID_PROTOCOL,0,0,transmiterThread);
+        this.packetCreator = new PacketCreatorImpl(this, PacketCreator.ID_PROTOCOL, transmiterThread);
         this.packetHandler = new PacketHandlerDistribuer(this,this.packetCreator);
 
         this.receiverThread = new Receiver(this.socket,PacketCreator.ID_PROTOCOL,this.packetHandler);
@@ -76,8 +80,8 @@ public class NetworkControllerImpl implements NetworkController {
             stream.writeInt(PacketCreator.JOIN);
 
             String userAlias = this.getApplication().getAppPreferences().getLocalAlias();
-            if (userAlias == null || userAlias.trim().isEmpty()) {
-                userAlias = "Unknown Player";
+            if (userAlias == null) {
+                userAlias = "";
             }
 
             byte[] userAliasBytes = userAlias.getBytes();
@@ -163,5 +167,21 @@ public class NetworkControllerImpl implements NetworkController {
             this.distantEngine = new DistantEngine();
         }
         return distantEngine;
+    }
+
+    @Override
+    public void setPlayerInfos(int idPlayer, int tokenPlayer) {
+        this.idPlayer = idPlayer;
+        this.tokenPlayer = tokenPlayer;
+    }
+
+    @Override
+    public int getIdPlayer() {
+        return idPlayer;
+    }
+
+    @Override
+    public int getTokenPlayer() {
+        return tokenPlayer;
     }
 }

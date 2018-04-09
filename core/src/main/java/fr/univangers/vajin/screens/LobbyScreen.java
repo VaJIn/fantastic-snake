@@ -38,7 +38,13 @@ public abstract class LobbyScreen extends AbstractMenuScreen {
             Iterator<PlayerBean> it = this.networkController.getLobbyBean().getPlayers().iterator();
             while (it.hasNext()) {
                 PlayerBean playerBean = it.next();
-                Label aliasLabel = new Label(playerBean.getAlias(), skin);
+
+                String aliasLabelText = "";
+                if (playerBean.getLocalId() == this.networkController.getIdPlayer()) {
+                    aliasLabelText += "-> ";
+                }
+                aliasLabelText += playerBean.getAlias();
+                Label aliasLabel = new Label(aliasLabelText, skin);
                 playerTable.add(aliasLabel).fillX().colspan(3);
                 if (it.hasNext()) {
                     playerTable.row().pad(10, 0, 0, 0);

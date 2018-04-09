@@ -10,6 +10,7 @@ public abstract class LoggingUtilities {
         StringBuilder debugMessageBuilder =
                 new StringBuilder(header)
                         .append(System.lineSeparator())
+                        .append("\t")
                         .append("Address : ")
                         .append(packet.getAddress())
                         .append(":")
@@ -18,7 +19,7 @@ public abstract class LoggingUtilities {
         byte[] data = packet.getData();
         for (int i = 0; i < packet.getLength(); i++) {
             if (i != 0 && i % 32 == 0) {
-                debugMessageBuilder.append(System.lineSeparator());
+                debugMessageBuilder.append(System.lineSeparator()).append("\t");
             } else if (i != 0 && i % 4 == 0) {
                 debugMessageBuilder.append("\t");
             }

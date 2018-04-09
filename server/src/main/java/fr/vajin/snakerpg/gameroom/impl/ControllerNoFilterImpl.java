@@ -91,8 +91,7 @@ public class ControllerNoFilterImpl implements Controller{
     }
 
     @Override
-    public synchronized UserEntity acceptConnection(int userId, byte[] token, InetAddress inetAddress, int port) {
-
+    public synchronized UserEntity acceptConnection(int userId, byte[] token, String alias, InetAddress inetAddress, int port) {
         userId = ++this.lastId;
         SecureRandom random = new SecureRandom();
         token = new byte[4];
@@ -106,11 +105,17 @@ public class ControllerNoFilterImpl implements Controller{
 
         idAddressMap.put(userId, adrStr);
 
+        if (alias == null || alias.trim().isEmpty()) {
+            alias = "Unknown Player " + userId;
+        }
+        //TODO check if alias already used
+
         UserEntity userEntity = new UserEntity();
         userEntity.setId(userId);
-        userEntity.setAlias("user"+String.valueOf(userId));
-        userEntity.setAccountName("account"+String.valueOf(userId));
+        userEntity.setAlias(alias);
         userEntity.setToken(token);
+
+        logger.debug("Connection to player " + alias + ", id " + userId + " from " + inetAddress.toString() + ":" + port);
 
         return userEntity;
     }

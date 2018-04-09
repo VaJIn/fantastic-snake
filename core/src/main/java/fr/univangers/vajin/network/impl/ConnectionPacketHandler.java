@@ -9,12 +9,12 @@ import java.nio.ByteBuffer;
 
 public class ConnectionPacketHandler implements PacketHandler {
 
-    private NetworkController controller;
+    private NetworkController networkController;
 
     private static int BUFFER_START_POS = 16;
 
-    public ConnectionPacketHandler(NetworkController controller){
-        this.controller = controller;
+    public ConnectionPacketHandler(NetworkController networkController) {
+        this.networkController = networkController;
     }
 
     @Override
@@ -37,10 +37,10 @@ public class ConnectionPacketHandler implements PacketHandler {
             int idPlayer = buffer.getInt();
             int tokenPlayer = buffer.getInt();
 
-            controller.getPacketCreator().setPlayerInfos(idPlayer,tokenPlayer);
-            controller.getApplication().getDirectConnectionScreen().acceptedConnection(packet.getAddress(), packet.getPort());
+            networkController.setPlayerInfos(idPlayer, tokenPlayer);
+            networkController.getApplication().getDirectConnectionScreen().acceptedConnection(packet.getAddress(), packet.getPort());
         } else {
-            controller.getApplication().getDirectConnectionScreen().refusedConnection(packet.getAddress(), packet.getPort());
+            networkController.getApplication().getDirectConnectionScreen().refusedConnection(packet.getAddress(), packet.getPort());
         }
     }
 }

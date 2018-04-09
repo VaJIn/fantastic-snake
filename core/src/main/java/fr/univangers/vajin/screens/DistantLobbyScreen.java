@@ -70,8 +70,6 @@ public class DistantLobbyScreen extends LobbyScreen {
         mainTable.add(exitLobby).fillX();
         mainTable.add(ready).fillX().colspan(3);
 
-        this.getStage().setDebugAll(true);
-
         exitLobby.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {

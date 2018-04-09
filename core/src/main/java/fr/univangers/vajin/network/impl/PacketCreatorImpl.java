@@ -1,5 +1,6 @@
 package fr.univangers.vajin.network.impl;
 
+import fr.univangers.vajin.network.NetworkController;
 import fr.univangers.vajin.network.PacketCreator;
 import fr.univangers.vajin.network.Transmiter;
 import fr.vajin.snakerpg.utilities.CustomByteArrayOutputStream;
@@ -11,19 +12,18 @@ public class PacketCreatorImpl implements PacketCreator{
     private int numSequence = 0;
 
     private int idProtocol;
-    private int idPlayer;
-    private int tokenPlayer;
 
     private int lastIdReceived = 0;
     private int ackBitfield = 0;
 
     private Transmiter transmiter;
+    private NetworkController networkController;
 
-    public PacketCreatorImpl(int idProtocol, int idPlayer, int tokenPlayer, Transmiter transmiter){
+    public PacketCreatorImpl(NetworkController networkController, int idProtocol, Transmiter transmiter) {
 
         this.idProtocol = idProtocol;
-        this.idPlayer = idPlayer;
-        this.tokenPlayer = tokenPlayer;
+
+        this.networkController = networkController;
 
         this.transmiter = transmiter;
     }
@@ -35,9 +35,9 @@ public class PacketCreatorImpl implements PacketCreator{
 
         stream.writeInt(idProtocol);
 
-        stream.writeInt(idPlayer);
+        stream.writeInt(networkController.getIdPlayer());
 
-        stream.writeInt(tokenPlayer);
+        stream.writeInt(networkController.getTokenPlayer());
 
         stream.writeInt(numSequence);
 
@@ -69,12 +69,6 @@ public class PacketCreatorImpl implements PacketCreator{
     @Override
     public void acknowledgePacket(int idReceived) {
 
-    }
-
-    @Override
-    public void setPlayerInfos(int idPlayer, int tokenPlayer) {
-        this.idPlayer = idPlayer;
-        this.tokenPlayer = tokenPlayer;
     }
 
 

@@ -34,7 +34,26 @@ public class NewConnectionHandlerNoFilterImpl implements NewConnectionHandler {
     public synchronized boolean handleDatagramPacket(DatagramPacket datagramPacket) {
         if (controller.getCurrentPlayerCount() < controller.getGameRoomSize()) {
 
-            UserEntity userEntity = controller.acceptConnection(0, new byte[4], datagramPacket.getAddress(), datagramPacket.getPort());
+
+            //Retrieve user alias from packet
+            ByteBuffer buffer = ByteBuffer.wrap(datagramPacket.getData());
+
+            buffer.position(16);
+
+            String alias = "";
+            if (buffer.hasRemaining()) {
+                int length = buffer.getInt();
+                if (length != 0) {
+                    byte[] userAliasByte = new byte[length];
+
+                    buffer.get(userAliasByte);
+
+                    alias = new String(userAliasByte);
+                    logger.debug("Retrieved alias " + alias);
+                }
+            }
+
+            UserEntity userEntity = controller.acceptConnection(0, new byte[4], alias, datagramPacket.getAddress(), datagramPacket.getPort());
 
             if (userEntity == null) {
                 logger.debug("[Thread - " + Thread.currentThread().getName() + "] Already waiting for response from " + datagramPacket.getAddress() + ":" + datagramPacket.getPort());
@@ -47,24 +66,6 @@ public class NewConnectionHandlerNoFilterImpl implements NewConnectionHandler {
             int userId = userEntity.getId();
             byte[] token = userEntity.getToken();
 
-            //Retrieve user alias from packet
-            ByteBuffer buffer = ByteBuffer.wrap(datagramPacket.getData());
-
-            buffer.position(16);
-
-
-            if (buffer.hasRemaining()) {
-                int length = buffer.getInt();
-                if (length != 0) {
-                    byte[] userAliasByte = new byte[length];
-
-                    buffer.get(userAliasByte);
-
-                    String alias = new String(userAliasByte);
-
-                    userEntity.setAlias(alias);
-                }
-            }
 
             int port = datagramPacket.getPort();
             InetAddress address = datagramPacket.getAddress();

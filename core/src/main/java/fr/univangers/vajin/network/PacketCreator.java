@@ -27,7 +27,6 @@ public interface PacketCreator {
 
     void acknowledgePacket(int idReceived);
 
-    void setPlayerInfos(int idPlayer, int tokenPlayer);
 
 
 }

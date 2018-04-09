@@ -25,7 +25,7 @@ public interface Controller {
 //
     void removePlayer(PlayerHandler playerHandler);
 
-    UserEntity acceptConnection(int userId, byte[] token, InetAddress inetAddress, int port);
+    UserEntity acceptConnection(int userId, byte[] token, String alias, InetAddress inetAddress, int port);
 
     GameModeEntity currentGameMode();
 
