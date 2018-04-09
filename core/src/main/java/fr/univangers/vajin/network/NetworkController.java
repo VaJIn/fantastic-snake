@@ -38,4 +38,6 @@ public interface NetworkController {
     int getIdPlayer();
 
     int getTokenPlayer();
+
+    void sendInput(int input);
 }

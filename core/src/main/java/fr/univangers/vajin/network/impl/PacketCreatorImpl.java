@@ -4,11 +4,16 @@ import fr.univangers.vajin.network.NetworkController;
 import fr.univangers.vajin.network.PacketCreator;
 import fr.univangers.vajin.network.Transmiter;
 import fr.vajin.snakerpg.utilities.CustomByteArrayOutputStream;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 
 public class PacketCreatorImpl implements PacketCreator{
+
+    private static final Logger logger = LogManager.getLogger();
+
     private int numSequence = 0;
 
     private int idProtocol;
@@ -85,6 +90,7 @@ public class PacketCreatorImpl implements PacketCreator{
             this.transmiter.send(new DatagramPacket(data, data.length));
 
         } catch (IOException e) {
+            logger.error("SendPlayerAction", e);
             e.printStackTrace();
         }
 

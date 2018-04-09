@@ -47,7 +47,7 @@ public class SimpleSnake extends Snake {
 
 
     public SimpleSnake() {
-        super(100, 100, 0, 0, 10);
+        super(100, 100, 0, 0, 2);
 
         this.atoms = MultimapBuilder.hashKeys().arrayListValues().build();
 

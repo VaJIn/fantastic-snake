@@ -58,7 +58,6 @@ public class CreditScreen extends AbstractMenuScreen {
             }
         });
 
-        Gdx.input.setInputProcessor(this.getStage());
     }
 
     @Override

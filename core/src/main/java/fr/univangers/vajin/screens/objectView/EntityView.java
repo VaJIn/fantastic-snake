@@ -9,7 +9,6 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import fr.univangers.vajin.engine.entities.Entity;
 import fr.univangers.vajin.engine.entities.EntityObserver;
-import fr.univangers.vajin.engine.entities.snake.Snake;
 import fr.univangers.vajin.engine.utilities.Position;
 
 import java.util.HashMap;
@@ -91,7 +90,7 @@ public class EntityView implements EntityObserver {
     @Override
     public void notifySpriteChange(int id, Position newPosition, String newResource) {
         if (newResource.equals("")) {
-            return;
+            layer.setCell(newPosition.getX(), newPosition.getY(), new TiledMapTileLayer.Cell());
         }
         tileChange(newPosition, newResource);
     }

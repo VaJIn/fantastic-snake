@@ -181,7 +181,15 @@ public class NetworkControllerImpl implements NetworkController {
     }
 
     @Override
+
     public int getTokenPlayer() {
         return tokenPlayer;
+    }
+
+    @Override
+    public void sendInput(int input) {
+
+        this.packetCreator.sendPlayerAction(input);
+
     }
 }

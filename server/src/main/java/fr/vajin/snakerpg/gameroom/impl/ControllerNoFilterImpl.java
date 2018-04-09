@@ -40,6 +40,8 @@ public class ControllerNoFilterImpl implements Controller{
     private Cleaner cleaner;
     private Collection<Integer> idPlayersReady;
 
+    private int startGameDelay = 3;
+
     ScheduledThreadPoolExecutor scheduledThreadPoolExecutor;
 
     public ControllerNoFilterImpl(GameModeEntity gameMode, String map){
@@ -179,9 +181,9 @@ public class ControllerNoFilterImpl implements Controller{
                 playerPacketCreator.setState(PlayerPacketCreator.GAME_STATE);
             }
 
-            logger.debug("Scheduling start of the game in 10 seconds");
+            logger.debug("Scheduling start of the game in " + startGameDelay + " seconds");
 
-            this.scheduledThreadPoolExecutor.schedule(new GameRun(gameEngine, 32), 5, TimeUnit.SECONDS);
+            this.scheduledThreadPoolExecutor.schedule(new GameRun(gameEngine, 32), startGameDelay, TimeUnit.SECONDS);
         } catch (IOException e) {
             logger.error("Error opening map", e);
         } catch (WrongPlayersNumberException e) {

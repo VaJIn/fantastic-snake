@@ -1,6 +1,7 @@
 package fr.univangers.vajin.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -17,6 +18,7 @@ import fr.univangers.vajin.SnakeRPG;
 import fr.univangers.vajin.engine.GameEngine;
 import fr.univangers.vajin.engine.GameEngineObserver;
 import fr.univangers.vajin.engine.entities.Entity;
+import fr.univangers.vajin.engine.entities.snake.Snake;
 import fr.univangers.vajin.io.TileMapReader;
 import fr.univangers.vajin.screens.objectView.EntityView;
 
@@ -75,7 +77,21 @@ public class DistantGameScreen implements GameEngineObserver, InputProcessor, Sc
 
     @Override
     public boolean keyDown(int keycode) {
-        return false;
+        switch (keycode) {
+            case Input.Keys.Z:
+                this.application.getNetworkController().sendInput(Snake.GO_NORTH);
+                break;
+            case Input.Keys.Q:
+                this.application.getNetworkController().sendInput(Snake.GO_WEST);
+                break;
+            case Input.Keys.S:
+                this.application.getNetworkController().sendInput(Snake.GO_SOUTH);
+                break;
+            case Input.Keys.D:
+                this.application.getNetworkController().sendInput(Snake.GO_EAST);
+                break;
+        }
+        return true;
     }
 
     @Override

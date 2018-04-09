@@ -195,6 +195,8 @@ public class GameEngineImpl extends AbstractGameEngine implements EntityObserver
 
             int tick = lastComputedTick + 1;
 
+            //logger.debug("Computing tick " + tick);
+
             List<DynamicEntity> updatedEntities = new ArrayList<>();
 
 

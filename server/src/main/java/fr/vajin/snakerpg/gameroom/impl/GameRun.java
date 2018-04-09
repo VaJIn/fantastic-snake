@@ -1,10 +1,14 @@
 package fr.vajin.snakerpg.gameroom.impl;
 
 import fr.univangers.vajin.engine.GameEngine;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.time.Instant;
 
 public class GameRun implements Runnable {
+
+    private final static Logger logger = LogManager.getLogger(GameRun.class);
 
     private GameEngine engine;
     private int ticksPerSecond;
@@ -30,10 +34,16 @@ public class GameRun implements Runnable {
 
                 long end = Instant.now().toEpochMilli();
 
-                Thread.sleep(1000/ticksPerSecond - end - start);
+                long sleepTime = 1000 / ticksPerSecond - (end - start);
+
+                logger.debug("Sleeping for " + sleepTime);
+
+                Thread.sleep(sleepTime);
+
 
 
             }
+            logger.debug("Game is over");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

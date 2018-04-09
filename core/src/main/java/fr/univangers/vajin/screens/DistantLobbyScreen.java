@@ -1,6 +1,5 @@
 package fr.univangers.vajin.screens;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -80,7 +79,6 @@ public class DistantLobbyScreen extends LobbyScreen {
 
         this.getStage().addActor(mainTable);
 
-        Gdx.input.setInputProcessor(getStage());
     }
 
     @Override

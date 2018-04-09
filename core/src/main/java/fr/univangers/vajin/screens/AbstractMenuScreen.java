@@ -47,6 +47,9 @@ public abstract class AbstractMenuScreen implements Screen {
                 this.getApplication().getAppPreferences().isDebugModeActivated();
         logger.debug("Showing screen  - " + (debugModeActivated ? "DEBUG MODE" : ""));
         this.stage.setDebugAll(debugModeActivated);
+
+        Gdx.input.setInputProcessor(getStage());
+
     }
 
     @Override

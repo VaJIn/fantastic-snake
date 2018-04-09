@@ -128,7 +128,7 @@ public class DistantEntity extends Entity {
     public void endUpdate() {
         for (EntityTileInfo entityTileInfo : oldEntityTileInfoMap.values()) {
             notifyChangeAtPosition(entityTileInfo.getPosition(), NOT_COVER_POSITION_ANYMORE);
-            notifySpriteChange(entityTileInfo.getId(), entityTileInfo.getPosition(), entityTileInfo.getRessourceKey());
+            notifySpriteChange(entityTileInfo.getId(), entityTileInfo.getPosition(), "");
         }
 
         this.oldEntityTileInfoMap = null;

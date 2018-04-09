@@ -6,6 +6,8 @@ import java.net.DatagramPacket;
 
 public abstract class LoggingUtilities {
 
+    private static boolean printAllData = false;
+
     private static String buildPacketString(DatagramPacket packet, String header) {
         StringBuilder debugMessageBuilder =
                 new StringBuilder(header)
@@ -16,14 +18,16 @@ public abstract class LoggingUtilities {
                         .append(":")
                         .append(packet.getPort())
                         .append(System.lineSeparator());
-        byte[] data = packet.getData();
-        for (int i = 0; i < packet.getLength(); i++) {
-            if (i != 0 && i % 32 == 0) {
-                debugMessageBuilder.append(System.lineSeparator()).append("\t");
-            } else if (i != 0 && i % 4 == 0) {
-                debugMessageBuilder.append("\t");
+        if (printAllData) {
+            byte[] data = packet.getData();
+            for (int i = 0; i < packet.getLength(); i++) {
+                if (i != 0 && i % 32 == 0) {
+                    debugMessageBuilder.append(System.lineSeparator()).append("\t");
+                } else if (i != 0 && i % 4 == 0) {
+                    debugMessageBuilder.append("\t");
+                }
+                debugMessageBuilder.append(String.format("%02X ", data[i]));
             }
-            debugMessageBuilder.append(String.format("%02X ", data[i]));
         }
         return debugMessageBuilder.toString();
     }

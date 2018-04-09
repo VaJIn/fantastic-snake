@@ -1,6 +1,5 @@
 package fr.univangers.vajin.screens;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -55,8 +54,6 @@ public class OptionScreen extends AbstractMenuScreen {
         layout.add(validateButton).fillX();
 
         this.getStage().addActor(layout);
-
-        Gdx.input.setInputProcessor(this.getStage());
     }
 
     @Override
