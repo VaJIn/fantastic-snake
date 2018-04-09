@@ -23,7 +23,6 @@ public class SnakeRPG extends Game implements ApplicationListener {
 
     private SnakeRPGAssetManager assetManager;
 
-    public static final int DISTANT_GAME_SCREEN = 8;
     private GameLoadingScreen gameLoadingScreen;
     private DirectConnectionScreen directConnectionScreen;
     private HostLobbyScreen hostLobbyScreen;
@@ -37,6 +36,7 @@ public class SnakeRPG extends Game implements ApplicationListener {
     private DatagramSocket datagramSocket;
     private CreditScreen creditScreen;
     private DistantGameScreen distantGameScreen;
+    public static final int DISTANT_GAME_SCREEN = 8;
 
     private AppPreferences appPreferences;
 
@@ -47,6 +47,8 @@ public class SnakeRPG extends Game implements ApplicationListener {
     public static final int HOST_LOBBY_SCREEN = 5;
     public static final int CREDIT_SCREEN = 6;
     public static final int DISTANT_LOBBY_SCREEN = 7;
+    public static final int OPTION_SCREEN = 9;
+    private OptionScreen optionScreen;
 
     @Override
     public void create() {
@@ -118,6 +120,12 @@ public class SnakeRPG extends Game implements ApplicationListener {
                 }
                 logger.debug("Change screen to DistantGameScreen");
                 this.setScreen(this.distantGameScreen);
+                break;
+            case OPTION_SCREEN:
+                if (this.optionScreen == null) {
+                    this.optionScreen = new OptionScreen(this);
+                }
+                this.setScreen(this.optionScreen);
                 break;
         }
     }

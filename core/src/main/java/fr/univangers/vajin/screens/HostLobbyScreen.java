@@ -29,9 +29,6 @@ public class HostLobbyScreen extends LobbyScreen {
         TextButton exitLobby = new TextButton("Exit lobby", skin);
         TextButton ready = new TextButton("Ready", skin);
 
-
-        this.getStage().setDebugAll(true);
-
         SelectBox<String> mapSelectBox = new SelectBox<String>(skin);
         mapSelectBox.setItems("simple_map.tmx", "sample_map.tmx");
 

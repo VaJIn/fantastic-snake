@@ -21,7 +21,6 @@ public class MenuScreen extends AbstractMenuScreen {
         // Create a table that fills the screen. Everything else will go inside this table.
         Table table = new Table();
         table.setFillParent(true);
-        //  table.setDebug(true);
         this.getStage().addActor(table);
 
         Skin skin = this.getApplication().getUISkin();
@@ -32,6 +31,7 @@ public class MenuScreen extends AbstractMenuScreen {
         TextButton playOnline = new TextButton("Play Online", skin);
         TextButton exit = new TextButton("Exit", skin);
         TextButton creditButton = new TextButton("Credit", skin);
+        TextButton options = new TextButton("Options", skin);
 
         table.add(startSPGame).fillX().uniformX();
         table.row().pad(10, 0, 0, 0);
@@ -43,6 +43,9 @@ public class MenuScreen extends AbstractMenuScreen {
         table.row().pad(10, 0, 0, 0);
 
         table.add(playOnline).fillX().uniformX();
+        table.row().pad(10, 0, 0, 0);
+
+        table.add(options).fillX().uniformX();
         table.row().pad(10, 0, 0, 0);
 
         table.add(creditButton).fillX().uniformX();
@@ -86,6 +89,13 @@ public class MenuScreen extends AbstractMenuScreen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 getApplication().changeScreen(SnakeRPG.CREDIT_SCREEN);
+            }
+        });
+
+        options.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                getApplication().changeScreen(SnakeRPG.OPTION_SCREEN);
             }
         });
 

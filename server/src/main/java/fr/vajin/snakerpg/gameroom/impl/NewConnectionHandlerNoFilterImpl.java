@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.nio.ByteBuffer;
 
 
 public class NewConnectionHandlerNoFilterImpl implements NewConnectionHandler {
@@ -37,7 +38,7 @@ public class NewConnectionHandlerNoFilterImpl implements NewConnectionHandler {
 
             if (userEntity == null) {
                 logger.debug("[Thread - " + Thread.currentThread().getName() + "] Already waiting for response from " + datagramPacket.getAddress() + ":" + datagramPacket.getPort());
-                return true; // TODO delegate
+                return true;
             }
 
             logger.info("[Thread - " + Thread.currentThread().getName() + "] New connection for " + datagramPacket.getAddress() + ":" + datagramPacket.getPort() + "\n" +
@@ -45,8 +46,25 @@ public class NewConnectionHandlerNoFilterImpl implements NewConnectionHandler {
 
             int userId = userEntity.getId();
             byte[] token = userEntity.getToken();
-            //TODO retrieve from packet (or add argument on the method ??? Since we read it in the receiver)
 
+            //Retrieve user alias from packet
+            ByteBuffer buffer = ByteBuffer.wrap(datagramPacket.getData());
+
+            buffer.position(16);
+
+
+            if (buffer.hasRemaining()) {
+                int length = buffer.getInt();
+                if (length != 0) {
+                    byte[] userAliasByte = new byte[length];
+
+                    buffer.get(userAliasByte);
+
+                    String alias = new String(userAliasByte);
+
+                    userEntity.setAlias(alias);
+                }
+            }
 
             int port = datagramPacket.getPort();
             InetAddress address = datagramPacket.getAddress();

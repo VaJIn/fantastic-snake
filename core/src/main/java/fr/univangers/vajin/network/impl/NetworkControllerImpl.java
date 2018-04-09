@@ -70,7 +70,20 @@ public class NetworkControllerImpl implements NetworkController {
 
             //id joueur
             stream.writeInt(0);
+            //token
+            stream.writeInt(0);
+
             stream.writeInt(PacketCreator.JOIN);
+
+            String userAlias = this.getApplication().getAppPreferences().getLocalAlias();
+            if (userAlias == null || userAlias.trim().isEmpty()) {
+                userAlias = "Unknown Player";
+            }
+
+            byte[] userAliasBytes = userAlias.getBytes();
+
+            stream.writeInt(userAliasBytes.length);
+            stream.write(userAliasBytes);
 
             byte[] data = stream.toByteArray();
             DatagramPacket packet = new DatagramPacket(data,data.length);

@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import fr.univangers.vajin.SnakeRPG;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public abstract class AbstractMenuScreen implements Screen {
 
@@ -16,6 +18,7 @@ public abstract class AbstractMenuScreen implements Screen {
     private final SnakeRPG application;
     private Stage stage;
 
+    private final Logger logger;
 
     protected AbstractMenuScreen(SnakeRPG parent) {
         this.application = parent;
@@ -25,6 +28,8 @@ public abstract class AbstractMenuScreen implements Screen {
         this.batch = new SpriteBatch();
 
         this.stage = new Stage(new ScreenViewport());
+
+        this.logger = LogManager.getLogger(this.getClass());
     }
 
     protected Stage getStage() {
@@ -38,6 +43,10 @@ public abstract class AbstractMenuScreen implements Screen {
     @Override
     public void show() {
         this.stage.clear();
+        boolean debugModeActivated =
+                this.getApplication().getAppPreferences().isDebugModeActivated();
+        logger.debug("Showing screen  - " + (debugModeActivated ? "DEBUG MODE" : ""));
+        this.stage.setDebugAll(debugModeActivated);
     }
 
     @Override
@@ -62,5 +71,9 @@ public abstract class AbstractMenuScreen implements Screen {
     public void dispose() {
         this.stage.dispose();
         this.stage.clear();
+    }
+
+    protected Logger getLogger() {
+        return logger;
     }
 }

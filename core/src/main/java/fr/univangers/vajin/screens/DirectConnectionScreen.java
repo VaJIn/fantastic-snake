@@ -2,11 +2,9 @@ package fr.univangers.vajin.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Align;
 import fr.univangers.vajin.SnakeRPG;
 
 import java.net.DatagramSocket;
@@ -56,6 +54,8 @@ private    boolean acceptedConnection = false;
 
     @Override
     public void show() {
+        super.show();
+
         this.acceptedConnection = false;
         this.currentState = this.initialState;
 
@@ -63,7 +63,6 @@ private    boolean acceptedConnection = false;
 
         Table table = new Table(skin);
         table.setFillParent(true);
-        table.debugAll();
 
         this.getStage().addActor(table);
 
@@ -75,18 +74,32 @@ private    boolean acceptedConnection = false;
         int lastPort = this.getApplication().getAppPreferences().getLastServerPort();
         String lastPortStr = lastPort != 0 ? String.valueOf(lastPort) : "";
 
+        String alias = this.getApplication().getAppPreferences().getLocalAlias();
+        if (alias == null || alias.trim().isEmpty()) {
+            alias = "";
+        }
+
         TextField ipTextField = new TextField(lastServerName, skin);
+        ipTextField.setAlignment(Align.right);
         TextField portTextField = new TextField(lastPortStr, skin);
+        portTextField.setAlignment(Align.right);
+        TextField userNameTextField = new TextField(alias, skin);
+        userNameTextField.setAlignment(Align.center);
 
         TextButton connect = new TextButton("Connect", skin);
         TextButton backToMenu = new TextButton("Back", skin);
 
-        table.add(ipTextField).colspan(2);
+        table.add(new Label("IP / Name", skin));
+        table.add(ipTextField).colspan(2).fillX().pad(0, 5, 0, 5);
         table.row().pad(10, 0, 10, 0);
-        table.add(portTextField).colspan(2);
+        table.add(new Label("Port", skin));
+        table.add(portTextField).colspan(2).fillX().pad(0, 5, 0, 5);
+        table.row().pad(10, 0, 10, 0);
+        table.add(new Label("Alias", skin));
+        table.add(userNameTextField).fillX().colspan(2).pad(0, 5, 0, 5);
         table.row();
-        table.add(connect);
-        table.add(backToMenu);
+        table.add(backToMenu).fillX();
+        table.add(connect).fillX().colspan(2);
 
         backToMenu.addListener(new ChangeListener() {
             @Override
@@ -98,20 +111,22 @@ private    boolean acceptedConnection = false;
         connect.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                SnakeRPG parent = getApplication();
-
+                SnakeRPG application = getApplication();
 
                 try {
                     InetAddress address = InetAddress.getByName(ipTextField.getText());
                     int port = Integer.valueOf(portTextField.getText());
+                    String alias = userNameTextField.getText();
 
                     getApplication().getAppPreferences().setLastServer(ipTextField.getText(), port);
+                    getApplication().getAppPreferences().setLocalAlias(alias);
+
+                    if (getApplication().getAppPreferences().hasChanged()) {
+                        getApplication().getAppPreferences().flush();
+                    }
 
                     waitingForResponseState.connectTo(address,port);
                     setState(waitingForResponseState);
-
-                    parent.getNetworkController().connect(address, port);
-                    parent.getNetworkController().startReceiver();
 
                 } catch (UnknownHostException e) {
                     e.printStackTrace();
@@ -181,8 +196,8 @@ private    boolean acceptedConnection = false;
         public synchronized void connectTo(InetAddress address, int port) {
             this.waitedAddress = address;
             this.waitedPort = port;
-
-            //TODO networking
+            getApplication().getNetworkController().connect(address, port);
+            getApplication().getNetworkController().startReceiver();
         }
 
         @Override
