@@ -43,14 +43,18 @@ public class GameState implements PlayerPacketCreator.PlayerPacketCreatorState {
             Iterator<? extends Entity.EntityTileInfo> it = entity.getEntityTilesInfosIterator();
 
             stream.writeInt(entity.getEntityId());
-            while (it.hasNext()) {
-                Entity.EntityTileInfo tileInfo = it.next();
-                stream.writeInt(tileInfo.getId());
-                stream.writeInt(tileInfo.getPosition().getX());
-                stream.writeInt(tileInfo.getPosition().getY());
-                byte[] resourceKeyBytes = tileInfo.getRessourceKey().getBytes();
-                stream.writeInt(resourceKeyBytes.length);
-                stream.write(resourceKeyBytes);
+            if (entity.isVisibleTo(this.parent.getPlayerHandler().getSnake())) {
+
+                while (it.hasNext()) {
+                    Entity.EntityTileInfo tileInfo = it.next();
+                    stream.writeInt(tileInfo.getId());
+                    stream.writeInt(tileInfo.getPosition().getX());
+                    stream.writeInt(tileInfo.getPosition().getY());
+                    byte[] resourceKeyBytes = tileInfo.getRessourceKey().getBytes();
+                    stream.writeInt(resourceKeyBytes.length);
+                    stream.write(resourceKeyBytes);
+                }
+
             }
             stream.writeInt(-1);
         }

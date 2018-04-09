@@ -7,6 +7,7 @@ import fr.univangers.vajin.engine.EngineBuilder;
 import fr.univangers.vajin.engine.GameEngine;
 import fr.univangers.vajin.engine.WrongPlayersNumberException;
 import fr.univangers.vajin.engine.entities.snake.SimpleSnake;
+import fr.univangers.vajin.engine.entities.snake.Snake;
 import fr.univangers.vajin.engine.field.Field;
 import fr.vajin.snakerpg.database.entities.GameModeEntity;
 import fr.vajin.snakerpg.database.entities.GameParticipationEntity;
@@ -161,8 +162,9 @@ public class ControllerNoFilterImpl implements Controller{
             logger.debug("Adding snakes");
             for (PlayerHandler playerHandler : playerHandlers) {
                 int id = playerHandler.getUserId();
+                Snake snake = new SimpleSnake();
                 gameEngineBuilder.addSnake(id, new SimpleSnake());
-
+                playerHandler.setSnake(snake);
             }
 
             logger.debug("Creating engine");
@@ -173,9 +175,6 @@ public class ControllerNoFilterImpl implements Controller{
             for (PlayerHandler playerHandler : this.playerHandlers) {
                 logger.debug("Setting Game state for player" + playerHandler.getUserId());
                 PlayerPacketCreator playerPacketCreator = playerHandler.getPlayerPacketCreator();
-                if (playerPacketCreator == null) {
-                    logger.debug("error");
-                }
                 playerPacketCreator.startGame();
 //                playerPacketCreator.setState(PlayerPacketCreator.GAME_START); //QUI EST LE PUTIN DE BOULET QUI A ECRIT ÇA
                 playerPacketCreator.setState(PlayerPacketCreator.GAME_STATE);

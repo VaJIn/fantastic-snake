@@ -1,5 +1,6 @@
 package fr.vajin.snakerpg.gameroom.impl.handlers;
 
+import fr.univangers.vajin.engine.entities.snake.Snake;
 import fr.vajin.snakerpg.database.entities.UserEntity;
 import fr.vajin.snakerpg.gameroom.Controller;
 import fr.vajin.snakerpg.gameroom.PlayerHandler;
@@ -24,6 +25,8 @@ public class PlayerHandlerImpl implements PlayerHandler {
     private Controller controller;
 
     private UserEntity userEntity;
+
+    private Snake snake;
 
     private long lastAliveSignalReceived;
 
@@ -97,4 +100,13 @@ public class PlayerHandlerImpl implements PlayerHandler {
         }
     }
 
+    @Override
+    public Snake getSnake() {
+        return snake;
+    }
+
+    @Override
+    public void setSnake(Snake snake) {
+        this.snake = snake;
+    }
 }
