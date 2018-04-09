@@ -37,6 +37,8 @@ public interface Controller {
 
     void startGame();
 
+    void endGame();
+
     void setPlayerReady(int idPlayer);
 
 

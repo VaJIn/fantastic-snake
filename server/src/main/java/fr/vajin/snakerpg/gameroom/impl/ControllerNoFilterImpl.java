@@ -193,6 +193,11 @@ public class ControllerNoFilterImpl implements Controller{
     }
 
     @Override
+    public void endGame() {
+
+    }
+
+    @Override
     public void setPlayerReady(int idPlayer) {
 
         if (!idPlayersReady.contains(idPlayer)){
