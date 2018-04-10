@@ -222,6 +222,7 @@ public class SnakeRPG extends Game implements ApplicationListener {
 
         logger.info("Setting UISkin to " + uiSkin);
 
+
         if (uiSkin == null || uiSkin.trim().isEmpty()) {
             uiSkin = "clean-crispy";
             this.getAppPreferences().setUISkin(uiSkin);

@@ -11,7 +11,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import org.apache.logging.log4j.LogManager;
 
 import java.util.NoSuchElementException;
 
@@ -70,8 +69,6 @@ public class SnakeRPGAssetManager {
         FileHandle skinDirectory = Gdx.files.internal("skin/" + uiSkin);
 
         FileHandle[] atlas = skinDirectory.list((file, s) -> s.endsWith(".atlas"));
-
-        LogManager.getLogger().debug("Found " + atlas.length + " atlas");
 
         if (atlas.length < 1) {
             throw new NoSuchElementException("No atlas found in skin directory" + uiSkin);
