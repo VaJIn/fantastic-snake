@@ -283,7 +283,7 @@ public class GameEngineImpl extends AbstractGameEngine implements EntityObserver
             if (isGameOver()){
                 this.ended = true;
                 this.notifyOfGameEnd();
-                System.out.println("Game is over");
+                logger.info("Game is over");
             }
 
             lastComputedTick = tick;
@@ -397,11 +397,11 @@ public class GameEngineImpl extends AbstractGameEngine implements EntityObserver
 
         if (timedCommand.getTick()>=getCurrentTick()){
             timedBonusCommands.add(timedCommand);
-            System.out.println("Adding timedCommand for tick : "+ timedCommand.getTick()+ " current : "+getCurrentTick());
-            System.out.println("ID : "+timedCommand.getId());
+            logger.debug("Adding timedCommand for tick : " + timedCommand.getTick() + " current : " + getCurrentTick());
+            logger.debug("ID : " + timedCommand.getId());
         }
         else{
-            System.out.println("Impossible to add the command because it is in the past");
+            logger.debug("Impossible to add the command because it is in the past");
         }
 
     }
@@ -409,20 +409,20 @@ public class GameEngineImpl extends AbstractGameEngine implements EntityObserver
     @Override
     public void launchTimeMachine() {
 
-        System.out.println("Launching time machine");
+        logger.info("Launching time machine at tick " + this.getCurrentTick());
 
         isTimeMachineActive = true;
 
         //Recording the tick the time machine must stop to go in the past
         stoppingTickTimeMachine = lastComputedTick+1-TIME_MACHINE_DURATION;
 
-        System.out.println("Stopping tick time machine = "+stoppingTickTimeMachine);
+        logger.debug("Will stop the time machine at tick " + stoppingTickTimeMachine);
 
 
         //Current tick the time machine is in the past
         lastTickTimeMachine = lastComputedTick+1;
 
-        System.out.println("Starting tick time machine = "+lastTickTimeMachine);
+        logger.debug("Current tick the time machine is in the past " + lastTickTimeMachine);
 
 
         //Canceling the next movements the snake wants to make and stop listening to the user input
@@ -441,15 +441,14 @@ public class GameEngineImpl extends AbstractGameEngine implements EntityObserver
             if (performedCommandsMap.containsTimedBonus(command.getId()) //Case ¬B5
                     && command.isRevertingTimedBonus()
                     && performedCommandsMap.numberOfCommands(command.getId())==1){
-                System.out.println("Removed command : id="+command.getId());
+                logger.debug("Removed command : id=" + command.getId());
                 timedBonusCommands.remove(command);
 
             }
             else{ //Case B3 and ¬B3
-                System.out.println("Command before time machine found");
                 timedBonusCommands.remove(command);
                 command.delayOf(TIME_MACHINE_DURATION);
-                System.out.println("delayed *1");
+                logger.debug("Command before time machine found - delayed *1");
                 addBonusTimedCommand(command);
             }
 
@@ -466,7 +465,7 @@ public class GameEngineImpl extends AbstractGameEngine implements EntityObserver
             if (cmd.isRevertingTimedBonus() && performedCommandsMap.numberOfCommands(cmd.getId())==1){
                 TimedCommand cmdClone = cmd.clone();
                 cmdClone.delayOf(2*TIME_MACHINE_DURATION);
-                System.out.println("delayed command *2");
+                logger.debug("delayed command *2");
                 timedBonusCommands.add(cmdClone);
             }
 
@@ -477,7 +476,7 @@ public class GameEngineImpl extends AbstractGameEngine implements EntityObserver
 
     private void endTimeMachine(){
 
-        System.out.println("ENDING TIME MACHINE");
+        logger.info("ENDING TIME MACHINE");
 
         //Listening again to the user input
         for (Entity e : entityCollection) {

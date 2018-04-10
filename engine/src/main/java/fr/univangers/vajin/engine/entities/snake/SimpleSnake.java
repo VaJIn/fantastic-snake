@@ -136,21 +136,20 @@ public class SimpleSnake extends Snake {
 
             //If the snake has no more body, it dies
             if (size <= 1) {
-                System.out.println("Destroy because no more body");
+                logger.debug("Destroy snake " + this.getEntityId() + " because no more body");
                 this.destroy();
             }
             else {
                 notifySpriteChange(tail.getId(), tail.getPosition(), tail.getGraphicKey());
             }
 
-            //If the snake has no more body, it dies
-            if (size <= 1) {
-                System.out.println("Destroy because no more body");
-                this.destroy();
-            }
+//            //If the snake has no more body, it dies
+//            if (size <= 1) {
+//                System.out.println("Destroy because no more body");
+//                this.destroy();
+//            } //Doublon
 
-        }
-        else if (walkDirection==WalkDirection.BACKWARD){
+        } else if (walkDirection == WalkDirection.BACKWARD) {
 
 
             //New tail is the former one
@@ -172,7 +171,7 @@ public class SimpleSnake extends Snake {
 
                 //Checking that the new position is valid
                 if (!isValidSnakePosition(tail.getPosition())) {
-                    System.out.println("Destroy because tail not valid position");
+                    logger.debug("Destroy snake " + this.getEntityId() + " because tail not valid position");
                     this.destroy();
                 }
             }
@@ -196,7 +195,7 @@ public class SimpleSnake extends Snake {
 
             //check if we don't hit ourself if the snake is material
             if (!isImmaterial() && this.coversPosition(newHeadPosition)) {
-                System.out.println("Destroy because covers own position");
+                logger.debug("Destroy snake " + this.getEntityId() + " because covers own position");
                 destroyed = true;
             }
 
@@ -225,7 +224,7 @@ public class SimpleSnake extends Snake {
 
             //Check if new head position is valid on the board
             if (!isValidSnakePosition(newHeadPosition)){
-                System.out.println("Destroy because not valid head position");
+                logger.debug("Destroy snake " + this.getEntityId() + " because not valid head position");
                 destroyed = true;
             }
 
@@ -260,13 +259,13 @@ public class SimpleSnake extends Snake {
         //Check if new head position is valid on the board
         if (pos.getX() < 0 || pos.getX() >= this.getEngine().getField().getWidth() || pos.getY() < 0 || pos.getY() >= this.getEngine().getField().getHeight()) {
             isValid = false;
-            System.out.println("Destroyed true because pos out of screen");
+            logger.debug("Destroyed snake " + this.getEntityId() + " true because pos out of screen");
         }
         else {
             FieldUnit headFieldUnit = this.getEngine().getField().getFieldUnits(pos);
             if (!headFieldUnit.isWalkable()) {
                 isValid = false;
-                System.out.println("Destroyed true because pos not walkable");
+                logger.debug("Destroyed snake " + this.getEntityId() + " true because pos not walkable");
             }
         }
 
@@ -338,8 +337,6 @@ public class SimpleSnake extends Snake {
         if (tick - lastMoveTick > GameConstants.TICKRATE / this.getSpeed()) {
             //We move
             lastMoveTick = tick;
-
-            System.out.println("Speed : "+getSpeed());
 
             TimedCommand movingTimedCommand;
 

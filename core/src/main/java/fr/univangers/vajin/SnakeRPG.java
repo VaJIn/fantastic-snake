@@ -3,6 +3,7 @@ package fr.univangers.vajin;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import fr.univangers.vajin.network.NetworkController;
@@ -17,9 +18,6 @@ import java.net.SocketException;
 public class SnakeRPG extends Game implements ApplicationListener {
 
     private final static Logger logger = LogManager.getLogger(SnakeRPG.class);
-
-    private final static String UISkinAtlas = "skin/clean-crispy-ui.atlas";
-    private final static String UISkinJSON = "skin/clean-crispy-ui.json";
 
     private SnakeRPGAssetManager assetManager;
 
@@ -54,16 +52,12 @@ public class SnakeRPG extends Game implements ApplicationListener {
 
     @Override
     public void create() {
-        String mapFileName = "simple_map.tmx";
 
         this.appPreferences = new AppPreferences();
 
-        this.assetManager = new SnakeRPGAssetManager();
+        this.assetManager = new SnakeRPGAssetManager(this);
 
-        assetManager.queueUIAssets();
-        assetManager.getManager().finishLoading();
-
-        this.UISkin = new Skin(Gdx.files.internal(UISkinJSON), assetManager.getManager().get(UISkinAtlas, TextureAtlas.class));
+        this.changeUISkin(this.getAppPreferences().getUISkin());
 
         this.menuScreen = new MenuScreen(this);
 
@@ -75,66 +69,43 @@ public class SnakeRPG extends Game implements ApplicationListener {
     public void changeScreen(int screen) {
         switch (screen) {
             case MENU_SCREEN:
-                if (this.menuScreen == null) {
-                    this.menuScreen = new MenuScreen(this);
-                }
                 logger.debug("Change screen to MenuScreen");
-                this.setScreen(this.menuScreen);
+                this.setScreen(this.getMenuScreen());
                 break;
             case DIRECT_CONNECTION_SCREEN:
-                if (this.directConnectionScreen == null) {
-                    this.directConnectionScreen = new DirectConnectionScreen(this);
-                }
                 logger.debug("Change screen to DirectConnectionScreen");
-                this.setScreen(directConnectionScreen);
+                this.setScreen(this.getDirectConnectionScreen());
                 break;
             case GAME_LOADING_SCREEN:
-                if (this.gameLoadingScreen == null) {
-                    this.gameLoadingScreen = new GameLoadingScreen(this);
-                }
                 logger.debug("Change screen to GameLoadingScreen");
-                this.setScreen(gameLoadingScreen);
+                this.setScreen(this.getGameLoadingScreen());
                 break;
             case HOST_LOBBY_SCREEN:
-                if (this.hostLobbyScreen == null) {
-                    this.hostLobbyScreen = new HostLobbyScreen(this, getNetworkController());
-                }
                 logger.debug("Change screen to HostLobbyScreen");
-                this.setScreen(hostLobbyScreen);
+                this.setScreen(this.getHostLobbyScreen());
                 break;
             case CREDIT_SCREEN:
-                if (this.creditScreen == null) {
-                    this.creditScreen = new CreditScreen(this);
-                }
                 logger.debug("Change screen to CreditScreen");
-                this.setScreen(creditScreen);
+                this.setScreen(this.getCreditScreen());
                 break;
             case DISTANT_LOBBY_SCREEN:
-                if (this.distantLobbyScreen == null) {
-                    this.distantLobbyScreen = new DistantLobbyScreen(this, getNetworkController());
-                }
                 logger.debug("Change screen to DistantLobbyScreen");
-                this.setScreen(distantLobbyScreen);
+                this.setScreen(this.getDistantLobbyScreen());
                 break;
             case DISTANT_GAME_SCREEN:
-                if (this.distantGameScreen == null) {
-                    this.distantGameScreen = new DistantGameScreen(this);
-                }
                 logger.debug("Change screen to DistantGameScreen");
-                this.setScreen(this.distantGameScreen);
+                this.setScreen(this.getDistantGameScreen());
                 break;
             case OPTION_SCREEN:
-                if (this.optionScreen == null) {
-                    this.optionScreen = new OptionScreen(this);
-                }
-                this.setScreen(this.optionScreen);
+                logger.debug("Change screen to OptionScreen");
+                this.setScreen(this.getOptionScreen());
                 break;
             case GAME_END_SCREEN:
+                logger.debug("Change screen to EndGameScreen");
                 this.setScreen(this.getEndGameScreen());
                 break;
         }
     }
-
     @Override
     public void render() {
         super.render();
@@ -161,6 +132,9 @@ public class SnakeRPG extends Game implements ApplicationListener {
     }
 
     public DirectConnectionScreen getDirectConnectionScreen() {
+        if (this.directConnectionScreen == null) {
+            this.directConnectionScreen = new DirectConnectionScreen(this);
+        }
         return directConnectionScreen;
     }
 
@@ -216,12 +190,79 @@ public class SnakeRPG extends Game implements ApplicationListener {
         return distantGameScreen;
     }
 
+    public MenuScreen getMenuScreen() {
+        if (menuScreen == null) {
+            this.menuScreen = new MenuScreen(this);
+        }
+        return menuScreen;
+    }
+
+    public CreditScreen getCreditScreen() {
+        if (creditScreen == null) {
+            this.creditScreen = new CreditScreen(this);
+        }
+        return creditScreen;
+    }
+
+    public OptionScreen getOptionScreen() {
+        if (this.optionScreen == null) {
+            this.optionScreen = new OptionScreen(this);
+        }
+        return optionScreen;
+    }
 
     public EndGameScreen getEndGameScreen() {
         if (endGameScreen == null){
             this.endGameScreen = new EndGameScreen(this);
         }
         return endGameScreen;
+    }
+
+    public void changeUISkin(String uiSkin) {
+
+        logger.info("Setting UISkin to " + uiSkin);
+
+        if (uiSkin == null || uiSkin.trim().isEmpty()) {
+            uiSkin = "clean-crispy";
+            this.getAppPreferences().setUISkin(uiSkin);
+        }
+
+        FileHandle skinDirectory = Gdx.files.internal("skin/" + uiSkin);
+
+        logger.debug("skinDirectory.exist() ? " + skinDirectory.exists());
+
+        if (!skinDirectory.exists()) {
+            logger.error("No skin " + uiSkin + " found ! Defaulting to clean-crispy");
+            skinDirectory = Gdx.files.internal("skin/clean-crispy");
+        }
+
+        for (FileHandle child : skinDirectory.list()) {
+            logger.debug(child.name() + " - .atlas ? " + child.name().endsWith(".atlas"));
+        }
+
+        FileHandle[] atlas = skinDirectory.list((file, s) -> s.endsWith(".atlas"));
+        FileHandle[] json = skinDirectory.list((file, s) -> s.endsWith(".json"));
+
+        logger.debug("Found " + atlas.length + " atlas");
+        logger.debug("Found " + json.length + " json");
+
+//        if(atlas.length == 0){
+//            throw new NoSuchElementException("No atlas found in skin directory " + uiSkin);
+//        }
+//        if(json.length == 0){
+//            throw new NoSuchElementException("No json found in skin directory" + uiSkin);
+//        }
+
+        this.assetManager.setUiSkin(skinDirectory.name());
+        this.assetManager.queueUIAssets();
+
+        assetManager.queueUIAssets();
+        assetManager.getManager().finishLoading();
+
+        String UISkinJSON = json[0].path();
+        String UISkinAtlas = atlas[0].path();
+
+        this.UISkin = new Skin(Gdx.files.internal(UISkinJSON), assetManager.getManager().get(UISkinAtlas, TextureAtlas.class));
     }
 
     public AppPreferences getAppPreferences() {

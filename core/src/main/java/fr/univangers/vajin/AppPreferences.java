@@ -10,6 +10,7 @@ public class AppPreferences {
     private static final String LAST_SERVER_NAME = "last_server_name";
     private static final String LOCAL_ALIAS = "local_alias";
     private static final String DEBUG_MODE = "debug_mode";
+    private static final String UI_SKIN = "ui_skin";
 
     private boolean changed;
 
@@ -51,6 +52,15 @@ public class AppPreferences {
     public void setDebugMode(boolean activated) {
         this.changed = true;
         this.getPreferences().putBoolean(DEBUG_MODE, activated);
+    }
+
+    public String getUISkin() {
+        return this.getPreferences().getString(UI_SKIN);
+    }
+
+    public void setUISkin(String uiSkin) {
+        this.changed = true;
+        this.getPreferences().putString(UI_SKIN, uiSkin);
     }
 
     public void flush() {

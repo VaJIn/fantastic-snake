@@ -33,7 +33,9 @@ public abstract class LoggingUtilities {
     }
 
     public static void logPacketDebug(Logger logger, DatagramPacket packet, String header) {
-        logger.debug(buildPacketString(packet, header));
+        if (logger.isDebugEnabled()) {
+            logger.debug(buildPacketString(packet, header));
+        }
     }
 
 }

@@ -44,6 +44,9 @@ public class ControllerNoFilterImpl implements Controller{
     private Cleaner cleaner;
     private Collection<Integer> idPlayersReady;
 
+    int outGamePacketFrequency = 2;
+    int inGamePacketFrenquency = 10;
+
     private int startGameDelay = 3;
 
     ScheduledThreadPoolExecutor scheduledThreadPoolExecutor;
@@ -178,7 +181,7 @@ public class ControllerNoFilterImpl implements Controller{
 
 //        TileMapReader reader = TileMapReader.newTileMapReader(map);
 
-        logger.debug("Starting game");
+        logger.info("Starting game");
 
         try {
             logger.debug("Loading field from files");
@@ -206,9 +209,10 @@ public class ControllerNoFilterImpl implements Controller{
                 PlayerPacketCreator playerPacketCreator = playerHandler.getPlayerPacketCreator();
                 playerPacketCreator.startGame();
                 playerPacketCreator.setState(PlayerPacketCreator.GAME_STATE);
+                playerHandler.getPlayerTransmitter().setFrequency(this.inGamePacketFrenquency);
             }
 
-            logger.debug("Scheduling start of the game in " + startGameDelay + " seconds");
+            logger.info("Scheduling start of the game in " + startGameDelay + " seconds");
 
             this.scheduledThreadPoolExecutor.schedule(new GameRun(gameEngine, this, 32), startGameDelay, TimeUnit.SECONDS);
         } catch (IOException e) {
@@ -226,6 +230,7 @@ public class ControllerNoFilterImpl implements Controller{
 
             playerHandler.getPlayerPacketCreator().endGame();
             playerHandler.getPlayerPacketCreator().setState(PlayerPacketCreator.WAITING_FOR_GAME_STATE);
+            playerHandler.getPlayerTransmitter().setFrequency(outGamePacketFrequency);
 
         }
 

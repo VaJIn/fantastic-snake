@@ -72,4 +72,8 @@ public class PlayerTransmiter extends Thread {
         }
 
     }
+
+    public void setFrequency(float packetsPerSecond) {
+        this.packetsPerSecond = packetsPerSecond;
+    }
 }

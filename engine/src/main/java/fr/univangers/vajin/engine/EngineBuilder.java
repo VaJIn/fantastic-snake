@@ -1,8 +1,8 @@
 package fr.univangers.vajin.engine;
 
 import fr.univangers.vajin.engine.entities.Entity;
-import fr.univangers.vajin.engine.entities.spawnables.bonus.*;
 import fr.univangers.vajin.engine.entities.snake.Snake;
+import fr.univangers.vajin.engine.entities.spawnables.bonus.*;
 import fr.univangers.vajin.engine.field.Field;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -96,7 +96,7 @@ public class EngineBuilder {
 
         List<Entity> entities = new ArrayList<>();
 
-        if (players.size()<minPlayer || players.size()>maxPlayer){
+        if (players.size() < minPlayer || players.size() > maxPlayer) {
             throw new WrongPlayersNumberException(minPlayer, maxPlayer, players.size());
         }
 
@@ -149,7 +149,7 @@ public class EngineBuilder {
 
         }
         catch (final ParserConfigurationException | SAXException | IOException e) {
-            e.printStackTrace();
+            logger.error("Error in xml file", e);
 
             //If the xml file contains error, setting a game with basic parameters
             availableFood.clear();
@@ -162,8 +162,6 @@ public class EngineBuilder {
     }
 
     private void readFoodSet(Node foodSetNode){
-
-//        System.out.println("reading food set");
 
         this.minFood = Integer.valueOf(((Element) foodSetNode).getAttribute(MIN_FOOD));
         this.maxFood = Integer.valueOf(((Element) foodSetNode).getAttribute(MAX_FOOD));

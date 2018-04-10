@@ -5,7 +5,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextTooltip;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import fr.univangers.vajin.SnakeRPG;
 
@@ -26,12 +25,15 @@ public class MenuScreen extends AbstractMenuScreen {
 
         Skin skin = this.getApplication().getUISkin();
 
+
         TextButton startSPGame = new TextButton("Single Player", skin);
+
         TextButton hostLocalMultiplayer = new TextButton("Host Local Multiplayer", skin);
+
         TextButton joinLocalMultiplayer = new TextButton("Join local Multiplayer", skin);
 
         TextButton playOnline = new TextButton("Play Online", skin);
-        playOnline.addListener(new TextTooltip("Not available for the moment. Sorry :(", skin));
+        playOnline.setDisabled(true);
 
         TextButton exit = new TextButton("Exit", skin);
         TextButton creditButton = new TextButton("Credit", skin);

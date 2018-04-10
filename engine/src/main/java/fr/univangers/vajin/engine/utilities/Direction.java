@@ -1,7 +1,5 @@
 package fr.univangers.vajin.engine.utilities;
 
-import static java.lang.Math.abs;
-
 public enum Direction {
 
     NORTH,
@@ -37,7 +35,6 @@ public enum Direction {
      * If the positions are the same, returns null
      */
     public static Direction fromPosition(Position src, Position dest) {
-        // System.out.println("src :" + src + " dest :" + dest);
         Direction result = null;
         if (src.getX() == dest.getX()) {
             if (src.getY() == dest.getY()) {
@@ -49,7 +46,6 @@ public enum Direction {
         } else if (src.getY() == dest.getY()) {
             result = src.getX() - dest.getX() < 0 ? EAST : WEST;
         }
-        // System.out.println(" -> " + result);
         return result;
     }
 

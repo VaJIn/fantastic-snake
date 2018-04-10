@@ -22,7 +22,7 @@ public class SnakeRPGGameRoom {
 
             Integer port = null;
 
-            if (args.length!=1){
+            if (args.length != 1) {
                 logger.info("No port provided - launching server on available port");
             } else {
                 try {
