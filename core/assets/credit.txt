@@ -3,6 +3,9 @@ Jules LEGUY
 Valentine RAHIER
 Paulin VIOLETTE
 
+Interface Skin :
+https://github.com/czyzby/gdx-skins
+
 In game map assets by Kenney
 http://www.kenney.nl/
 
