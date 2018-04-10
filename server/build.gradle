@@ -7,9 +7,19 @@ sourceCompatibility = 1.8
 sourceSets.main.java.srcDirs = [ "src/main/java/" ]
 
 project.ext.mainClassName = "fr.vajin.snakerpg.gameroom.SnakeRPGGameRoom"
+project.ext.assetsDir = new File("./assets");
+
+
 
 task run(dependsOn: classes, type: JavaExec) {
     main = project.mainClassName
     classpath = sourceSets.main.runtimeClasspath
+    workingDir = project.assetsDir
     standardInput = System.in
+    if (project.hasProperty("appArgs")) {
+        args Eval.me(appArgs)
+    }else{
+        println "No argument given - Giving port 1534 as argument"
+        args = ['1534']
+    }
 }

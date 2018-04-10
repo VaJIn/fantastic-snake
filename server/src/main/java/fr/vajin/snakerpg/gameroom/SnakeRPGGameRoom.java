@@ -23,17 +23,23 @@ public class SnakeRPGGameRoom {
             Integer port = null;
 
             if (args.length!=1){
-                System.out.println("Please provide the port as unique argument of the program. Exiting");
-                System.exit(1);
+                logger.info("No port provided - launching server on available port");
+            } else {
+                try {
+                    port = Integer.valueOf(args[0]);
+                } catch (NumberFormatException e) {
+                    System.out.println("The given port (" + args[0] + ") is not an integer");
+                    System.exit(1);
+                }
             }
 
-            try{
-                port = Integer.valueOf(args[0]);
+            DatagramSocket socket;
+            if (port == null) {
+                socket = new DatagramSocket();
+            } else {
+                socket = new DatagramSocket(port);
             }
-            catch (NumberFormatException e){
-                System.out.println("The given port ("+args[0]+") is not an integer");
-                System.exit(1);
-            }
+
 
 
 
@@ -45,7 +51,6 @@ public class SnakeRPGGameRoom {
 
             Controller controller = new ControllerNoFilterImpl(gameMode, "simple_map.tmx");
 
-            DatagramSocket socket = new DatagramSocket(port);
 
 
             NewConnectionHandler newConnectionHandler = new NewConnectionHandlerNoFilterImpl(controller, socket);
@@ -55,7 +60,7 @@ public class SnakeRPGGameRoom {
             ReceiverThread receiverThread = new ReceiverThread(receiver, socket);
             receiverThread.start();
 
-            logger.info("Server started on port " + port);
+            logger.info("Server started on port " + socket.getLocalPort());
 
         } catch (SocketException e) {
             e.printStackTrace();
