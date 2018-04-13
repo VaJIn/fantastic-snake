@@ -125,7 +125,6 @@
     minimize: {
       up: button-minimize
       down: button-minimize-over
-      copy
       over: button-minimize-over
     }
     maximize: {

@@ -87,13 +87,13 @@ public class TileMapReader {
 
         Matrix<FieldUnit> fieldMatrix = new StaticMatrix<FieldUnit>(mapHeight, mapWidth);
 
-        System.out.println("Matrix rows : " + fieldMatrix.getRowDimension());
-        System.out.println("Matrix columns :" + fieldMatrix.getColumnDimension());
+        logger.debug("Matrix rows : " + fieldMatrix.getRowDimension());
+        logger.debug("Matrix columns :" + fieldMatrix.getColumnDimension());
 
         TiledMapTileLayer terrainLayer = (TiledMapTileLayer) map.getLayers().get(TERRAIN_LAYER);
 
         if (terrainLayer == null) {
-            System.err.println("ERROR TILEDMAP : NO \"terrain\" layer ! Taking first layer as replacement");
+            logger.info("ERROR TILEDMAP : NO \"terrain\" layer ! Taking first layer (index 0) as terrain layer");
             terrainLayer = (TiledMapTileLayer) map.getLayers().get(0);
         }
 
@@ -114,8 +114,6 @@ public class TileMapReader {
                 if (fieldUnitString == null) {
                     fieldUnitString = "null";
                 }
-                //TODO : fieldUnitFactory
-                //TEMPORARY CODE
                 switch (fieldUnitString) {
                     case "grass":
                         fieldMatrix.set(j, i, FieldUnitEnum.GRASS);
@@ -130,8 +128,6 @@ public class TileMapReader {
                         fieldMatrix.set(j, i, FieldUnitEnum.WALL);
                         break;
                 }
-                //END TEMPORATY CODE
-
             }
         }
         this.field = new StaticField(fieldMatrix);
