@@ -1,0 +1,15 @@
+Authors :
+Jules LEGUY
+Valentine RAHIER
+Paulin VIOLETTE
+
+Interface Skin
+https://github.com/czyzby/gdx-skins
+
+In game map assets by Kenney
+http://www.kenney.nl/
+
+Snake assets by eugeneloza
+https://opengameart.org/content/snake-sprites-sound
+
+Menu background : Created by Macrovector - Freepik.com
